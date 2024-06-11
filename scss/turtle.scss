@@ -1,0 +1,124 @@
+@use "var/colors" as *;
+@use "var/fonts" as *;
+
+html, body {
+  * {
+    @include JetBrainsMono;
+  }
+  --bs-text-opacity: 1;
+  color: $text !important;
+  background-color: darken($background, 11%);
+  width: 100%;
+}
+html {
+  scroll-padding-top: 3.7rem;
+  a[href] {
+    &:visited {
+      color: darken($text, 8%);
+    }
+    &:active {
+      color: lighten($text, 10%);
+    }
+    &:hover, &:active + &:hover {
+      color: darken($text, 16%);
+    }
+    &:link {
+      color: lighten($text, 5%);
+    }
+  }
+}
+body {
+  height: 100vw !important;
+  margin:0; padding:0;
+}
+.index-box {
+  display: flex;
+  position: relative;
+  height: 100%;
+  align-content: center;
+  text-align: center;
+  .title {
+    @include SyneMono;
+    font-size: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 4.44rem;
+  }
+  .t-form {
+    align-self: center;
+    max-width: 15rem;
+  }
+  .table {
+    margin: .5rem 7rem 0;
+    background-color: darken($background, 15%);
+    align-self: center;
+    border: 0.2rem solid darken($background, 25%);
+    border-radius: 0.33rem;
+    width: 0;
+    min-width: fit-content;
+    table {
+      border-collapse: collapse;
+      & > tbody > tr {
+        &:not(:nth-child(1)) {
+          border-top: 0.1rem solid darken($background, 25%);
+        }
+        th, td {
+          min-width: fit-content;
+          text-align: center;
+          padding: 0.15rem 0.5rem;
+          margin: 0;
+        }
+        th {
+          text-wrap: nowrap;
+        }
+        td {
+          display: block;
+          max-height: 35vw;
+          overflow: hidden;
+          a {
+            width: fit-content;
+            overflow: hidden;
+            overflow-wrap: anywhere;
+          }
+        }
+      }
+    }
+  }
+}
+.flex-col {
+  flex-flow: column;
+}
+.t-form {
+  display: flex;
+  align-content: center;
+  input {
+    color: inherit;
+    border: unset;
+  }
+  label {
+    padding: 0.7rem 0;
+  }
+  input[type=text], input[type=date], input[type=url] {
+    font-size: 1rem;
+    background-color: darken($background, 15%);
+    width: 100%;
+    &:focus {
+      outline: 0.1rem solid darken($background, 13%);
+    }
+    &:hover {
+      background-color: darken($background, 20%);
+      outline: 0.1rem solid darken($background, 17%);
+    }
+  }
+  input[type=submit] {
+    background-color: darken($background, 16%);
+    font-size: 1.1rem;
+    align-self: center;
+    width: 50%;
+    //margin: 0 3.8rem;
+    //box-shadow: inset 0.1rem 0.05rem $background;
+    &:hover {
+      background-color: darken($background, 20%);
+      outline: 0.1rem solid darken($background, 17%);
+    }
+  }
+}
