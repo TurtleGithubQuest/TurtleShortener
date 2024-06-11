@@ -1,5 +1,6 @@
 @use "var/colors" as *;
 @use "var/fonts" as *;
+@use "function/scrollbar" as *;
 
 html, body {
   * {
@@ -11,6 +12,8 @@ html, body {
   width: 100%;
 }
 html {
+  @include scrollie-vertical-1;
+  font-size: 1rem;
   scroll-padding-top: 3.7rem;
   a[href] {
     &:visited {
@@ -28,7 +31,7 @@ html {
   }
 }
 body {
-  height: 100vw !important;
+  //height: 100vw !important;
   margin:0; padding:0;
 }
 .index-box {
@@ -44,23 +47,40 @@ body {
     margin-bottom: 4.44rem;
   }
   .t-form {
+    background-color: darken($background, 13%);
+    border: 0.1rem solid darken($background, 16%);
+    border-radius: 0.33rem;
     align-self: center;
     max-width: 15rem;
   }
-  .table {
+  .results {
+    display: flex;
+    margin: 1rem 5rem 0;
+    line-break: anywhere;
+  }
+  .result-table {
     margin: .5rem 7rem 0;
+    padding: 0.13rem;
     background-color: darken($background, 15%);
     align-self: center;
     border: 0.2rem solid darken($background, 25%);
     border-radius: 0.33rem;
     width: 0;
     min-width: fit-content;
+    div {
+      color: darken($text, 16%);
+      overflow: hidden;
+      line-break: anywhere;
+      line-height: 1rem;
+      max-height: 2rem;
+    }
     table {
+      width: 100%;
       border-collapse: collapse;
       & > tbody > tr {
-        &:not(:nth-child(1)) {
-          border-top: 0.1rem solid darken($background, 25%);
-        }
+        //&:not(:nth-child(1)) {
+        border-top: 0.1rem solid darken($background, 25%);
+        //}
         th, td {
           min-width: fit-content;
           text-align: center;
@@ -68,7 +88,7 @@ body {
           margin: 0;
         }
         th {
-          text-wrap: nowrap;
+          text-wrap: pretty;
         }
         td {
           display: block;
@@ -90,23 +110,34 @@ body {
 .t-form {
   display: flex;
   align-content: center;
+  padding: 0.55rem 0;
+  box-shadow: 0 0 0.55rem 0.05rem lighten($background, 6%);
   input {
     color: inherit;
     border: unset;
+    transition: all 60ms ease-in;
+    padding: 0.2rem;
   }
   label {
+    display: flex;
+    flex-flow: column;
     padding: 0.7rem 0;
+    width: 100%;
   }
   input[type=text], input[type=date], input[type=url] {
     font-size: 1rem;
     background-color: darken($background, 15%);
-    width: 100%;
     &:focus {
       outline: 0.1rem solid darken($background, 13%);
     }
     &:hover {
       background-color: darken($background, 20%);
-      outline: 0.1rem solid darken($background, 17%);
+    }
+    &::-webkit-datetime-edit-day-field:focus,
+    &::-webkit-datetime-edit-month-field:focus,
+    &::-webkit-datetime-edit-year-field:focus {
+        background-color: darken($background, 4%);
+        color: lighten($text, 3%);
     }
   }
   input[type=submit] {
@@ -114,11 +145,33 @@ body {
     font-size: 1.1rem;
     align-self: center;
     width: 50%;
-    //margin: 0 3.8rem;
-    //box-shadow: inset 0.1rem 0.05rem $background;
+    border-radius: 0.1rem;
     &:hover {
       background-color: darken($background, 20%);
-      outline: 0.1rem solid darken($background, 17%);
     }
   }
+}
+.tools {
+  position: fixed;
+  bottom: 0.75%;
+  right: 0.75%;
+  input[type="image"] {
+    height: 2rem;
+    transition: all 40ms ease-out;
+    filter: blur(0.075rem);
+    &:hover {
+      transform: scale(1.35) rotateZ(-45deg);
+      filter: unset;
+    }
+  }
+  .broom {
+    &:hover {
+      animation: sweep 2s infinite;
+    }
+  }
+}
+@keyframes sweep {
+  0% { transform: rotateZ(-15deg); }
+  50% { transform: rotateZ(-55deg); }
+  100% { transform: rotateZ(-15deg); }
 }

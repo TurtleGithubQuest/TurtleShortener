@@ -17,4 +17,3 @@ class DbUtil {
         return self::$pdo;
     }
 }
-?>

@@ -1,2 +1,4 @@
 ./website/settings.php
 ./website/css/**
+**/*.css
+*.css

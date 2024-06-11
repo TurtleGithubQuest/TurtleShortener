@@ -1,57 +1,62 @@
 <?php
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+require_once(__DIR__ . '/php/model/short.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>trt.ls</title>
     <link rel="stylesheet" href="css/turtle.css">
 </head>
 <body>
+<div class="tools">
+    <form action="php/fix.php" method="post">
+        <input type="image" class="broom" src="svg/broom.svg" alt="Clean cookies">
+    </form>
+</div>
 <div class="index-box flex-col">
     <div class="title">Turtle Shortener</div>
     <form class="t-form flex-col" action="shorten.php" method="post">
-        <label>Url to shorten<input type="url" name="url" placeholder="url.." spellcheck="false" maxlength="2083" required></label>
+        <label>Url address<input type="url" name="url" placeholder="very long url.." spellcheck="false" maxlength="2083" required></label>
         <label>Expiration<input type="date" name="expiration"></label>
         <input type="submit" value="Shorten">
     </form>
-    <?php
-    require_once(__DIR__ . '/php/model/short.php');
+    <section class="results flex-col"><?php
     if (isset($_SESSION["error"])) {
         echo '<p>$_SESSION["error"]</p>';
         unset($_SESSION["error"]);
         exit;
     }
-    $shortened = unserialize($_SESSION["shortened"]);
-    if(isset($shortened)) {
-        $url = $shortened->url;
-        $shortenedUrl = $shortened->shortenedUrl;
-        $expiry = $shortened->expiry;
-        echo '<div class="table"> 
-            <table>
-              <tr>
-                <th>url</th>
-                <td><a href="'.$url.'">'.$url.'</a></td>
-              </tr>
-              <tr>
-                <th>shortened url</th>
-                <td><a href="'.$shortenedUrl.'">'.$shortenedUrl.'</a></td>
-              </tr>
-              <tr>
-                <th>expiration</th>
-                <td>'.$shortened->getExpiryFormatted().'</td>
-              </tr>
-            </table></div>
-        ';
-        //unset($_SESSION["shortcode"]);
-        //unset($_SESSION["expiry"]);
-        //unset($_SESSION["shortenedUrl"]);
+    if (isset($_SESSION["shortened_array"])) {
+        $array = $_SESSION["shortened_array"];
+        $size = count($array);
+        echo "<div>$size result(s) found:</div>";
+        foreach (array_reverse($_SESSION["shortened_array"], true) as $index => $value) {
+            $shortened = unserialize($value);
+            $url = $shortened->url;
+            $shortenedUrl = $shortened->shortenedUrl;
+            echo '<div class="result-table">
+                <div>'.$url.'</div>
+                <table>
+                  <tr>
+                    <th>shortened url</th>
+                    <td><a href="https://'.$shortenedUrl.'">https://'.$shortenedUrl.'</a></td>
+                  </tr>
+                  <tr>
+                    <th>created at</th>
+                    <td>'.$shortened->getCreationDate().'</td>
+                  </tr>
+                  <tr>
+                    <th>expiration</th>
+                    <td>'.$shortened->getExpiryFormatted().'</td>
+                  </tr>
+                </table></div>
+            ';
+        }
     }
     ?>
+    </section>
 </div>
 </body>
 </html>

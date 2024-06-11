@@ -1,0 +1,18 @@
+@mixin scrollie-vertical-1 {
+  --thumb-color: #114228;
+  --track-color: #010E23;
+  overflow-y: auto;
+  overflow-x: hidden !important;
+  scrollbar-color: var(--thumb-color) var(--track-color);
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 1rem;
+    background-color: var(--track-color);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--thumb-color);
+    border-radius: 0.5rem;
+  }
+  -ms-overflow-style: none;
+}
