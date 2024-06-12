@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 
 require_once(__DIR__ . '/php/db/util.php');
 require_once(__DIR__ . '/php/model/short.php');
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once(__DIR__ . '/composer/vendor/autoload.php');
 use Ulid\Ulid;
 $pdo = DbUtil::getPdo();
 
@@ -50,5 +50,5 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
     }
     $_SESSION["error"] = "Shortcode '$shortCode' is not valid.";
     $_SESSION["error_code"] = "404";
-    header('Location: error.php');
+    header('Location: /error.php');
 }

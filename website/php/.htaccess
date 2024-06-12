@@ -1,1 +1,9 @@
-Deny from all
+<FilesMatch ".*">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+<Files "tools.php">
+    Order Allow,Deny
+    Allow from all
+</Files>

@@ -31,8 +31,27 @@ html {
   }
 }
 body {
-  //height: 100vw !important;
   margin:0; padding:0;
+  width: 100vw;
+  height: 100vh;
+}
+@media only screen and (max-device-width : 768px), only screen and (max-width : 768px) {
+  .title {
+    font-size: 4rem !important;
+  }
+  .index-box {
+    .t-form {
+      max-width: 92% !important;
+      width: 100% !important;
+      padding: 0 1rem !important;
+      label {font-size: 2.5rem !important;}
+      input {font-size: 2rem !important;}
+    }
+  }
+  .turtle-box {
+    top: 45% !important;
+    opacity: 70% !important;
+  }
 }
 .index-box {
   display: flex;
@@ -52,6 +71,14 @@ body {
     border-radius: 0.33rem;
     align-self: center;
     max-width: 15rem;
+    opacity: 0.97;
+    input[type=file] {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      outline: none;
+    }
   }
   .results {
     display: flex;
@@ -111,7 +138,7 @@ body {
   display: flex;
   align-content: center;
   padding: 0.55rem 0;
-  box-shadow: 0 0 0.55rem 0.05rem lighten($background, 6%);
+  animation: green_glow 5s infinite;
   input {
     color: inherit;
     border: unset;
@@ -155,6 +182,7 @@ body {
   position: fixed;
   bottom: 0.75%;
   right: 0.75%;
+  z-index: 2;
   input[type="image"] {
     height: 2rem;
     transition: all 40ms ease-out;
@@ -174,4 +202,9 @@ body {
   0% { transform: rotateZ(-15deg); }
   50% { transform: rotateZ(-55deg); }
   100% { transform: rotateZ(-15deg); }
+}
+@keyframes green_glow {
+  0% {box-shadow: 0 0 0.55rem 0.05rem lighten($background, 6%);}
+  50% {box-shadow: -0.25 -0.25 1.55rem 0.5rem lighten($background, 12%);}
+  100% {box-shadow: 0 0 0.55rem 0.05rem lighten($background, 6%);}
 }

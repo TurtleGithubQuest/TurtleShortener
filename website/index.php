@@ -8,12 +8,52 @@ require_once(__DIR__ . '/php/model/short.php');
     <meta charset="UTF-8">
     <title>trt.ls</title>
     <link rel="stylesheet" href="css/turtle.css">
+    <link rel="stylesheet" href="css/third-party/josetxu_turtle.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
 </head>
 <body>
 <div class="tools">
-    <form action="php/fix.php" method="post">
-        <input type="image" class="broom" src="svg/broom.svg" alt="Clean cookies">
+    <form action="php/tools.php" method="post">
+        <input type="image" class="broom" src="img/svg/broom.svg" alt="Clean cookies">
     </form>
+</div>
+<div class="turtle-box" style="position:absolute; top: 20%; right: 2%; opacity: 80%">
+    <div class="bubbles">
+        <div class="bubble b1"></div>
+        <div class="bubble b2"></div>
+        <div class="bubble b3"></div>
+        <div class="bubble b4"></div>
+        <div class="bubble b5"></div>
+        <div class="bubble b6"></div>
+        <div class="bubble b7"></div>
+        <div class="bubble b8"></div>
+        <div class="bubble b9"></div>
+        <div class="bubble b10"></div>
+    </div>
+    <div class="bubbles mirror">
+        <div class="bubble b1"></div>
+        <div class="bubble b2"></div>
+        <div class="bubble b3"></div>
+        <div class="bubble b4"></div>
+        <div class="bubble b5"></div>
+        <div class="bubble b6"></div>
+        <div class="bubble b7"></div>
+        <div class="bubble b8"></div>
+        <div class="bubble b9"></div>
+        <div class="bubble b10"></div>
+    </div>
+    <div class="turtle">
+        <div class="head"><div class="eyes"></div></div>
+        <div class="leg1"></div>
+        <div class="leg2"></div>
+        <div class="leg3"></div>
+        <div class="leg4"></div>
+        <div class="tail"></div>
+        <div class="body"><span></span></div>
+        <div class="body-tail"></div>
+    </div>
 </div>
 <div class="index-box flex-col">
     <div class="title">Turtle Shortener</div>
@@ -41,7 +81,7 @@ require_once(__DIR__ . '/php/model/short.php');
                 <table>
                   <tr>
                     <th>shortened url</th>
-                    <td><a href="https://'.$shortenedUrl.'">https://'.$shortenedUrl.'</a></td>
+                    <td><a href="https://'.$shortenedUrl.'">'.$shortenedUrl.'</a></td>
                   </tr>
                   <tr>
                     <th>created at</th>

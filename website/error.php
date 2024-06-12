@@ -7,6 +7,9 @@ session_start();
     <meta charset="UTF-8">
     <title>Error: <?php echo $_SESSION['error_code']; ?></title>
     <link rel="stylesheet" href="css/turtle.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
 </head>
 <body>
     <div style="display: flex; align-items: center; text-align: center; flex-flow: column; margin-top: 1%; font-size: x-large">
