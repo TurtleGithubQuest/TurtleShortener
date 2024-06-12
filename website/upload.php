@@ -9,17 +9,39 @@ $img_extensions = $settings['img_extensions'];
 
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['secret'])) {
     $secret = $_POST['secret'];
-    if (in_array($secret, $tokens)) {
-        $filename = substr(md5(uniqid(rand(), true)), 0, $img_name_length);
+    $status = 'ERROR';
+    $uploadedName = '';
+    $host = filter_input(INPUT_SERVER, 'HTTP_HOST') ?? filter_input(INPUT_SERVER, 'REQUEST URI');
+    if (!isset($host))
+        $message = "Could not determine host.";
+    else if (in_array($secret, $tokens)) {
         $target_file = $_FILES["file"]["name"];
         $fileType = pathinfo($target_file, PATHINFO_EXTENSION);
-        if (in_array($fileType, $img_extensions)) {
-            if (move_uploaded_file($_FILES["file"]["tmp_name"], $img_dir . $filename . '.' . $fileType))
-                $json = ['status' => 'OK', 'errormsg' => '', 'url' => $filename . '.' . $fileType];
-            else
-                $json = ['status' => 'ERROR', 'errormsg' => '', 'url' => 'File upload failed. Does the folder exist and did you CHMOD the folder?'];
-        } else $json = ['status' => 'ERROR', 'errormsg' => '', 'url' => 'File extension not allowed: ' . $fileType . '.'];
-    } else $json = ['status' => 'ERROR', 'errormsg' => '', 'url' => 'Invalid secret key.'];
-
-    echo(json_encode($json));
+        if (is_null($target_file)) {
+            $message = 'No file provided.';
+        } else if (in_array($fileType, $img_extensions)) {
+            $filename = substr(md5(uniqid(rand(), true)), 0, $img_name_length);
+            $date = date("Ymd");
+            $target_dir = $img_dir . '/' . $date;
+            if(!file_exists($target_dir))
+                mkdir($target_dir, 0750, true);
+            if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_dir . '/' . $filename . '.' . $fileType)) {
+                $status = 'OK';
+                $uploadedName = $date . '/' . $filename . '.' . $fileType;
+                $message = '';
+            } else
+                $message = 'File upload failed. Does the folder exist?';
+        } else $message = 'File extension not allowed: ' . $target_file . '.';
+    } else $message = 'Invalid access token.';
+    $ref = $_SERVER['HTTP_REFERER'];
+    // Request is probably from user interface, redirect;
+    if (isset($ref)  && parse_url($ref, PHP_URL_HOST) == $host) {
+        if ($status == 'OK')
+            header("Location: i/" . $uploadedName);
+        else
+            header("Location: error.php?error=" . urlencode($message));
+    } else {
+        $json = ['status' => $status, 'errormsg' => $message, 'url' => 'https://'.$host.'/'.$img_dir.$uploadedName];
+        echo json_encode($json);
+    }
 }

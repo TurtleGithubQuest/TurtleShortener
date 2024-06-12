@@ -10,9 +10,13 @@ $img_extensions = $settings['img_extensions'];
     <meta charset="UTF-8">
     <title>trt.ls</title>
     <link rel="stylesheet" href="css/turtle.css">
+    <link rel="stylesheet" href="css/third-party/josetxu_turtle.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
 </head>
 <body>
-<div class="turtle-box" style="position:absolute; top: 20%; right: 2%; opacity: 80%">
+<div class="turtle-box" style="position:absolute; top: 20%; right: 2%">
     <div class="bubbles">
         <div class="bubble b1"></div>
         <div class="bubble b2"></div>
@@ -50,13 +54,17 @@ $img_extensions = $settings['img_extensions'];
 </div>
 <div class="index-box flex-col">
     <div class="title">Turtle Images</div>
-    <form class="t-form flex-col" action="upload.php" method="post" style="border: 4px dashed #fff; min-width: 15rem">
+    <form class="t-form flex-col" action="upload.php" method="post" enctype="multipart/form-data" style="border: 4px dashed #fff; min-width: 15rem">
         <input type="file" name="file" spellcheck="false" maxlength="2083" required>
         <input type="text" name="secret" placeholder="your access token" required style="z-index:1; text-align: center">
         <p>Drag and drop here</p>
         <sub>Supported extensions: <?php echo "[".implode(", ", $img_extensions)."]"; ?></sub>
         <input type="submit" value="Upload" style="z-index: 1;">
     </form>
+    <?php
+        if (isset($_GET["error"]))
+            echo $_GET["error"];
+    ?>
 </div>
 </body>
 </html>

@@ -9,7 +9,7 @@ html, body {
   --bs-text-opacity: 1;
   color: $text !important;
   background-color: darken($background, 11%);
-  width: 100%;
+  //width: 100%;
 }
 html {
   @include scrollie-vertical-1;
@@ -56,7 +56,7 @@ body {
 .index-box {
   display: flex;
   position: relative;
-  height: 100%;
+  //height: 100%;
   align-content: center;
   text-align: center;
   .title {
@@ -172,7 +172,8 @@ body {
     font-size: 1.1rem;
     align-self: center;
     width: 50%;
-    border-radius: 0.1rem;
+    border-radius: 0.15rem;
+    margin: 0.5rem 0;
     &:hover {
       background-color: darken($background, 20%);
     }

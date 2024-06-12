@@ -1,4 +1,6 @@
 <?php
+if (isset($_GET["sid"]))
+    session_id($_GET["sid"]);
 session_start();
 require_once(__DIR__ . '/php/model/short.php');
 ?>
@@ -15,7 +17,7 @@ require_once(__DIR__ . '/php/model/short.php');
 </head>
 <body>
 <div class="tools">
-    <form action="php/tools.php" method="post">
+    <form action="php/tools.php?t=clear" method="post">
         <input type="image" class="broom" src="img/svg/broom.svg" alt="Clean cookies">
     </form>
 </div>
@@ -57,22 +59,26 @@ require_once(__DIR__ . '/php/model/short.php');
 </div>
 <div class="index-box flex-col">
     <div class="title">Turtle Shortener</div>
-    <form class="t-form flex-col" action="shorten.php" method="post">
+    <form class="t-form flex-col" action="shorten.php?sid=<?php
+        if (isset($_GET['sid'])) echo $_GET['sid'];
+        else echo session_id();
+    ?>" method="post">
         <label>Url address<input type="url" name="url" placeholder="very long url.." spellcheck="false" maxlength="2083" required></label>
         <label>Expiration<input type="date" name="expiration"></label>
         <input type="submit" value="Shorten">
     </form>
     <section class="results flex-col"><?php
     if (isset($_SESSION["error"])) {
-        echo '<p>$_SESSION["error"]</p>';
+        echo '<p>'.$_SESSION["error"].'</p>';
         unset($_SESSION["error"]);
         exit;
     }
     if (isset($_SESSION["shortened_array"])) {
         $array = $_SESSION["shortened_array"];
         $size = count($array);
-        echo "<div>$size result(s) found:</div>";
-        foreach (array_reverse($_SESSION["shortened_array"], true) as $index => $value) {
+        if ($size > 0)
+            echo "<div>$size shortened url(s) found:</div>";
+        foreach (array_reverse($array, true) as $index => $value) {
             $shortened = unserialize($value);
             $url = $shortened->url;
             $shortenedUrl = $shortened->shortenedUrl;

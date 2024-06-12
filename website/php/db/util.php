@@ -1,10 +1,10 @@
 <?php
 class DbUtil {
-    private static $pdo = null;
+    private static ?PDO $pdo = null;
 
-    public static function getPdo() {
+    public static function getPdo(): PDO {
         if (self::$pdo == null) {
-            $settings = require_once(__DIR__ . '/../settings.php');
+            $settings = require(__DIR__ . '/../settings.php');
             $db_host = $settings['db_host'];
             $db_name = $settings['db_name'];
             $db_user = $settings['db_user'];

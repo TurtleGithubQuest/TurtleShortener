@@ -5,7 +5,7 @@ session_start();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Error: <?php echo $_SESSION['error_code']; ?></title>
+    <title>Error<?php if(isset($_SESSION['error_code'])) echo ": ".$_SESSION['error_code']; ?></title>
     <link rel="stylesheet" href="css/turtle.css">
     <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
@@ -18,10 +18,12 @@ session_start();
             if (isset($_SESSION['error'])) {
                 echo $_SESSION['error'];
                 unset($_SESSION['error']);
-            } else echo "404: Not found";
+            } else if(isset($_GET['error']))
+                echo $_GET['error'];
+            else echo "404: Not found";
         ?>
         </div>
-        <img src="jfif/turtle_0.jfif" alt="turtle" width="50%" style="border-radius:0.3rem">
+        <img src="img/jfif/turtle_0.jfif" alt="turtle" width="50%" style="border-radius:0.3rem">
     </div>
 </body>
 </html>

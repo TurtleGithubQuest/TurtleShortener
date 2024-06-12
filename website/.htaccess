@@ -1,4 +1,6 @@
+Options -Indexes
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /shorten.php?s=$1 [L,QSA]
+RewriteRule ^(.*)$ /preview.php?s=$1 [L,QSA]
