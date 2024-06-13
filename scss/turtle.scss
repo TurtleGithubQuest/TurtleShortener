@@ -9,7 +9,6 @@ html, body {
   --bs-text-opacity: 1;
   color: $text !important;
   background-color: darken($background, 11%);
-  //width: 100%;
 }
 html {
   @include scrollie-vertical-1;
@@ -37,15 +36,18 @@ body {
 }
 @media only screen and (max-device-width : 768px), only screen and (max-width : 768px) {
   .title {
-    font-size: 4rem !important;
+    font-size: 3rem !important;
   }
   .index-box {
     .t-form {
-      max-width: 92% !important;
+      max-width: 80% !important;
       width: 100% !important;
       padding: 0 1rem !important;
-      label {font-size: 2.5rem !important;}
-      input {font-size: 2rem !important;}
+      label {font-size: 1.8rem !important;}
+      input {font-size: 1.65rem !important;}
+    }
+    .results {
+      max-width: unset !important;
     }
   }
   .turtle-box {
@@ -56,7 +58,6 @@ body {
 .index-box {
   display: flex;
   position: relative;
-  //height: 100%;
   align-content: center;
   text-align: center;
   .title {
@@ -84,15 +85,19 @@ body {
     display: flex;
     margin: 1rem 5rem 0;
     line-break: anywhere;
+    align-self: center;
+    gap: .5rem;
+    max-width: 50%;
+    .result-table {
+      flex: 1 1 auto;
+    }
   }
   .result-table {
-    margin: .5rem 7rem 0;
+    //margin: .5rem 7rem 0;
     padding: 0.13rem;
     background-color: darken($background, 15%);
-    align-self: center;
     border: 0.2rem solid darken($background, 25%);
     border-radius: 0.33rem;
-    width: 0;
     min-width: fit-content;
     div {
       color: darken($text, 16%);
@@ -100,6 +105,37 @@ body {
       line-break: anywhere;
       line-height: 1rem;
       max-height: 2rem;
+    }
+    .copy-wrapper {
+      position: relative;
+      margin: 0 0 0 0.3rem;
+      width: 1.44rem;
+      user-select: none;
+      img {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        transition: all 100ms ease-in;
+      }
+      &:hover {
+        img:first-child {
+          transform: translate(-50%, -50%) scale(115%);
+        }
+      }
+      img:last-child {
+        opacity: 0;
+        scale: 0;
+      }
+      &.success {
+        img:first-child {
+          transform: translate(-50%, -50%) scale(0);
+        }
+        img:last-child {
+          opacity: 1;
+          scale: 100%;
+        }
+      }
     }
     table {
       width: 100%;
@@ -118,13 +154,15 @@ body {
           text-wrap: pretty;
         }
         td {
-          display: block;
+          display: flex;
           max-height: 35vw;
           overflow: hidden;
+          justify-content: center;
           a {
             width: fit-content;
             overflow: hidden;
             overflow-wrap: anywhere;
+            align-self: center;
           }
         }
       }
@@ -151,7 +189,7 @@ body {
     padding: 0.7rem 0;
     width: 100%;
   }
-  input[type=text], input[type=date], input[type=url] {
+  input[type=text], input[type=date], input[type=datetime-local], input[type=url] {
     font-size: 1rem;
     background-color: darken($background, 15%);
     &:focus {
@@ -162,7 +200,9 @@ body {
     }
     &::-webkit-datetime-edit-day-field:focus,
     &::-webkit-datetime-edit-month-field:focus,
-    &::-webkit-datetime-edit-year-field:focus {
+    &::-webkit-datetime-edit-year-field:focus,
+    &::-webkit-datetime-edit-hour-field:focus,
+    &::-webkit-datetime-edit-minute-field:focus, {
         background-color: darken($background, 4%);
         color: lighten($text, 3%);
     }

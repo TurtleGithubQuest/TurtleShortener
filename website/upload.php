@@ -37,7 +37,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['secret'])) {
     // Request is probably from user interface, redirect;
     if (isset($ref)  && parse_url($ref, PHP_URL_HOST) == $host) {
         if ($status == 'OK')
-            header("Location: i/" . $uploadedName);
+            header("Location: ". $img_dir . $uploadedName);
         else
             header("Location: error.php?error=" . urlencode($message));
     } else {

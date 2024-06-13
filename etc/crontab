@@ -1,0 +1,2 @@
+# Upkeep - removes expired urls
+0 * * * * /usr/bin/php /php/db/upkeep.php?token={server_tokens}

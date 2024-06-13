@@ -9,4 +9,6 @@ if ($tool == "clear") {
     exit;
 } else if ($tool == "migratedb") {
     echo require("db/migrate.php");
+} else if ($tool == "upkeep") {
+    echo require("db/upkeep.php");
 }

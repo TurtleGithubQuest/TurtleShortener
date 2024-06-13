@@ -12,10 +12,10 @@ const { values, positionals } = parseArgs({
 });
 const outdir = values["outdir"];
 const buildOutput = await Bun.build({
-  entrypoints: ['./src/shortener.js'],
+  entrypoints: ['./src/turtle.js'],
   outdir: outdir ? outdir : '../website/js',
   external: [],
-  minify: false,
+  minify: true,
 })
 if (!buildOutput.success) {
   console.error(buildOutput.logs);

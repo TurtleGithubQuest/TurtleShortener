@@ -1,6 +1,11 @@
 Options -Indexes
 
 RewriteEngine On
+RewriteBase /
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /preview.php?s=$1 [L,QSA]
+
+RewriteRule ^(.*)\+$ preview.php?s=$1&preview=true [L,QSA]
+
+RewriteRule ^([a-zA-Z0-9_-]+)$ preview.php?s=$1 [L,QSA]

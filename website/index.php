@@ -14,6 +14,7 @@ require_once(__DIR__ . '/php/model/short.php');
     <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
+    <script src="js/turtle.js"></script>
 </head>
 <body>
 <div class="tools">
@@ -63,8 +64,8 @@ require_once(__DIR__ . '/php/model/short.php');
         if (isset($_GET['sid'])) echo $_GET['sid'];
         else echo session_id();
     ?>" method="post">
-        <label>Url address<input type="url" name="url" placeholder="very long url.." spellcheck="false" maxlength="2083" required></label>
-        <label>Expiration<input type="date" name="expiration"></label>
+        <label>Url address<input type="text" name="url" placeholder="very long url.." spellcheck="false" maxlength="2083" required></label>
+        <label>Expiration<input type="datetime-local" name="expiration" value="<?php echo date('Y-m-d\TH:i', strtotime('+1 week')); ?>"></label>
         <input type="submit" value="Shorten">
     </form>
     <section class="results flex-col"><?php
@@ -87,15 +88,20 @@ require_once(__DIR__ . '/php/model/short.php');
                 <table>
                   <tr>
                     <th>shortened url</th>
-                    <td><a href="https://'.$shortenedUrl.'">'.$shortenedUrl.'</a></td>
+                    <td><a href="https://'.$shortenedUrl.'">'.$shortenedUrl.'</a>
+                        <span class="copy-wrapper" title="click to copy url" onclick="copyValue(this)" copyValue="https://'.$shortenedUrl.'">
+                            <img src="img/svg/copy.svg" alt="copy">
+                            <img src="img/svg/success.svg" alt="copy-success">
+                        </span>
+                    </td>
                   </tr>
                   <tr>
                     <th>created at</th>
-                    <td>'.$shortened->getCreationDate().'</td>
+                    <td unix="'.$shortened->created.'">'.$shortened->getCreationDate().'</td>
                   </tr>
                   <tr>
                     <th>expiration</th>
-                    <td>'.$shortened->getExpiryFormatted().'</td>
+                    <td unix="'.$shortened->expiry.'">'.$shortened->getExpiryFormatted().'</td>
                   </tr>
                 </table></div>
             ';
@@ -104,5 +110,15 @@ require_once(__DIR__ . '/php/model/short.php');
     ?>
     </section>
 </div>
+<script>
+window.addEventListener('DOMContentLoaded', async (e) => {
+    const dateInput = document.querySelector('input[type=datetime-local]')
+    updateInputElementDate(dateInput)
+    for (const el of document.querySelectorAll('[unix]')) {
+        const unix = el.getAttribute('unix')*1000;
+        updateElementTextDate(el, unix);
+    }
+});
+</script>
 </body>
 </html>
