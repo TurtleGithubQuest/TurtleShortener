@@ -17,7 +17,7 @@ $stmt->execute([$currentUnix]);
 $rowCount = $stmt->rowCount();
 
 if ($rowCount > 0) {
-    require_once(__DIR__.'/../log.php');
+    require_once(__DIR__ . '/../log.php');
     $log = LogUtil::getInstance();
     $log->log("Deleted (".$rowCount.") expired urls.");
     echo "Deleted (".$rowCount.") expired urls.";

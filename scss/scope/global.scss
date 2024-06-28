@@ -1,0 +1,102 @@
+@use "../var/font" as *;
+@use "../fn/scrollbar" as *;
+@use "header.scss" as *;
+@import "../var/color";
+html, body {
+  * {
+    @include JetBrainsMono;
+  }
+  --bs-text-opacity: 1;
+  color: $text !important;
+  background-color: darken($background, 11%);
+}
+html {
+  @include scrollie-vertical-1;
+  font-size: 1rem;
+  scroll-padding-top: 3.7rem;
+}
+body {
+  margin:0; padding:0;
+  width: 100vw;
+  height: 100vh;
+}
+.bookmark {
+  position: sticky;
+  display: inline-block;
+  color: white;
+  font-size: 0.9rem;
+  text-decoration: none;
+  left: 90%;
+  border-right: $pink_lobster 0.1rem solid;
+  padding-right: 0.1rem;
+}
+#work_experience, #knowledge, #knowledge_chart, #projects, #education {
+  width: 100%;
+}
+#knowledge_chart {
+  height: 18rem;
+}
+#wrapper-content > div {
+  animation: 0.95s cubic-bezier(.65,.23,.21,.88) popout;
+}
+.d-flex {
+  display: flex;
+}
+.row {
+  flex-flow: row;
+}
+.justify-content-center {
+  justify-content: center;
+}
+.exp_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 1rem;
+  .title {
+    display: flex;
+    flex: 1 0 45%;
+    text-decoration: underline;
+    align-items: center;
+    color: lighten($text, 8%);
+    img {
+      max-height: 1.1rem;
+      margin: 0 0.2rem;
+    }
+    sub {
+      margin-left: 0.2rem;
+      font-size: 0.6rem;
+      align-self: end;
+    }
+  }
+  .timeframe {
+    flex: 1 0 55%;
+    text-align: right;
+  }
+  .description {
+    width: 100%;
+    font-size: 0.9rem;
+    padding-left: 0.3rem;
+    color: darken($text, 8%);
+  }
+}
+hr {
+  margin: 2rem 0;
+  width: 30%;
+  border-color: darken($background, 35%);
+}
+a[href]:not(.bookmark) {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+  text-decoration-thickness: 0.1rem;
+  text-shadow: 0.02rem 0.02rem 0.02rem darken($rock_lobster, 12%);
+  &:hover {
+    color: lighten($background, 12%);
+    text-decoration: underline;
+  }
+}
+img.linkIcon {
+  position: relative;
+  bottom: -0.22rem;
+  max-height: 0.95rem;
+}

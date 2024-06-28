@@ -1,7 +1,7 @@
-@use "var/colors" as *;
-@use "var/fonts" as *;
-@use "function/scrollbar" as *;
-
+@use "var/color" as *;
+@use "var/font" as *;
+@use "scope/global" as *;
+/*
 html, body {
   * {
     @include JetBrainsMono;
@@ -33,7 +33,7 @@ body {
   margin:0; padding:0;
   width: 100vw;
   height: 100vh;
-}
+}*/
 @media only screen and (max-device-width : 768px), only screen and (max-width : 768px) {
   .title {
     font-size: 3rem !important;
