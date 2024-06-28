@@ -3,7 +3,7 @@
     $preview_mode = $_GET['preview'] ?? false;
     try {
         if (isset($_GET['s'])) {
-            require_once(__DIR__ . '/php/db/util.php');
+            require_once(__DIR__ . '/../db/util.php');
             $pdo = DbUtil::getPdo();
             $query = $preview_mode ?
                 "SELECT shortcode, url, expiry, created FROM urls WHERE shortcode = ?":
@@ -65,10 +65,6 @@
 </head><body>
 <?php
 if ($preview_mode) {
-    /*if (empty($data)) {
-        echo 'Error fetching data';
-        exit;
-    }*/
     require_once(__DIR__ . '/php/model/short.php');
     try {
         $shortened = new Shortened($data['shortcode'], "", $url, $data['expiry'], $data['created']);

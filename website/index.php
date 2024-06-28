@@ -86,7 +86,7 @@ loadLanguage();
             $array = $_SESSION["shortened_array"];
             $size = count($array);
             if ($size > 0)
-                echo '<div>$size '.$lang['shortened-found'].'</div>';
+                echo '<div>'.$size.$lang['shortened-found'].'</div>';
             foreach (array_reverse($array, true) as $index => $value) {
                 $shortened = unserialize($value);
                 $url = $shortened->url;

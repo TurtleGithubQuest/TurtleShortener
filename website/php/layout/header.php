@@ -4,12 +4,12 @@
         <!--<a class="title">Trt<sub>•</sub>ls</a>-->
     </section>
     <section class="right">
-        <section class="collapsable">
+        <section class="collapsable" style="display: none">
             <section class="burger">
                 <img src="img/svg/burger.svg" alt="burgerline1">
             </section>
             <section class="items">
-                <a><?php echo $lang['preview-url']; ?></a>
+                <a href="preview"><?php echo $lang['preview-url']; ?></a>
             </section>
         </section>
         <div class="dropdown">
