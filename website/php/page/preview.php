@@ -21,7 +21,7 @@
         if (!empty($url)) {
             if (!$is_bot && !$preview_mode)
                 header('Location: ' . $url);
-        } else header('Location: /error.php?error=Shortened+url+not+found');
+        } else header('Location: /error.php?error='.urlencode('Shortened url "'. ($url ?? 'none') .'" not found.'));
     }
 ?>
 <!DOCTYPE html>
@@ -65,7 +65,7 @@
 </head><body>
 <?php
 if ($preview_mode) {
-    require_once(__DIR__ . '/php/model/short.php');
+    require_once(__DIR__ . '/../model/short.php');
     try {
         $shortened = new Shortened($data['shortcode'], "", $url, $data['expiry'], $data['created']);
     } catch (Exception $e) {

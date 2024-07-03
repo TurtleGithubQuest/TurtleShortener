@@ -11,9 +11,9 @@ session_start();
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
 </head>
-<body>
-    <div style="display: flex; align-items: center; text-align: center; flex-flow: column; margin-top: 1%; font-size: x-large">
-        <div class="JetBrainsMono_Italic" style="margin: 1rem 0">
+<body style="overflow: hidden">
+    <div class="error-wrapper">
+        <div class="text">
         <?php
             if (isset($_SESSION['error'])) {
                 echo $_SESSION['error'];
@@ -23,7 +23,7 @@ session_start();
             else echo "404: Not found";
         ?>
         </div>
-        <img src="img/jfif/turtle_0.jfif" alt="turtle" width="50%" style="border-radius:0.3rem">
+        <div class="error-img"><img src="img/jfif/turtle_0.jfif" alt="turtle"></div>
     </div>
 </body>
 </html>

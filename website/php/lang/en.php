@@ -9,4 +9,7 @@ $lang = array(
     "created-at" => "Created at",
     "shortened-url" => "Shortened URL",
     "preview-url" => "Preview URL",
+    "hours" => "hours",
+    "days" => "days",
+    "month" => "month"
 );

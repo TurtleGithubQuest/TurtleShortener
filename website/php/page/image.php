@@ -1,6 +1,6 @@
 <?php
 session_start();
-$settings = require_once(__DIR__ . '/php/settings.php');
+$settings = require_once(__DIR__ . '/../settings.php');
 $img_name_length = $settings['img_name_length'];
 $img_extensions = $settings['img_extensions'];
 ?>

@@ -69,10 +69,23 @@ loadLanguage();
             else echo session_id();
         ?>" method="post">
             <?php
-                $expirationDate = date('Y-m-d\TH:i', strtotime('+1 week'));
+                $expValue = $_GET["exp"] ?? 10080; # Default 1 week
+                if (!filter_var($expValue, FILTER_VALIDATE_INT) || $expValue <= 0) {
+                    $expValue = 10080;
+                }
+                $expValue = (int)$expValue*60;
+                $expTime = time() + ($expValue);
+                $expirationDate = date('Y-m-d\TH:i', $expTime);
+                $queryParams = getQueryParams();
                 echo '
                     <label>'.$lang['url-address'].'<input type="text" name="url" placeholder="'.$lang['url-address.placeholder'].'" spellcheck="false" maxlength="2083" required></label>
                     <label>'.$lang['expiration'].'<input type="datetime-local" name="expiration" value="'.$expirationDate.'"></label>
+                    <div class="expiration-time">
+                        <a href="'.buildQuery("exp", 360, $queryParams).'">6 '.$lang['hours'].'</a>
+                        <a href="'.buildQuery("exp", 2880, $queryParams).'">48 '.$lang['hours'].'</a>
+                        <a href="'.buildQuery("exp", 20160, $queryParams).'">14 '.$lang['days'].'</a>
+                        <a href="'.buildQuery("exp", 40320, $queryParams).'">1 '.$lang['month'].'</a>
+                    </div>
                     <input type="submit" value="'.$lang['shorten'].'">';
             ?>
         </form>
@@ -124,7 +137,7 @@ loadLanguage();
 <script>
 window.addEventListener('DOMContentLoaded', async (e) => {
     const dateInput = document.querySelector('input[type=datetime-local]')
-    updateInputElementDate(dateInput, Date.now()+604800000)
+    updateInputElementDate(dateInput, <?php echo $expTime*1000; ?>)
     for (const el of document.querySelectorAll('[unix]')) {
         const unix = el.getAttribute('unix')*1000;
         updateElementTextDate(el, unix);

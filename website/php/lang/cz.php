@@ -8,5 +8,8 @@ $lang = array(
     "shortened-found" => "x zkrácený odkaz:",
     "created-at" => "Vytvořeno",
     "shortened-url" => "Zkrácený odkaz",
-    "preview-url" => "Informace o odkazu"
+    "preview-url" => "Informace o odkazu",
+    "hours" => "hodin",
+    "days" => "dní",
+    "month" => "měsíc"
 );

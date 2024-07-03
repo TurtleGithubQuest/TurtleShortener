@@ -9,6 +9,7 @@ session_start();
 require_once(__DIR__ . '/../db/util.php');
 require_once(__DIR__ . '/../model/short.php');
 require_once(__DIR__ . '/../../composer/vendor/autoload.php');
+require_once(__DIR__ . '/utils.php');
 use Ulid\Ulid;
 $pdo = DbUtil::getPdo();
 
@@ -58,7 +59,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
         $json_data = ['error' => $errorMessage];
     } finally {
         if ($should_redirect)
-            header('Location: https://'.$_SERVER['HTTP_HOST'].'/index.php?sid='.session_id());
+            header('Location: '.getProtocol().'://'.$_SERVER['HTTP_HOST'].'/index.php?sid='.session_id());
         else echo json_encode($json_data);
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['s'])) {

@@ -6,6 +6,13 @@ RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule ^(.*)\+$ preview.php?s=$1&preview=true [L,QSA]
+RewriteRule ^upload$ /php/fn/upload.php [L,QSA]
 
-RewriteRule ^([a-zA-Z0-9_-]+)$ preview.php?s=$1 [L,QSA]
+RewriteRule ^image$ /php/page/image.php [L,QSA]
+
+RewriteRule ^shorten$ /php/fn/shorten.php [L,QSA]
+
+RewriteRule ^(.*)\+$ php/page/preview.php?s=$1&preview=true [L,QSA]
+
+RewriteRule ^([a-zA-Z0-9_-]+)$ php/page/preview.php?s=$1 [L,QSA]
+
