@@ -14,10 +14,14 @@
         </section>
         <div class="dropdown">
             <img src="img/svg/flag/<?php echo $user_language ?>.svg" alt="selected language"/>
+            <?php
+            $queryParams = getQueryParams();
+            echo '
             <div class="dropdown-menu">
-                <a href="?lang=en"><img src="img/svg/flag/en.svg" alt="English" />English</a>
-                <a href="?lang=cz"><img src="img/svg/flag/cz.svg" alt="Czech" />Čeština</a>
-            </div>
+                <a href="'.buildQuery("lang", "en", $queryParams).'"><img src="img/svg/flag/en.svg" alt="English" />English</a>
+                <a href="'.buildQuery("lang", "cz", $queryParams).'"><img src="img/svg/flag/cz.svg" alt="Czech" />Čeština</a>
+            </div>';
+            ?>
         </div>
     </section>
 </nav>

@@ -192,7 +192,7 @@ body {
       padding:0;
     }
   }
-  input[type=text], input[type=date], input[type=datetime-local], input[type=url] {
+  input[type=text], input[type=date], input[type=datetime-local], input[type=url], input[type=password] {
     font-size: 1rem;
     background-color: darken($background, 15%);
     &:focus {

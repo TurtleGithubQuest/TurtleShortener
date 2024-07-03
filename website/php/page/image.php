@@ -54,16 +54,16 @@ $img_extensions = $settings['img_extensions'];
 </div>
 <div class="index-box flex-col">
     <div class="title">Turtle Images</div>
-    <form class="t-form flex-col" action="upload.php" method="post" enctype="multipart/form-data" style="border: 4px dashed #fff; min-width: 15rem">
+    <form class="t-form flex-col" action="upload" method="post" enctype="multipart/form-data" style="border: 4px dashed #fff; min-width: 15rem">
         <input type="file" name="file" spellcheck="false" maxlength="2083" required>
-        <input type="text" name="secret" placeholder="your access token" required style="z-index:1; text-align: center">
+        <label><input type="password" name="secret" placeholder="your access token" required style="z-index:1; text-align: center"></label>
         <p>Drag and drop here</p>
         <sub>Supported extensions: <?php echo "[".implode(", ", $img_extensions)."]"; ?></sub>
         <input type="submit" value="Upload" style="z-index: 1;">
     </form>
     <?php
         if (isset($_GET["error"]))
-            echo $_GET["error"];
+            echo "Error: ".$_GET["error"];
     ?>
 </div>
 </body>
