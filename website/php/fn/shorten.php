@@ -14,7 +14,6 @@ use Ulid\Ulid;
 $pdo = DbUtil::getPdo();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
-    //
     $url = (string) $_POST['url'];
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
         $_SESSION["error"] = "'$url' is not a valid url.";
@@ -31,8 +30,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
             $expiry = $timestamp;
     }
     try {
-        $stmt = $pdo->prepare("SELECT shortcode, expiry, created FROM urls WHERE url = ?");
-        $stmt->execute([$url]);
+        $stmt = $pdo->prepare("SELECT shortcode, expiry, created FROM urls WHERE url = ? or shortcode = ?");
+        $stmt->execute([$url, $_POST["alias"]??null]);
         $data = $stmt->fetch();
         if ($data) {
            $shortcode = $data["shortcode"];
@@ -40,7 +39,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
            $created = strtotime($data['created']);
         } else {
             $ulid = Ulid::generate();
-            $shortcode = substr(md5(uniqid(rand(), true)), 0, 6);
+            $alias = $_POST["alias"] ?? "!";
+            $pattern = '/^[a-zA-Z0-9\-_.~]+$/';
+            $shortcode = preg_match($pattern, $alias) ? $alias : substr(md5(uniqid(rand(), true)), 0, 6);
             $stmt = $pdo->prepare("INSERT INTO urls (ulid, shortcode, url, expiry) VALUES (?, ?, ?, ?)");
             $stmt->execute([$ulid, $shortcode, $url, $expiry]);
             $created = null;
@@ -59,7 +60,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
         $json_data = ['error' => $errorMessage];
     } finally {
         if ($should_redirect)
-            header('Location: '.getProtocol().'://'.$_SERVER['HTTP_HOST'].'/index.php?sid='.session_id());
+            header('Location: '.getProtocol().'://'.$_SERVER['HTTP_HOST'].'/?sid='.session_id());
         else echo json_encode($json_data);
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['s'])) {

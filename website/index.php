@@ -86,6 +86,8 @@ loadLanguage();
                         <a href="'.buildQuery("exp", 20160, $queryParams).'">14 '.$lang['days'].'</a>
                         <a href="'.buildQuery("exp", 40320, $queryParams).'">1 '.$lang['month'].'</a>
                     </div>
+                    <label for="alias">Alias <input type="text" name="alias" placeholder="'.$lang['alias.placeholder'].'" pattern="[a-zA-Z0-9\-_\.~]+" maxlength="6"></label>
+                    <sup>[a-zA-Z0-9\-_\.~]+</sup>
                     <input type="submit" value="'.$lang['shorten'].'">';
             ?>
         </form>

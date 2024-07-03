@@ -11,5 +11,6 @@ $lang = array(
     "preview-url" => "Preview URL",
     "hours" => "hours",
     "days" => "days",
-    "month" => "month"
+    "month" => "month",
+    "alias.placeholder" => "(optional) shortcode"
 );

@@ -11,5 +11,6 @@ $lang = array(
     "preview-url" => "Informace o odkazu",
     "hours" => "hodin",
     "days" => "dní",
-    "month" => "měsíc"
+    "month" => "měsíc",
+    "alias.placeholder" => "kód (nepovinné)"
 );

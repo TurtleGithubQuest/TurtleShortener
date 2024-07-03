@@ -5,7 +5,7 @@ class LogUtil {
 
     private function __construct() {
         $date = date('Y-m-d');
-        $logDir = __DIR__."/../logs";
+        $logDir = __DIR__."/../../logs";
         if (!is_dir($logDir)) {
             mkdir($logDir, 0777, true);
         }
