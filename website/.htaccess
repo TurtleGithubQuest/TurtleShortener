@@ -6,11 +6,7 @@ RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule ^upload$ /php/fn/upload.php [L,QSA]
-
-RewriteRule ^image$ /php/page/image.php [L,QSA]
-
-RewriteRule ^shorten$ /php/fn/shorten.php [L,QSA]
+RewriteRule ^(upload|image|shorten|search)$ /php/fn/$1.php [L,QSA]
 
 RewriteRule ^(.*)\+$ php/page/preview.php?s=$1&preview=true [L,QSA]
 

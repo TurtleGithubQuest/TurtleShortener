@@ -12,5 +12,6 @@ $lang = array(
     "hours" => "hours",
     "days" => "days",
     "month" => "month",
-    "alias.placeholder" => "(optional) shortcode"
+    "alias.placeholder" => "(optional) shortcode",
+    "search-url" => "Search URL",
 );

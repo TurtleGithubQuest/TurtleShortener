@@ -12,5 +12,6 @@ $lang = array(
     "hours" => "hodin",
     "days" => "dní",
     "month" => "měsíc",
-    "alias.placeholder" => "kód (nepovinné)"
+    "alias.placeholder" => "kód (nepovinné)",
+    "search-url" => "Hledej odkaz",
 );

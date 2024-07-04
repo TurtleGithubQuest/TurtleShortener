@@ -1,4 +1,5 @@
 @use "../var/font" as *;
+@use "../fn/scrollbar" as *;
 @import "../var/color";
 nav {
   position: sticky;
@@ -61,6 +62,75 @@ nav {
           transform: rotateX(-10deg) scale(1.06);
         }
       }
+      form.search {
+        display: flex;
+        align-items: center;
+        height: 2rem;
+        border: 0.1rem solid darken($background, 15%);
+        border-radius: 0.2rem;
+        input:hover {
+          background-color: darken($background, 5%) !important;
+        }
+        input:-webkit-autofill {
+          -webkit-box-shadow: 0 0 3.125rem darken($background, 15%) inset !important;
+          background-color: transparent !important;
+          background-clip: text;
+          -webkit-text-fill-color: $text !important;
+        }
+        input[type="image"] {
+          background-color: darken($background, 7%);
+          height: 1.75rem;
+          padding: 0.15rem;
+          margin: 0.05rem;
+          border-radius: 0.15rem;
+        }
+        label {
+          border-right: 0.1rem solid darken($background, 15%);
+          height: 100%; width: 100%;
+          align-content: center;
+          overflow: hidden;
+        }
+        input[type="text"] {
+          background-color: darken($background, 10%);
+          border: none;
+          padding: 0 0 0 0.5rem; //left 0.5rem
+          height: 100%; width: 100%;
+          color: $text;
+          &:focus {
+            background-color: darken($background, 5%);
+            outline: none;
+          }
+        }
+      }
+      #searchResult {
+        @include scrollie-hidden;
+        display: flex;
+        flex-flow: column;
+        flex-wrap: wrap;
+        margin-bottom: -3rem;
+        background-color: darken($background, 6%);
+        //width: 100%;
+        width: 15rem;
+        overflow: scroll;
+        gap: 0.1rem;
+        border: 0.1rem solid darken($background, 15%);
+        a {
+          display: flex;
+          align-items: center;
+          background-color: darken($background, 3%);
+          &:hover {
+            background-color: darken($background, 7%);
+          }
+          .shortcode {
+            padding: 0 0.25rem;
+            color: darken($text, 10%);
+            font-size: 0.85rem;
+            &:hover {
+              background-color: darken($background, 12%);
+            }
+          }
+        }
+      }
     }
     &[data-collapsable=true] {
       flex-flow: column;
@@ -83,8 +153,8 @@ nav {
       &[data-collapsed=false] {
         .items {
           opacity: 1;
-          background-color: darken($background, 7%);
-          box-shadow: 0 0 0.05rem 0.02rem lighten($background, 5%);
+          //background-color: darken($background, 7%);
+          //box-shadow: 0 0 0.05rem 0.02rem lighten($background, 5%);
           //margin: 0.5rem;
           margin: 0.75rem 2rem;
           border-top-right-radius: 0.3rem;

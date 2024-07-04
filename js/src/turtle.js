@@ -1,5 +1,8 @@
+import {search} from "./fn/search.js";
+
 import("./util/misc.js")
 import("./util/date.js")
+import("./fn/search.js")
 
 //Navbar
 const navbar = document.querySelector('nav');
@@ -24,3 +27,14 @@ burgerCollapser.addEventListener('click', async (_) => {
     collapsableMenu.setAttribute('data-collapsed', (!(collapsableMenu.getAttribute('data-collapsed') === "true")).toString())
 });
 cookBurger()
+const searchForm = document.querySelector("form.search");
+const searchResults = searchForm.parentElement.querySelector('#searchResult');
+searchForm.addEventListener("submit", search);
+document.addEventListener('click', (e) => {
+    if (e.target === document.body || e.target.classList.contains("index-box")) {
+        searchResults.classList.add("d-none");
+    } else if (e.target.name === "q" && searchResults.innerHTML !== "") {
+        searchResults.classList.remove("d-none");
+    }
+})
+searchForm.style.display = "flex";

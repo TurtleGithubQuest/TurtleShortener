@@ -49,6 +49,7 @@
         }
         echo '<meta property="og:url" content="'.$url.'">';
         echo '<meta property="og:image" content="'.$url.'">';
+        echo '<meta property="og:image:secure_url" content="'.$url.'">';
         echo '<meta property="og:title" content="'.$title.'">';
         if (isset($description))
             echo '<meta property="og:description" content="'.$description.'">';

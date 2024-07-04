@@ -4,12 +4,16 @@
         <!--<a class="title">Trt<sub>•</sub>ls</a>-->
     </section>
     <section class="right">
-        <section class="collapsable" style="display: none">
+        <section class="collapsable">
             <section class="burger">
                 <img src="img/svg/burger.svg" alt="burgerline1">
             </section>
             <section class="items">
-                <a href="preview"><?php echo $lang['preview-url']; ?></a>
+                <form class="search" target="none" style="display: none">
+                    <label><input name="q" type="text" placeholder="<?php echo $lang['search-url']; ?>"></label>
+                    <input type="image" src="img/svg/magnifying-glass.svg" alt="Submit">
+                </form>
+                <div id="searchResult" class="d-none"></div>
             </section>
         </section>
         <div class="dropdown">
@@ -25,4 +29,3 @@
         </div>
     </section>
 </nav>
-

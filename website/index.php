@@ -78,7 +78,7 @@ loadLanguage();
                 $expirationDate = date('Y-m-d\TH:i', $expTime);
                 $queryParams = getQueryParams();
                 echo '
-                    <label>'.$lang['url-address'].'<input type="text" name="url" placeholder="'.$lang['url-address.placeholder'].'" spellcheck="false" maxlength="2083" required></label>
+                    <label>'.$lang['url-address'].'<input type="url" name="url" placeholder="'.$lang['url-address.placeholder'].'" spellcheck="false" maxlength="2083" required></label>
                     <label>'.$lang['expiration'].'<input type="datetime-local" name="expiration" value="'.$expirationDate.'"></label>
                     <div class="expiration-time">
                         <a href="'.buildQuery("exp", 360, $queryParams).'">6 '.$lang['hours'].'</a>
@@ -135,6 +135,7 @@ loadLanguage();
     </div>
     </div>
 </div>
+<iframe style="display: none" id="none"></iframe>
 <script src="js/turtle.js"></script>
 <script>
 window.addEventListener('DOMContentLoaded', async (e) => {
