@@ -6,11 +6,15 @@ export async function search(e) {
         method: "POST",
         body: formData
     });
-    function addResult(href, text) {
-        const result = createEl("a");
+    function addResult(href, text, hrefDisplay) {
+        const result = createEl("div", "result");
+        const urlA  = createEl("a");
         result.innerHTML = text;
-        if (href)
-            result.href = href;
+        if (hrefDisplay) {
+            urlA.href = href;
+            urlA.innerText = hrefDisplay;
+            result.append(urlA);
+        }
         results.append(result)
     }
     const items = e.target.parentElement;
@@ -26,8 +30,7 @@ export async function search(e) {
             const host = window.location.protocol + "//" + window.location.host;
             addResult(url, `
                 <a class="shortcode" href="${host}/${shortcode}+">[?]</a>
-                ${userFriendlyURL}
-            `);
+            `, userFriendlyURL);
         }
     } else {
         addResult(null, response.statusText)

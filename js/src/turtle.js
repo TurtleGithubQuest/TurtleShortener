@@ -38,3 +38,4 @@ document.addEventListener('click', (e) => {
     }
 })
 searchForm.style.display = "flex";
+searchForm.target = "none";

@@ -114,7 +114,7 @@ nav {
         overflow: scroll;
         gap: 0.1rem;
         border: 0.1rem solid darken($background, 15%);
-        a {
+        .result {
           display: flex;
           align-items: center;
           background-color: darken($background, 3%);

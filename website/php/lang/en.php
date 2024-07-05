@@ -14,4 +14,5 @@ $lang = array(
     "month" => "month",
     "alias.placeholder" => "(optional) shortcode",
     "search-url" => "Search URL",
+    "found-nothing" => "Nothing found"
 );
