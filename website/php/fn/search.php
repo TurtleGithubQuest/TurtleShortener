@@ -2,9 +2,15 @@
 include_once("utils.php");
 loadLanguage();
 $q = $_POST['q'] ?? $_GET['q'];
+function dataReturn($data): void {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST')
+        echo $data;
+    else
+        header('Location: /?found='.urlencode($data).'&lang='.$user_language);
+}
 if(empty($q)) {
     http_response_code(404);
-    echo json_encode(array(null=>$lang["found-nothing"]));
+    dataReturn(json_encode(array(null => array("url"=>$lang["found-nothing"]))));
     exit;
 }
 require_once(__DIR__."/../db/util.php");
@@ -20,7 +26,4 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if (empty($data))
     $data = array(null => array("url"=>$lang["found-nothing"]));
 $data = json_encode($data);
-if ($_SERVER['REQUEST_METHOD'] === 'POST' )
-    echo $data;
-else
-    header('Location: /?found='.urlencode($data).'&lang='.$user_language);
+dataReturn($data);
