@@ -17,7 +17,8 @@ $sql = "CREATE TABLE IF NOT EXISTS urls (
     shortcode VARCHAR(6) NOT NULL, #-- url shortcode placeholder
     url VARCHAR(2083) NOT NULL, #-- origin url
     expiry BIGINT, #-- date of expiration, null = url will last forever
-    created BIGINT DEFAULT (UNIX_TIMESTAMP()) #--DATE CREATED
+    created BIGINT DEFAULT (UNIX_TIMESTAMP()), #--DATE CREATED
+    searchable BOOL
 )";
 
 $pdo->exec($sql);

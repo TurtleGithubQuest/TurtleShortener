@@ -14,5 +14,8 @@ $lang = array(
     "month" => "měsíc",
     "alias.placeholder" => "kód (nepovinné)",
     "search-url" => "Hledej odkaz",
-    "found-nothing" => "Nic nenalezeno"
+    "found-nothing" => "Nic nenalezeno",
+    "include_in_search" => "Zobrazit v hledání",
+    1 => "ano",
+    0 => "ne",
 );

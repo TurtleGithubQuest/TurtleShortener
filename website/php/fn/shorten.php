@@ -29,7 +29,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
         if ($timestamp !== false)
             $expiry = $timestamp;
     }
-    $searchable = $_POST['searchable'] ?? true;
+    $searchable = !isset($_POST['searchable']) || $_POST['searchable'] == '1';
     try {
         $stmt = $pdo->prepare("SELECT shortcode, expiry, created FROM urls WHERE url = ? OR shortcode = ?");
         $stmt->execute([$url, $_POST["alias"]??null]);

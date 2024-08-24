@@ -6,7 +6,7 @@
             require_once(__DIR__ . '/../db/util.php');
             $pdo = DbUtil::getPdo();
             $query = $preview_mode ?
-                "SELECT shortcode, url, expiry, created FROM urls WHERE shortcode = ?":
+                "SELECT shortcode, url, expiry, created, searchable FROM urls WHERE shortcode = ?":
                 "SELECT url FROM urls WHERE shortcode = ?";
             $stmt = $pdo->prepare($query);
             $shortCode = $_GET['s'];
@@ -92,6 +92,10 @@ if ($preview_mode) {
           <tr>
             <th>expiration</th>
             <td unix="'.$shortened->expiry.'">'.$shortened->getExpiryFormatted().'</td>
+          </tr>
+          <tr>
+            <th>Searchable</th>
+            <td>'.(($data['searchable']??true) ? "true" : "false").'</td>
           </tr>
         </table></div></div>
     ';

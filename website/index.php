@@ -89,7 +89,7 @@ loadLanguage();
                     </div>
                     <label for="alias">Alias <input type="text" name="alias" placeholder="'.$lang['alias.placeholder'].'" pattern="[a-zA-Z0-9\-_\.~]+" maxlength="6"></label>
                     <sup>[a-zA-Z0-9\-_\.~]+</sup>
-                    <label>'.$lang['include_in_search'].'<input type="checkbox" name="searchable" value="'.(($_GET['searchable']??1) ? "true" : "false").'" hidden>
+                    <label>'.$lang['include_in_search'].'<input type="text" name="searchable" value="'.(($_GET['searchable']??1) ? "true" : "false").'" hidden>
                     <a href="'.buildQuery("searchable", !($_GET['searchable']??1), $queryParams).'">'.$lang[$_GET['searchable']??1].'</a></label>
                     <input type="submit" value="'.$lang['shorten'].'">';
             ?>

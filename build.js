@@ -13,7 +13,7 @@ const { values, positionals } = parseArgs({
 const outdir = values["outdir"];
 const buildOutput = await Bun.build({
   entrypoints: ['./src/turtle.js'],
-  outdir: outdir ? outdir : '../website/js',
+  outdir: outdir ? outdir : './website/js',
   external: [],
   minify: true,
 })

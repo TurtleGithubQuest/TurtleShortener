@@ -1,15 +1,18 @@
 {
-  "name": "trt.ls",
-  "module": "index.ts",
+  "name": "dev.turtle.shortener",
+  "module": "",
   "type": "module",
   "scripts": {
-    "deploy": "bun run bun/tasks/deploy.ts",
-    "watch": "bun run bun/tasks/watch.ts"
+    "deploy": "bun run tasks/deploy.js",
+    "watch": "bun run tasks/watch.js"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "basic-ftp": "^5.0.5"
   }
 }
