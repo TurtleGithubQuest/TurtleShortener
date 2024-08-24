@@ -1,0 +1,15 @@
+{
+  "name": "trt.ls",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "deploy": "bun run bun/tasks/deploy.ts",
+    "watch": "bun run bun/tasks/watch.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
