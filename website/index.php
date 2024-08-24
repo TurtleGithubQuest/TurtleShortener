@@ -89,6 +89,7 @@ loadLanguage();
                     </div>
                     <label for="alias">Alias <input type="text" name="alias" placeholder="'.$lang['alias.placeholder'].'" pattern="[a-zA-Z0-9\-_\.~]+" maxlength="6"></label>
                     <sup>[a-zA-Z0-9\-_\.~]+</sup>
+                    <label><input type="checkbox" name="include_in_search" checked> '.$lang['include_in_search'].'</label>
                     <input type="submit" value="'.$lang['shorten'].'">';
             ?>
         </form>
