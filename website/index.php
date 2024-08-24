@@ -64,7 +64,7 @@ loadLanguage();
         </div>
     </div>
     <div class="index-box flex-col">
-        <div class="title">Turtle Shortener</div>
+        <div class="title">Turtle Shortenerv</div>
         <form class="t-form flex-col" action="php/fn/shorten.php?sid=<?php
             if (isset($_GET['sid'])) echo $_GET['sid'];
             else echo session_id();
@@ -89,7 +89,8 @@ loadLanguage();
                     </div>
                     <label for="alias">Alias <input type="text" name="alias" placeholder="'.$lang['alias.placeholder'].'" pattern="[a-zA-Z0-9\-_\.~]+" maxlength="6"></label>
                     <sup>[a-zA-Z0-9\-_\.~]+</sup>
-                    <label><input type="checkbox" name="include_in_search" checked> '.$lang['include_in_search'].'</label>
+                    <label>'.$lang['include_in_search'].'<input type="checkbox" name="searchable" value="'.(($_GET['searchable']??1) ? "true" : "false").'" hidden>
+                    <a href="'.buildQuery("searchable", !($_GET['searchable']??1), $queryParams).'">'.$lang[$_GET['searchable']??1].'</a></label>
                     <input type="submit" value="'.$lang['shorten'].'">';
             ?>
         </form>

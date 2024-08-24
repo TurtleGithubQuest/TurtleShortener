@@ -29,6 +29,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
         if ($timestamp !== false)
             $expiry = $timestamp;
     }
+    $searchable = $_POST['searchable'] ?? true;
     try {
         $stmt = $pdo->prepare("SELECT shortcode, expiry, created FROM urls WHERE url = ? OR shortcode = ?");
         $stmt->execute([$url, $_POST["alias"]??null]);
@@ -42,8 +43,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
             $alias = $_POST["alias"] ?? "!";
             $pattern = '/^[a-zA-Z0-9\-_.~]+$/';
             $shortcode = preg_match($pattern, $alias) ? $alias : substr(md5(uniqid(rand(), true)), 0, 6);
-            $stmt = $pdo->prepare("INSERT INTO urls (ulid, shortcode, url, expiry) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$ulid, $shortcode, $url, $expiry]);
+            $stmt = $pdo->prepare("INSERT INTO urls (ulid, shortcode, url, expiry, searchable) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$ulid, $shortcode, $url, $expiry, $searchable]);
             $created = null;
         }
         $shortenedUrl = $_SERVER['HTTP_HOST'] . '/' . $shortcode;
