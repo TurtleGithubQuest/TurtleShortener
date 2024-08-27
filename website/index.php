@@ -64,7 +64,7 @@ loadLanguage();
         </div>
     </div>
     <div class="index-box flex-col">
-        <div class="title">Turtle Shortenerv</div>
+        <div class="title">Turtle Shortener</div>
         <form class="t-form flex-col" action="php/fn/shorten.php?sid=<?php
             if (isset($_GET['sid'])) echo $_GET['sid'];
             else echo session_id();
