@@ -1,5 +1,5 @@
 <?php
-namespace Website\Php;
+namespace Website\php;
 
 use Website\php\fn\Utils;
 
