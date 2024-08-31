@@ -2,6 +2,7 @@ import { Client } from "basic-ftp";
 import { Readable } from "stream";
 import { build } from "./build.js";
 import path from "path";
+import { colorLog } from "./utils.js";
 
 const SERVER_HOST = process.env.SERVER_HOST;
 const SERVER_USER = process.env.SERVER_USER;
@@ -10,7 +11,7 @@ const SERVER_PATH = process.env.SERVER_PATH; // Default to root if not provided
 const LOCAL_PATH = "./website";
 
 if (!SERVER_USER || !SERVER_HOST || !SERVER_PATH || !SERVER_PASSWORD) {
-    console.error("Missing required environment variables. Please set SERVER_USER, SERVER_HOST, SERVER_PATH, and SERVER_PASSWORD.");
+    colorLog("RED", "Missing required environment variables. Please set SERVER_USER, SERVER_HOST, SERVER_PATH, and SERVER_PASSWORD.");
     process.exit(1);
 }
 
@@ -18,7 +19,7 @@ async function deploy() {
     const client = new Client();
 
     try {
-        console.log(`${getTimestamp()} Connecting to server...`);
+        colorLog("YELLOW", "Connecting to server...");
 
         await client.access({
             host: SERVER_HOST,
@@ -27,14 +28,14 @@ async function deploy() {
             secure: true, // Enable FTPS
         });
 
-        console.log(`${getTimestamp()} Connection established.`);
+        colorLog("GREEN", "Connection established.");
 
         // Step 1: Upload the entire website directory
-        console.log(`${getTimestamp()} Uploading directory: ${LOCAL_PATH}...`);
+        colorLog("YELLOW", `Uploading directory: ${LOCAL_PATH}...`);
         await client.uploadFromDir(LOCAL_PATH, SERVER_PATH);
 
         // Step 2: Generate and upload settings.php directly to the server
-        console.log(`${getTimestamp()} Generating settings.php...`);
+        colorLog("YELLOW", "Generating settings.php...");
         const settingsContent = `<?php
           return [
               'db_host' => '${process.env.DB_HOST || 'localhost'}',
@@ -52,23 +53,16 @@ async function deploy() {
         const settingsFilePath = path.join("php", "settings.php");
         const readableStream = Readable.from([settingsContent]);
         // Upload settings.php
-        console.log(`${getTimestamp()} Uploading settings.php...`);
+        colorLog("YELLOW", "Uploading settings.php...");
         await client.uploadFrom(readableStream, path.join(SERVER_PATH, settingsFilePath));
 
-        console.log(`${getTimestamp()} Deployment completed successfully!`);
+        colorLog("GREEN", "Deployment completed successfully!");
     } catch (error) {
-        console.error(`${getTimestamp()} Deployment failed:`, error);
+        colorLog("RED", `Deployment failed: ${error}`);
     } finally {
         client.close();
     }
 }
-function getTimestamp() {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    return `[${hours}:${minutes}:${seconds}]`;
-}
 
-await build()
+await build();
 await deploy();
