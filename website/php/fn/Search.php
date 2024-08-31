@@ -1,9 +1,12 @@
 <?php
-namespace Website\Php\Fn;
+namespace TurtleShortener\Misc;
 
-global $lang;
-include_once("utils.php");
-loadLanguage();
+require_once(__DIR__ . '/../bootstrap.php');
+
+use PDO;
+use TurtleShortener\Database\DbUtil;
+
+$GLOBALS['utils']->loadLanguage();
 $q = $_POST['q'] ?? $_GET['q'];
 function dataReturn($data): void {
     global $user_language;
@@ -17,7 +20,6 @@ if(empty($q)) {
     dataReturn(json_encode(array(null => array("url"=>$lang["found-nothing"]))));
     exit;
 }
-require_once(__DIR__."/../db/util.php");
 $pdo = DbUtil::getPdo();
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

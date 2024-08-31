@@ -31,7 +31,7 @@ async function deploy() {
         colorLog("GREEN", "Connection established.");
 
         // Step 1: Upload the entire website directory
-        colorLog("YELLOW", `Uploading directory: ${LOCAL_PATH}...`);
+        colorLog("YELLOW", `Uploading directory: '${LOCAL_PATH}' to '${SERVER_HOST}/${SERVER_PATH}'.`);
         await client.uploadFromDir(LOCAL_PATH, SERVER_PATH);
 
         // Step 2: Generate and upload settings.php directly to the server
@@ -63,6 +63,6 @@ async function deploy() {
         client.close();
     }
 }
-
 await build();
+colorLog("BRIGHT_MAGENTA", "Deploying..")
 await deploy();

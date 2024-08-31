@@ -1,5 +1,5 @@
 <?php
-namespace Website\Php\Fn;
+namespace TurtleShortener\Misc;
 
 error_reporting(E_ALL);
 if (isset($_GET["sid"]))
@@ -8,13 +8,19 @@ else if (isset($_POST["sid"]))
     session_id($_POST["sid"]);
 session_start();
 
-require_once(__DIR__ . '/../db/util.php');
+/*require_once(__DIR__ . '/../db/util.php');
 require_once(__DIR__ . '/../model/short.php');
+require_once(__DIR__ . '/utils.php');*/
+require_once(__DIR__. '/../bootstrap.php');
 require_once(__DIR__ . '/../../composer/vendor/autoload.php');
-require_once(__DIR__ . '/utils.php');
+
+use Throwable;
+use TurtleShortener\Database\DbUtil;
+use TurtleShortener\Models\Shortened;
 use Ulid\Ulid;
-use Website\Php\Db\DbUtil;
-$pdo = DbUtil::getPdo();
+
+$dbUtil = new DbUtil();
+$pdo = $dbUtil->getPdo();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
     $url = (string) $_POST['url'];
@@ -62,9 +68,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
         if (!isset($errorMessage)) $errorMessage = $e->getTraceAsString();
         $_SESSION["error"] = 'Object creation error: ' . $errorMessage;
         $json_data = ['error' => $errorMessage];
+        $GLOBALS['log']->debug(json_encode($errorMessage));
     } finally {
         if ($should_redirect)
-            header('Location: '.getProtocol().'://'.$_SERVER['HTTP_HOST'].'/?sid='.session_id());
+            header('Location: '.$GLOBALS['utils']->getProtocol().'://'.$_SERVER['HTTP_HOST'].'/?sid='.session_id());
         else echo json_encode($json_data);
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['s'])) {

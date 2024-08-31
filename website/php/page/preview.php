@@ -1,35 +1,43 @@
 <?php
-namespace Website\Php\Page;
-    $is_bot = false;
-    $preview_mode = $_GET['preview'] ?? false;
-    try {
-        if (isset($_GET['s'])) {
-            require_once(__DIR__ . '/../db/util.php');
-            $pdo = DbUtil::getPdo();
-            $query = $preview_mode ?
-                "SELECT shortcode, url, expiry, created, searchable FROM urls WHERE shortcode = ?":
-                "SELECT url FROM urls WHERE shortcode = ?";
-            $stmt = $pdo->prepare($query);
-            $shortCode = $_GET['s'];
-            $stmt->execute([$shortCode]);
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (is_array($data))
-                $url = $data['url'];
-            $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
-            $is_bot = str_contains($userAgent, "bot");
-        }
-    } catch(Exception $e) {} finally {
-        if (!empty($url)) {
-            if (!$is_bot && !$preview_mode)
-                header('Location: ' . $url);
-        } else header('Location: /error.php?error='.urlencode('Shortened url "'. ($url ?? 'none') .'" not found.'));
+namespace TurtleShortener\Page;
+
+use TurtleShortener\Database\DbUtil;
+use TurtleShortener\Models\Shortened;
+use Exception;
+use PDO;
+use ValueError;
+
+$is_bot = false;
+$preview_mode = $_GET['preview'] ?? false;
+try {
+    if (isset($_GET['s'])) {
+        //require_once(__DIR__ . '/../db/util.php');
+        $pdo = DbUtil::getPdo();
+        $query = $preview_mode ?
+            "SELECT shortcode, url, expiry, created, searchable FROM urls WHERE shortcode = ?":
+            "SELECT url FROM urls WHERE shortcode = ?";
+        $stmt = $pdo->prepare($query);
+        $shortCode = $_GET['s'];
+        $stmt->execute([$shortCode]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (is_array($data))
+            $url = $data['url'];
+        $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        $is_bot = str_contains($userAgent, "bot");
     }
+} catch(Exception $e) {} finally {
+    if (!empty($url)) {
+        if (!$is_bot && !$preview_mode)
+            header('Location: ' . $url);
+    } else header('Location: /error.php?error='.urlencode('Shortened url "'. ($url ?? 'none') .'" not found.'));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta property="og:type" content="website">
+    <title></title>
     <?php
         $title = "trt.ls";
         $options = array(
@@ -67,7 +75,7 @@ namespace Website\Php\Page;
 </head><body>
 <?php
 if ($preview_mode) {
-    require_once(__DIR__ . '/../model/short.php');
+    //require_once(__DIR__ . '/../model/short.php');
     try {
         $shortened = new Shortened($data['shortcode'], "", $url, $data['expiry'], $data['created']);
     } catch (Exception $e) {

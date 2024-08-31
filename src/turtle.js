@@ -1,9 +1,7 @@
+import("./util/date.js");
+import("./util/misc.js");
+
 import {search} from "./fn/search.js";
-
-import("./util/misc.js")
-import("./util/date.js")
-import("./fn/search.js")
-
 //Navbar
 const navbar = document.querySelector('nav');
 const collapsableMenu = navbar.querySelector(".collapsable");
@@ -39,3 +37,19 @@ document.addEventListener('click', (e) => {
 })
 searchForm.style.display = "flex";
 searchForm.target = "none";
+
+const url = window.location.href;
+const urlObject = new URL(url);
+const params = new URLSearchParams(urlObject.search);
+
+const expValue = (parseInt(params.get('exp')) || 10080)*60;
+const expTime = Date.now() + expValue;
+
+window.addEventListener('DOMContentLoaded', async (e) => {
+    const dateInput = document.querySelector('input[type=datetime-local]')
+    updateInputElementDate(dateInput, expTime*1000);
+    for (const el of document.querySelectorAll('[unix]')) {
+        const unix = el.getAttribute('unix')*1000;
+        updateElementTextDate(el, unix);
+    }
+});

@@ -53,7 +53,7 @@ const debouncedUploadFile = debounce(async (filename) => {
 }, 15); // Adjust debounce delay as needed
 
 // Watch for changes in the directory
-colorLog("YELLOW", `Watching for changes in '${LOCAL_PATH}'...`);
+colorLog("BRIGHT_MAGENTA", `Watching for changes in folder '${LOCAL_PATH.replace("./", "")}'...`);
 watch(LOCAL_PATH, { recursive: true }, (eventType, filename) => {
     // Only trigger upload on file changes (not on rename or delete)
     if (eventType === 'change' && filename) {

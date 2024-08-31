@@ -4,7 +4,18 @@ export const COLORS = {
     YELLOW: "\x1b[33m",
     RED: "\x1b[31m",
     BLUE: "\x1b[34m",
-    GREY: "\x1b[38;5;249m"
+    GREY: "\x1b[38;5;240m",
+    CYAN: "\x1b[36m",
+    MAGENTA: "\x1b[35m",
+    WHITE: "\x1b[37m",
+    BLACK: "\x1b[30m",
+    BRIGHT_GREEN: "\x1b[38;5;82m",
+    BRIGHT_YELLOW: "\x1b[38;5;226m",
+    BRIGHT_RED: "\x1b[38;5;196m",
+    BRIGHT_BLUE: "\x1b[38;5;75m",
+    BRIGHT_CYAN: "\x1b[38;5;51m",
+    BRIGHT_MAGENTA: "\x1b[38;5;201m",
+    BRIGHT_WHITE: "\x1b[38;5;15m"
 };
 
 export function getTimestamp() {
@@ -16,5 +27,5 @@ export function getTimestamp() {
 }
 
 export function colorLog(color, message) {
-    console.log(`${COLORS.GREY}${getTimestamp()} ${COLORS[color]}${message}${COLORS.RESET}`);
+    console.log(`${COLORS.BRIGHT_YELLOW}${getTimestamp()} ${COLORS[color]}${message}${COLORS.RESET}`);
 }

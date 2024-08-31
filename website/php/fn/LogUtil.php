@@ -1,9 +1,5 @@
 <?php
-namespace Website\Php\Lang;
-namespace Website\Php\Lang;
-namespace Website\Php\Fn;
-namespace Website\Php\Fn;
-namespace Website\Php\Fn;
+namespace TurtleShortener\Misc;
 
 class LogUtil {
     private static LogUtil $instance;
@@ -25,9 +21,15 @@ class LogUtil {
         return self::$instance;
     }
 
-    public function log($message): void{
+    public function debug(string $message): void
+    {
+        $this->log($message, 'debug');
+    }
+
+    private function log(string $message, string $level): void
+    {
         $timestamp = date('H:i:s');
-        fwrite($this->handle, "[$timestamp] - $message\n");
+        fwrite($this->handle, "[$timestamp] |$level| - $message\n");
     }
 
     function __destruct() {

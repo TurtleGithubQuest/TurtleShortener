@@ -22,6 +22,8 @@ class ComposerStaticInitf6ae021b0a5664b87a76b4b2dea0b0e3
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Ulid\\Exception\\InvalidUlidStringException' => __DIR__ . '/..' . '/robinvdvleuten/ulid/src/Exception/InvalidUlidStringException.php',
+        'Ulid\\Ulid' => __DIR__ . '/..' . '/robinvdvleuten/ulid/src/Ulid.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

@@ -2,7 +2,7 @@ import {createEl} from "../util/misc.js";
 export async function search(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const response = await fetch("php/fn/search.php", {
+    const response = await fetch("php/fn/Search.php", {
         method: "POST",
         body: formData
     });

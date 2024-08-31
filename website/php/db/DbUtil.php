@@ -1,14 +1,14 @@
 <?php
-namespace Website\Php\Db;
-namespace Website\Php\Db;
-namespace Website\Php\Db;
+namespace TurtleShortener\Database;
+
+use PDO;
 
 class DbUtil {
     private static ?PDO $pdo = null;
 
     public static function getPdo(): PDO {
         if (self::$pdo == null) {
-            $settings = require(__DIR__ . '/../settings.php');
+            $settings = $GLOBALS['settings'];
             $db_host = $settings['db_host'];
             $db_name = $settings['db_name'];
             $db_user = $settings['db_user'];

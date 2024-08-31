@@ -4,7 +4,7 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
-<Files "tools.php">
+<Files "Tools.php">
     Order Allow,Deny
     Allow from all
 </Files>

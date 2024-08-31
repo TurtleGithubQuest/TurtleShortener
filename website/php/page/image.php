@@ -1,9 +1,9 @@
 <?php
-namespace Website\Php\Page;
+namespace TurtleShortener\Page;
 session_start();
-$settings = require_once(__DIR__ . '/../settings.php');
-$img_name_length = $settings['img_name_length'];
-$img_extensions = $settings['img_extensions'];
+require_once(__DIR__ . '/../bootstrap.php');
+$img_name_length = $GLOBALS['settings']['img_name_length'];
+$img_extensions = $GLOBALS['settings']['img_extensions'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

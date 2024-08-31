@@ -1,5 +1,9 @@
 <?php
-namespace Website\Php\Model;
+namespace TurtleShortener\Models;
+
+use DateTime;
+use DateTimeZone;
+use Exception;
 
 class Shortened {
     public string $shortcode;

@@ -1,19 +1,13 @@
 <?php
-namespace Website\php;
-
-use Website\php\fn\Utils;
+namespace TurtleShortener;
 
 require_once(__DIR__ . '/php/bootstrap.php');
-
-global $user_language, $lang;
 
 if (isset($_GET["sid"])) {
     session_id($_GET["sid"]);
 }
 session_start();
 
-$utils = new Utils();
-$utils->loadLanguage();
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $user_language; ?>">
@@ -27,11 +21,11 @@ $utils->loadLanguage();
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
 </head>
 <body>
-<?php include_once "php/layout/header.php" ?>
+<?php include_once __DIR__."/php/layout/header.php" ?>
 <div class="wrapper">
     <div id="wrapper-content">
     <div class="tools">
-        <form action="php/tools.php?t=clear" method="post">
+        <form action="php/Tools.php?t=clear" method="post">
             <input type="image" class="broom" src="img/svg/broom.svg" alt="Clean cookies">
         </form>
     </div>
@@ -73,7 +67,7 @@ $utils->loadLanguage();
     </div>
     <div class="index-box flex-col">
         <div class="title">Turtle Shortener</div>
-        <form class="t-form flex-col" action="php/fn/shorten.php?sid=<?php
+        <form class="t-form flex-col" action="php/fn/Shorten.php?sid=<?php
             if (isset($_GET['sid'])) echo $_GET['sid'];
             else echo session_id();
         ?>" method="post">
@@ -85,20 +79,20 @@ $utils->loadLanguage();
                 $expValue = (int)$expValue*60;
                 $expTime = time() + ($expValue);
                 $expirationDate = date('Y-m-d\TH:i', $expTime);
-                $queryParams = getQueryParams();
+                $queryParams = $GLOBALS['utils']?->getQueryParams();
                 echo '
                     <label>'.$lang['url-address'].'<input type="url" name="url" placeholder="'.$lang['url-address.placeholder'].'" spellcheck="false" maxlength="2083" required></label>
                     <label>'.$lang['expiration'].'<input type="datetime-local" name="expiration" value="'.$expirationDate.'"></label>
                     <div class="expiration-time">
-                        <a href="'.buildQuery("exp", 360, $queryParams).'">6 '.$lang['hours'].'</a>
-                        <a href="'.buildQuery("exp", 2880, $queryParams).'">48 '.$lang['hours'].'</a>
-                        <a href="'.buildQuery("exp", 20160, $queryParams).'">14 '.$lang['days'].'</a>
-                        <a href="'.buildQuery("exp", 40320, $queryParams).'">1 '.$lang['month'].'</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 360, $queryParams).'">6 '.$lang['hours'].'</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 2880, $queryParams).'">48 '.$lang['hours'].'</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 20160, $queryParams).'">14 '.$lang['days'].'</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 40320, $queryParams).'">1 '.$lang['month'].'</a>
                     </div>
                     <label for="alias">Alias <input type="text" name="alias" placeholder="'.$lang['alias.placeholder'].'" pattern="[a-zA-Z0-9\-_\.~]+" maxlength="6"></label>
                     <sup>[a-zA-Z0-9\-_\.~]+</sup>
                     <label>'.$lang['include_in_search'].'<input type="text" name="searchable" value="'.(($_GET['searchable']??1) ? "true" : "false").'" hidden>
-                    <a href="'.buildQuery("searchable", !($_GET['searchable']??1), $queryParams).'">'.$lang[$_GET['searchable']??1].'</a></label>
+                    <a href="'.$GLOBALS['utils']?->buildQuery("searchable", !($_GET['searchable']??1), $queryParams).'">'.$lang[$_GET['searchable']??1].'</a></label>
                     <input type="submit" value="'.$lang['shorten'].'">';
             ?>
         </form>
@@ -148,15 +142,5 @@ $utils->loadLanguage();
 </div>
 <iframe style="display: none" id="none"></iframe>
 <script src="js/turtle.js"></script>
-<script>
-window.addEventListener('DOMContentLoaded', async (e) => {
-    const dateInput = document.querySelector('input[type=datetime-local]')
-    updateInputElementDate(dateInput, <?php echo $expTime*1000; ?>)
-    for (const el of document.querySelectorAll('[unix]')) {
-        const unix = el.getAttribute('unix')*1000;
-        updateElementTextDate(el, unix);
-    }
-});
-</script>
 </body>
 </html>

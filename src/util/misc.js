@@ -8,10 +8,11 @@ export const copyValue = function(el, value) {
         }, 500);
     })
 };
-export const createEl = (tag, classNames) => {
+export function createEl(tag, classNames) {
     const element = document.createElement(tag);
     if (classNames) {
         element.classList.add(...classNames.split(' '));
     }
     return element;
-};
+}
+console.log()

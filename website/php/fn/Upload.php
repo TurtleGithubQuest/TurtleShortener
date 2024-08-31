@@ -1,10 +1,13 @@
 <?php
 namespace Website\Php\Fn;
 
+require_once('bootstrap.php');
+
 header('Content-type:application/json;charset=utf-8');
 error_reporting(E_ERROR);
-$settings = require_once(__DIR__ . '/../settings.php');
-include_once(__DIR__ . "/utils.php");
+
+$settings = $GLOBALS['settings'];
+//include_once(__DIR__ . "/utils.php");
 $tokens = $settings['img_tokens'];
 $img_dir = $settings['img_dir'];
 $img_name_length = $settings['img_name_length'];

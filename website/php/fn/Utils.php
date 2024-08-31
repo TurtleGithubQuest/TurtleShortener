@@ -1,5 +1,5 @@
 <?php
-namespace Website\php\fn;
+namespace TurtleShortener\Misc;
 
 class Utils {
     public function getLanguage($userLang) {

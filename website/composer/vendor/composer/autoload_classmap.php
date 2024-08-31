@@ -7,4 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Ulid\\Exception\\InvalidUlidStringException' => $vendorDir . '/robinvdvleuten/ulid/src/Exception/InvalidUlidStringException.php',
+    'Ulid\\Ulid' => $vendorDir . '/robinvdvleuten/ulid/src/Ulid.php',
 );
