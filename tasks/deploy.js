@@ -1,5 +1,6 @@
 import { Client } from "basic-ftp";
 import { Readable } from "stream";
+import { build } from "./build.js";
 import path from "path";
 
 const SERVER_HOST = process.env.SERVER_HOST;
@@ -68,4 +69,6 @@ function getTimestamp() {
     const seconds = now.getSeconds().toString().padStart(2, '0');
     return `[${hours}:${minutes}:${seconds}]`;
 }
+
+await build()
 await deploy();
