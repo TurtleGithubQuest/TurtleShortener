@@ -1,6 +1,6 @@
 <?php
 class LogUtil {
-    private static $instance;
+    private static LogUtil $instance;
     private $handle;
 
     private function __construct() {
@@ -12,7 +12,7 @@ class LogUtil {
         $this->handle = fopen("$logDir/$date-log.txt", 'a');
     }
 
-    public static function getInstance() {
+    public static function getInstance(): LogUtil {
         if (!isset(self::$instance)) {
             self::$instance = new LogUtil();
         }

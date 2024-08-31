@@ -29,9 +29,11 @@ function getQueryParams(): array{
     parse_str($_SERVER['QUERY_STRING'] ?? "", $query_params);
     return $query_params;
 }
-function buildQuery(String $key, $value, array $query_params = null): String {
-    $query_params ?? parse_str($_SERVER['QUERY_STRING'] ?? "", $query_params);
+function buildQuery(string $key, $value, ?array $query_params = null, string $url = ''): string {
+    $query_params = $query_params ?? getQueryParams();
     $query_params[$key] = $value;
+    if (!empty($currentUrl))
+        $query_params['url'] = $currentUrl;
     $new_query_string = http_build_query($query_params);
     return '?' . $new_query_string;
 }
