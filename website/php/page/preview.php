@@ -1,4 +1,5 @@
 <?php
+namespace Website\Php\Page;
     $is_bot = false;
     $preview_mode = $_GET['preview'] ?? false;
     try {

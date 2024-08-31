@@ -15,6 +15,7 @@
                     <input type="image" src="img/svg/magnifying-glass.svg" alt="Submit">
                 </form>
                 <?php
+                namespace Website\Php\Layout;
                 echo '<div id="searchResult"'.(empty($_GET["found"]) ? ' class="d-none"' : '').'>';
                 if (!empty($_GET["found"])) {
                     $results = json_decode(urldecode($_GET["found"]));

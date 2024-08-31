@@ -1,4 +1,6 @@
 <?php
+namespace Website\Php;
+namespace Website\Php\Fn;
 namespace Website\Php\Fn;
 
 function getLanguage($userLang) {

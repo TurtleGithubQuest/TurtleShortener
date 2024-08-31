@@ -1,4 +1,5 @@
 <?php
+namespace Website;
 global $user_language, $lang;
 if (isset($_GET["sid"]))
     session_id($_GET["sid"]);

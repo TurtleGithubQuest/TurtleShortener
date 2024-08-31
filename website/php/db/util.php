@@ -1,5 +1,7 @@
 <?php
 namespace Website\Php\Db;
+namespace Website\Php\Db;
+namespace Website\Php\Db;
 
 class DbUtil {
     private static ?PDO $pdo = null;

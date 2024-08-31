@@ -1,4 +1,5 @@
 <?php
+namespace Website\Php\Page;
 session_start();
 $settings = require_once(__DIR__ . '/../settings.php');
 $img_name_length = $settings['img_name_length'];

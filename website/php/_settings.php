@@ -1,4 +1,5 @@
 <?php
+namespace Website\Php;
 return [
     'db_host' => 'localhost',
     'db_name' => 'database',

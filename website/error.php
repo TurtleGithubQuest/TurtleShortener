@@ -1,4 +1,5 @@
 <?php
+namespace Website;
 session_start();
 ?>
 <!DOCTYPE html>

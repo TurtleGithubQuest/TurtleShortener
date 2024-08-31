@@ -1,4 +1,8 @@
 <?php
+namespace Website\Php\Lang;
+namespace Website\Php\Lang;
+namespace Website\Php\Fn;
+namespace Website\Php\Fn;
 namespace Website\Php\Fn;
 
 class LogUtil {
