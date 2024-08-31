@@ -1,4 +1,6 @@
 <?php
+namespace Website\Php\Fn;
+
 global $lang;
 include_once("utils.php");
 loadLanguage();
