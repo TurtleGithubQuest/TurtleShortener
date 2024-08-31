@@ -1,4 +1,6 @@
 <?php
+namespace Website\Php\Fn;
+
 class LogUtil {
     private static LogUtil $instance;
     private $handle;

@@ -1,4 +1,6 @@
 <?php
+namespace Website\Php\Fn;
+
 function getLanguage($userLang) {
     if (file_exists(__DIR__ . "/../lang/{$userLang}.php")) {
         return $userLang;

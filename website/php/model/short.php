@@ -1,4 +1,6 @@
 <?php
+namespace Website\Php\Model;
+
 class Shortened {
     public string $shortcode;
     public string $shortenedUrl;
