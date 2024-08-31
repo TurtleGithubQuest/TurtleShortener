@@ -1,8 +1,9 @@
 <?php
 namespace Website\Php;
 
+use Website\php\fn\Utils;
+
 require_once(__DIR__ . '/php/bootstrap.php');
-require_once(__DIR__ . '/php/fn/utils.php');
 
 global $user_language, $lang;
 
