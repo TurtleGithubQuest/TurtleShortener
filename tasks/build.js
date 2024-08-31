@@ -1,9 +1,10 @@
 import { spawn } from 'bun';
 import { join, resolve } from 'path';
 import { exists } from 'fs/promises';
+import { colorLog } from './utils.js';
 
 async function runCommand(command, args, cwd) {
-    console.log(`Running command: ${command} ${args.join(' ')}`);
+    colorLog("BLUE", `Running command: ${command} ${args.join(' ')}`);
     const proc = spawn([command, ...args], { cwd });
     const output = await new Response(proc.stdout).text();
     console.log(output);
@@ -13,14 +14,14 @@ async function runCommand(command, args, cwd) {
 }
 
 async function buildComposer() {
-    console.log('Building Composer...');
+    colorLog("YELLOW", 'Building Composer...');
     const composerDir = resolve(import.meta.dir, '../website/composer');
     await runCommand('composer', ['install', '--no-dev', '--optimize-autoloader'], composerDir);
-    console.log('Composer build completed.');
+    colorLog("GREEN", 'Composer build completed.');
 }
 
 async function buildJavaScript() {
-    console.log('Building JavaScript...');
+    colorLog("YELLOW", 'Building JavaScript...');
     const srcDir = resolve(import.meta.dir, '../src');
     
     // Check if package.json exists
@@ -34,16 +35,16 @@ async function buildJavaScript() {
     // Run build script (assuming it's defined in package.json)
     await runCommand('bun', ['run', 'build'], srcDir);
     
-    console.log('JavaScript build completed.');
+    colorLog("GREEN", 'JavaScript build completed.');
 }
 
 async function build() {
     try {
         await buildComposer();
         await buildJavaScript();
-        console.log('Build process completed successfully.');
+        colorLog("GREEN", 'Build process completed successfully.');
     } catch (error) {
-        console.error('Build process failed:', error);
+        colorLog("RED", `Build process failed: ${error}`);
         process.exit(1);
     }
 }
