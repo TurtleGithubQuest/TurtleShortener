@@ -1,19 +1,18 @@
 <?php
-namespace TurtleShortener;
-//use function TurtleShortener\Utils\getQueryParams;
-//use function TurtleShortener\Utils\loadLanguage;
-use TurtleShortener\Misc\Utils;
+namespace Website\Php;
 
 require_once(__DIR__ . '/php/bootstrap.php');
+require_once(__DIR__ . '/php/fn/utils.php');
+
 global $user_language, $lang;
 
-if (isset($_GET["sid"]))
+if (isset($_GET["sid"])) {
     session_id($_GET["sid"]);
+}
 session_start();
-//require_once(__DIR__ . '/php/model/short.php');
-//include_once("php/fn/utils.php");
-$GLOBALS['utils'] = new Utils();
-$GLOBALS['utils']->loadLanguage();
+
+$utils = new Utils();
+$utils->loadLanguage();
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $user_language; ?>">
