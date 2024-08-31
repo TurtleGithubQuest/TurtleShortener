@@ -1,4 +1,4 @@
-export const copyValue = function(el, value) {
+export const copyValue = function(el, value=null) {
     const copy = value ? value :
         (el.getAttribute("copyValue") ? el.getAttribute("copyValue") : el.value);
     navigator.clipboard.writeText(copy).then(async function() {

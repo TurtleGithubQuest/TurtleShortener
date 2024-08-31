@@ -1,7 +1,8 @@
 import("./util/date.js");
 import("./util/misc.js");
-
+import { bubbleCursor } from "cursor-effects";
 import {search} from "./fn/search.js";
+import {copyValue} from "./util/misc.js";
 //Navbar
 const navbar = document.querySelector('nav');
 const collapsableMenu = navbar.querySelector(".collapsable");
@@ -43,13 +44,20 @@ const urlObject = new URL(url);
 const params = new URLSearchParams(urlObject.search);
 
 const expValue = (parseInt(params.get('exp')) || 10080)*60;
-const expTime = Date.now() + expValue;
-
+const expTime = Date.now() + (expValue*1000);
 window.addEventListener('DOMContentLoaded', async (e) => {
     const dateInput = document.querySelector('input[type=datetime-local]')
-    updateInputElementDate(dateInput, expTime*1000);
+    updateInputElementDate(dateInput, expTime);
     for (const el of document.querySelectorAll('[unix]')) {
         const unix = el.getAttribute('unix')*1000;
         updateElementTextDate(el, unix);
     }
+    for (const el of document.querySelectorAll('[copyValue]')) {
+        el.addEventListener('click', async (e) => {
+            const el = e.target;
+            console.log(el);
+            await copyValue(el);
+        });
+    }
+    new bubbleCursor();
 });

@@ -69,10 +69,10 @@ nav {
         border: 0.1rem solid darken($background, 15%);
         border-radius: 0.2rem;
         input:hover {
-          background-color: darken($background, 5%) !important;
+          background-color: darken($bg_secondary, 5%) !important;
         }
         input:-webkit-autofill {
-          -webkit-box-shadow: 0 0 3.125rem darken($background, 15%) inset !important;
+          -webkit-box-shadow: 0 0 3.125rem darken($bg_secondary, 15%) inset !important;
           background-color: transparent !important;
           background-clip: text;
           -webkit-text-fill-color: $text !important;
@@ -83,21 +83,24 @@ nav {
           padding: 0.15rem;
           margin: 0.05rem;
           border-radius: 0.15rem;
+          &:hover {
+            background-color: darken($background, 5%) !important;
+          }
         }
         label {
-          border-right: 0.1rem solid darken($background, 15%);
+          border-right: 0.1rem solid darken($bg_secondary, 15%);
           height: 100%; width: 100%;
           align-content: center;
           overflow: hidden;
         }
         input[type="text"] {
-          background-color: darken($background, 10%);
+          background-color: darken($bg_secondary, 10%);
           border: none;
           padding: 0 0 0 0.5rem; //left 0.5rem
           height: 100%; width: 100%;
           color: $text;
           &:focus {
-            background-color: darken($background, 5%);
+            background-color: darken($bg_secondary, 5%);
             outline: none;
           }
         }
@@ -108,25 +111,25 @@ nav {
         flex-flow: column;
         //flex-wrap: wrap;
         margin-bottom: -3rem;
-        background-color: darken($background, 6%);
+        background-color: darken($bg_secondary, 6%);
         //width: 100%;
         width: 15rem;
         overflow: scroll;
         gap: 0.1rem;
-        border: 0.1rem solid darken($background, 15%);
+        border: 0.1rem solid darken($bg_secondary, 15%);
         .result {
           display: flex;
           align-items: center;
-          background-color: darken($background, 3%);
+          background-color: darken($bg_secondary, 3%);
           &:hover {
-            background-color: darken($background, 7%);
+            background-color: darken($bg_secondary, 7%);
           }
           .shortcode {
             padding: 0 0.25rem;
             color: darken($text, 10%);
             font-size: 0.85rem;
             &:hover {
-              background-color: darken($background, 12%);
+              background-color: darken($bg_secondary, 12%);
             }
           }
         }
@@ -206,7 +209,7 @@ nav {
     top: 3.5rem;
     right: 0;
     transform: translateX(-18%);
-    background-color: darken($background,3%);
+    background-color: darken($bg_secondary,3%);
     border-radius: 0.2rem;
     padding: 0.15rem 0.3rem;
     gap: 0.2rem;
@@ -221,7 +224,7 @@ nav {
       border-radius: 0.2rem;
       &:hover {
         transform: scaleX(105%);
-        background-color: lighten($background, 3%);
+        background-color: lighten($bg_secondary, 3%);
         color: $pink_lobster;
       }
     }

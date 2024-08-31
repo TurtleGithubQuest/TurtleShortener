@@ -1,27 +1,8 @@
-import { spawnSync } from 'bun';
 import { resolve } from 'path';
 import { exists } from 'fs/promises';
-import { colorLog } from './utils.js';
+import {colorLog, runCommand} from './utils.js';
 
-function runCommand(command, args, cwd) {
-    colorLog("BLUE", `Running command: ${command} ${args.join(' ')}`);
-    const proc = spawnSync([command, ...args], {
-        cwd
-    });
-    if (!proc.success)
-        throw new Error(proc.error);
-
-    if (proc.stdout) {
-        const lines = proc.stdout.toString().split(/\r?\n/);
-        lines.forEach(line => {
-            if (line.trim()) {
-                colorLog("GREY", line);
-            }
-        });
-    }
-}
-
-async function buildComposer() {
+export async function buildComposer() {
     colorLog("YELLOW", 'Building Composer...');
     const composerDir = resolve(import.meta.dir, '../website/composer');
     
@@ -37,16 +18,17 @@ async function buildComposer() {
     }
 }
 
-async function buildJavaScript() {
-    colorLog("YELLOW", 'Building JavaScript...');
+export async function buildJavaScript(isQuiet=false) {
+    if (!isQuiet)
+        colorLog("YELLOW", 'Building JavaScript...');
     if (!(await exists('package.json'))) {
         throw new Error('package.json not found in the src directory. Make sure it exists and contains necessary build scripts.');
     }
 
-    await runCommand('bun', ['install']);
-    await runCommand('bun', ['run', 'build.js']);
-    
-    colorLog("YELLOW", 'JavaScript build completed.');
+    await runCommand('bun', ['install'], null, isQuiet);
+    await runCommand('bun', ['run', 'build.js'], null, isQuiet);
+    if (!isQuiet)
+        colorLog("YELLOW", 'JavaScript build completed.');
 }
 
 export async function build() {
@@ -65,5 +47,7 @@ export async function build() {
     }
     colorLog("GREEN", 'Build process completed successfully.');
 }
-colorLog("BRIGHT_MAGENTA", "Building..")
-await build();
+if (import.meta.main) {
+    colorLog("BRIGHT_MAGENTA", "Building...");
+    await build();
+}

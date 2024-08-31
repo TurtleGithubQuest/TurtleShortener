@@ -26,7 +26,7 @@ session_start();
     <div id="wrapper-content">
     <div class="tools">
         <form action="php/Tools.php?t=clear" method="post">
-            <input type="image" class="broom" src="img/svg/broom.svg" alt="Clean cookies">
+            <input type="image" class="broom" src="img/svg/broom.svg" alt="Clean cookies" title="Clean cookies">
         </form>
     </div>
     <div class="turtle-box" style="position:absolute; top: 20%; right: 2%; opacity: 80%">
@@ -117,7 +117,7 @@ session_start();
                       <tr>
                         <th>'.$lang['shortened-url'].'</th>
                         <td><a href="https://'.$shortenedUrl.'">'.$shortenedUrl.'</a>
-                            <span class="copy-wrapper" title="click to copy url" onclick="copyValue(this)" copyValue="https://'.$shortenedUrl.'">
+                            <span class="copy-wrapper" title="click to copy url" copyValue="https://'.$shortenedUrl.'">
                                 <img src="img/svg/copy.svg" alt="copy">
                                 <img src="img/svg/success.svg" alt="copy-success">
                             </span>

@@ -1,7 +1,8 @@
 import { watch } from "fs";
 import { Client } from "basic-ftp";
 import path from "path";
-import { COLORS, getTimestamp, colorLog } from "./utils.js";
+import {colorLog} from "./utils.js";
+import {buildJavaScript} from "./build.js";
 
 // Environment variables
 const SERVER_HOST = process.env.SERVER_HOST;
@@ -9,6 +10,7 @@ const SERVER_USER = process.env.SERVER_USER;
 const SERVER_PASSWORD = process.env.SERVER_PASSWORD;
 const SERVER_PATH = process.env.SERVER_PATH; // Default to root if not provided
 const LOCAL_PATH = "./website";
+const JS_PATH = "./src";
 
 // Validate environment variables
 if (!SERVER_USER || !SERVER_HOST || !SERVER_PATH || !SERVER_PASSWORD) {
@@ -57,6 +59,11 @@ colorLog("BRIGHT_MAGENTA", `Watching for changes in folder '${LOCAL_PATH.replace
 watch(LOCAL_PATH, { recursive: true }, (eventType, filename) => {
     // Only trigger upload on file changes (not on rename or delete)
     if (eventType !== 'change' && filename)
-        colorLog("BRIGHT_WHITE", `${eventType}d ${filename}.`)
+        colorLog("BRIGHT_WHITE", `${eventType}d ${filename}.`);
     debouncedUploadFile(filename);
+});
+colorLog("BRIGHT_MAGENTA", `Watching for changes in folder '${JS_PATH.replace("./", "")}'...`);
+watch(JS_PATH, { recursive: true }, async (eventType, filename) => {
+    if (eventType === 'change')
+        debounce(buildJavaScript(true), 15);
 });

@@ -1,3 +1,5 @@
+import {spawnSync} from "bun";
+
 export const COLORS = {
     RESET: "\x1b[0m",
     GREEN: "\x1b[32m",
@@ -28,4 +30,23 @@ export function getTimestamp() {
 
 export function colorLog(color, message) {
     console.log(`${COLORS.BRIGHT_YELLOW}${getTimestamp()} ${COLORS[color]}${message}${COLORS.RESET}`);
+}
+
+export function runCommand(command, args, cwd, isQuiet=false) {
+    if (!isQuiet)
+        colorLog("BLUE", `Running command: ${command} ${args.join(' ')}`);
+    const proc = spawnSync([command, ...args], {
+        cwd
+    });
+    if (!proc.success)
+        throw new Error(proc.error);
+
+    if (proc.stdout && !isQuiet) {
+        const lines = proc.stdout.toString().split(/\r?\n/);
+        lines.forEach(line => {
+            if (line.trim()) {
+                colorLog("GREY", line);
+            }
+        });
+    }
 }

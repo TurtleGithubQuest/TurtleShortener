@@ -112,13 +112,13 @@ img.linkIcon {
   a {
     margin: 0 0.2rem;
     padding: 0.25rem 0.33rem;
-    background-color: darken($background, 8%);
+    background-color: darken($bg_secondary, 8%);
     line-height: 0.8rem;
     border-radius: 0.25rem;
     transition: background-color 0.25s cubic-bezier(.65,.23,.21,.88), transform 0.5s ease;
     &:hover {
       //transform: scaleY(102%);
-      background-color: darken($background, 4%);
+      background-color: darken($bg_secondary, 4%);
     }
   }
 }
@@ -141,5 +141,10 @@ img.linkIcon {
       height: 100%;
       border-radius: 0.3rem;
     }
+  }
+}
+[copyValue] {
+  img {
+    pointer-events: none;
   }
 }

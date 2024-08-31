@@ -63,6 +63,8 @@ async function deploy() {
         client.close();
     }
 }
-await build();
-colorLog("BRIGHT_MAGENTA", "Deploying..")
-await deploy();
+if (import.meta.main) {
+    await build();
+    colorLog("BRIGHT_MAGENTA", "Deploying..")
+    await deploy();
+}

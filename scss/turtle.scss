@@ -1,39 +1,7 @@
 @use "var/color" as *;
 @use "var/font" as *;
 @use "scope/global" as *;
-/*
-html, body {
-  * {
-    @include JetBrainsMono;
-  }
-  --bs-text-opacity: 1;
-  color: $text !important;
-  background-color: darken($background, 11%);
-}
-html {
-  @include scrollie-vertical-1;
-  font-size: 1rem;
-  scroll-padding-top: 3.7rem;
-  a[href] {
-    &:visited {
-      color: darken($text, 8%);
-    }
-    &:active {
-      color: lighten($text, 10%);
-    }
-    &:hover, &:active + &:hover {
-      color: darken($text, 16%);
-    }
-    &:link {
-      color: lighten($text, 5%);
-    }
-  }
-}
-body {
-  margin:0; padding:0;
-  width: 100vw;
-  height: 100vh;
-}*/
+
 @media only screen and (max-device-width : 768px), only screen and (max-width : 768px) {
   .title {
     font-size: 3rem !important;
@@ -67,8 +35,8 @@ body {
     margin-bottom: 4.44rem;
   }
   .t-form {
-    background-color: darken($background, 13%);
-    border: 0.1rem solid darken($background, 16%);
+    background-color: $bg_secondary;//darken($background, 13%);
+    border: 0.1rem solid darken($bg_secondary, 16%);
     border-radius: 0.33rem;
     align-self: center;
     max-width: 15rem;
@@ -194,23 +162,23 @@ body {
   }
   input[type=text], input[type=date], input[type=datetime-local], input[type=url], input[type=password] {
     font-size: 1rem;
-    background-color: darken($background, 15%);
+    background-color: darken($bg_secondary, 4%);
     &:focus {
-      outline: 0.1rem solid darken($background, 13%);
+      outline: 0.1rem solid darken($bg_secondary, 6%);
     }
     &:hover {
-      background-color: darken($background, 20%);
+      background-color: darken($bg_secondary, 8%);
     }
     &::-webkit-datetime-edit-day-field:focus,
     &::-webkit-datetime-edit-month-field:focus,
     &::-webkit-datetime-edit-year-field:focus,
     &::-webkit-datetime-edit-hour-field:focus,
     &::-webkit-datetime-edit-minute-field:focus, {
-        background-color: darken($background, 4%);
+        background-color: darken($bg_secondary, 4%);
         color: lighten($text, 3%);
     }
     &:-webkit-autofill {
-      -webkit-box-shadow: 0 0 3.125rem darken($background, 15%) inset !important;
+      -webkit-box-shadow: 0 0 3.125rem darken($bg_secondary, 15%) inset !important;
       background-color: transparent !important;
       background-clip: text;
       -webkit-text-fill-color: $text !important;
