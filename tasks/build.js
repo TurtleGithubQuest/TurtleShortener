@@ -16,8 +16,20 @@ async function runCommand(command, args, cwd) {
 async function buildComposer() {
     colorLog("YELLOW", 'Building Composer...');
     const composerDir = resolve(import.meta.dir, '../website/composer');
-    await runCommand('composer', ['install', '--no-dev', '--optimize-autoloader'], composerDir);
-    colorLog("GREEN", 'Composer build completed.');
+    
+    try {
+        // Check if composer is available
+        await runCommand('composer', ['--version'], composerDir);
+        
+        // If composer is available, proceed with the installation
+        await runCommand('composer', ['install', '--no-dev', '--optimize-autoloader'], composerDir);
+        colorLog("GREEN", 'Composer build completed.');
+    } catch (error) {
+        colorLog("RED", 'Composer is not available or encountered an error.');
+        colorLog("YELLOW", 'Please make sure Composer is installed and accessible from the command line.');
+        colorLog("YELLOW", 'You can download Composer from https://getcomposer.org/');
+        throw new Error('Composer build failed. See above for details.');
+    }
 }
 
 async function buildJavaScript() {
@@ -39,12 +51,23 @@ async function buildJavaScript() {
 }
 
 async function build() {
+    let composerBuildFailed = false;
     try {
         await buildComposer();
-        await buildJavaScript();
-        colorLog("GREEN", 'Build process completed successfully.');
     } catch (error) {
-        colorLog("RED", `Build process failed: ${error}`);
+        composerBuildFailed = true;
+        colorLog("RED", `Composer build failed: ${error}`);
+    }
+
+    try {
+        await buildJavaScript();
+        if (composerBuildFailed) {
+            colorLog("YELLOW", 'Build process completed with warnings (Composer build failed).');
+        } else {
+            colorLog("GREEN", 'Build process completed successfully.');
+        }
+    } catch (error) {
+        colorLog("RED", `JavaScript build failed: ${error}`);
         process.exit(1);
     }
 }
