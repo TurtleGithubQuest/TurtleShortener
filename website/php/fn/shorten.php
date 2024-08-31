@@ -1,4 +1,6 @@
 <?php
+namespace Website\Php\Fn;
+
 error_reporting(E_ALL);
 if (isset($_GET["sid"]))
     session_id($_GET["sid"]);
@@ -11,6 +13,7 @@ require_once(__DIR__ . '/../model/short.php');
 require_once(__DIR__ . '/../../composer/vendor/autoload.php');
 require_once(__DIR__ . '/utils.php');
 use Ulid\Ulid;
+use Website\Php\Db\DbUtil;
 $pdo = DbUtil::getPdo();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {

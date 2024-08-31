@@ -1,4 +1,6 @@
 <?php
+namespace Website\Php\Db;
+
 $token = filter_input(INPUT_GET, 'token')
     ?? filter_input(INPUT_POST, 'token');
 $settings = require(__DIR__."/../settings.php");

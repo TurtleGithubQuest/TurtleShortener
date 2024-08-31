@@ -1,4 +1,6 @@
 <?php
+namespace Website\Php\Fn;
+
 header('Content-type:application/json;charset=utf-8');
 error_reporting(E_ERROR);
 $settings = require_once(__DIR__ . '/../settings.php');

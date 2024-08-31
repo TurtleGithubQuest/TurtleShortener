@@ -1,4 +1,6 @@
 <?php
+namespace Website\Php;
+
 session_start();
 $tool = $_GET["t"];
 if (!isset($tool))

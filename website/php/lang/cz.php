@@ -1,5 +1,7 @@
 <?php
-global$lang;
+namespace Website\Php\Lang;
+
+global $lang;
 $lang = array(
     "url-address" => "Url adresa",
     "url-address.placeholder" => "velmi dlouhý odkaz..",
