@@ -69,9 +69,13 @@ const debouncedUploadFile = debounce(async (filename) => {
 colorLog("BRIGHT_MAGENTA", `Watching for changes in folder '${LOCAL_PATH.replace("./", "")}'...`);
 watch(LOCAL_PATH, { recursive: true }, (eventType, filename) => {
     // Only trigger upload on file changes (not on rename or delete)
-    if (eventType !== 'change' && filename)
+    if (eventType !== 'change' && filename) {
         colorLog("BRIGHT_WHITE", `${eventType}d ${filename}.`);
-    debouncedUploadFile(filename);
+    }
+    // Ignore temporary files
+    if (!filename.endsWith('~')) {
+        debouncedUploadFile(filename);
+    }
 });
 colorLog("BRIGHT_MAGENTA", `Watching for changes in folder '${JS_PATH.replace("./", "")}'...`);
 watch(JS_PATH, { recursive: true }, async (eventType, filename) => {
