@@ -30,19 +30,30 @@ function debounce(func, wait) {
 // Function to upload a file to the server
 async function uploadFile(localPath, remotePath) {
     const client = new Client();
-    try {
-        await client.access({
-            host: SERVER_HOST,
-            user: SERVER_USER,
-            password: SERVER_PASSWORD,
-            secure: true, // Enable FTPS
-        });
-        colorLog("GREEN", `Uploading file: ${localPath}`);
-        await client.uploadFrom(localPath, remotePath);
-    } catch (error) {
-        colorLog("RED", `Error uploading file ${localPath}: ${error}`);
-    } finally {
-        client.close();
+    let attempts = 0;
+    const maxAttempts = 5;
+    let success = false;
+
+    while (attempts < maxAttempts && !success) {
+        try {
+            await client.access({
+                host: SERVER_HOST,
+                user: SERVER_USER,
+                password: SERVER_PASSWORD,
+                secure: true, // Enable FTPS
+            });
+            colorLog("GREEN", `Uploading file: ${localPath} (Attempt ${attempts + 1})`);
+            await client.uploadFrom(localPath, remotePath);
+            success = true;
+        } catch (error) {
+            attempts++;
+            colorLog("RED", `Error uploading file ${localPath} (Attempt ${attempts}): ${error}`);
+            if (attempts >= maxAttempts) {
+                colorLog("RED", `Failed to upload file ${localPath} after ${maxAttempts} attempts.`);
+            }
+        } finally {
+            client.close();
+        }
     }
 }
 
