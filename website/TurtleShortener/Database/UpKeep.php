@@ -1,5 +1,5 @@
 <?php
-namespace Website\Php\Db;
+namespace TurtleShortener\Database;
 
 $token = filter_input(INPUT_GET, 'token')
     ?? filter_input(INPUT_POST, 'token');
@@ -19,7 +19,7 @@ $stmt->execute([$currentUnix]);
 $rowCount = $stmt->rowCount();
 
 if ($rowCount > 0) {
-    require_once(__DIR__ . '/../fn/log.php');
+    require_once(__DIR__ . '/../Misc/log.php');
     $log = LogUtil::getInstance();
     $log->log("Deleted (".$rowCount.") expired urls.");
     echo "Deleted (".$rowCount.") expired urls.";

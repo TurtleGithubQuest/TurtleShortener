@@ -2,17 +2,22 @@ import {createEl} from "../util/misc.js";
 export async function search(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const response = await fetch("php/fn/Search.php", {
+    const response = await fetch("/TurtleShortener/Misc/Search.php", {
         method: "POST",
         body: formData
     });
-    function addResult(href, text, hrefDisplay) {
+    function addResult(url, shortcode) {
         const result = createEl("div", "result");
         const urlA  = createEl("a");
-        result.innerHTML = text;
-        if (hrefDisplay) {
-            urlA.href = href;
-            urlA.innerText = hrefDisplay;
+        const isUndefined = shortcode===undefined;
+        let userFriendlyURL = url.replace(/(http:\/\/|https:\/\/|www\.)/g, "");
+        if (userFriendlyURL) {
+            if (!isUndefined) {
+                const host = window.location.protocol + "//" + window.location.host;
+                urlA.href = url;
+                result.innerHTML = `<a class="shortcode" href="${host}/${shortcode}+">[?]</a>`;
+            }
+            urlA.innerText = userFriendlyURL;
             result.append(urlA);
         }
         results.append(result)
@@ -25,15 +30,15 @@ export async function search(e) {
         const json = await response.json();
         for (const key of Object.keys(json)) {
             const url = json[key]["url"];
-            let userFriendlyURL = url.replace(/(http:\/\/|https:\/\/|www\.)/g, "");
             const shortcode = json[key]["shortcode"];
-            const host = window.location.protocol + "//" + window.location.host;
-            addResult(url, `
-                <a class="shortcode" href="${host}/${shortcode}+">[?]</a>
-            `, userFriendlyURL);
+            addResult(
+                url,
+                shortcode
+            );
         }
     } else {
-        addResult(null, response.statusText)
+        console.error(response);
+        //addResult(null, response.statusText)
     }
     items.style.overflow = "visible";
     items.style.height = "1.45rem"

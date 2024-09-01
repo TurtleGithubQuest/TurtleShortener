@@ -1,5 +1,5 @@
 <?php
-namespace Website\Php\Lang;
+namespace TurtleShortener\Language;
 
 global $lang;
 $lang = array(

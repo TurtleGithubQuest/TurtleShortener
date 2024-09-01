@@ -1,5 +1,7 @@
 <?php
-namespace Website\Php\Db;
+namespace TurtleShortener\Database;
+
+use PDO;
 
 $token = filter_input(INPUT_GET, 'token')
     ?? filter_input(INPUT_POST, 'token');
@@ -9,7 +11,7 @@ if (!in_array($token, $admin_tokens)) {
     echo "Access token is not valid.";
     exit;
 }
-require_once('util.php');
+require_once(__DIR__.'/../bootstrap.php');
 $pdo = DbUtil::getPdo();
 
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

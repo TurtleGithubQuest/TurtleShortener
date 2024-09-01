@@ -12,7 +12,7 @@ global$user_language;
                 <img src="img/svg/burger.svg" alt="burgerline1">
             </section>
             <section class="items">
-                <form class="search" target="_self" action="php/fn/Search.php">
+                <form class="search" target="_self" action="/TurtleShortener/Misc/Search.php">
                     <label><input name="q" type="text" placeholder="<?php echo $lang['search-url']; ?>"></label>
                     <label hidden><input type="text" name="lang" value="<?php echo $user_language?>"></label>
                     <input type="image" src="img/svg/magnifying-glass.svg" alt="Submit">

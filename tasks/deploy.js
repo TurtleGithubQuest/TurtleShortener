@@ -50,7 +50,7 @@ async function deploy() {
               'img_extensions' => array(${(process.env.IMG_EXTENSIONS || 'jpg,jpeg,png,gif,jfif').replaceAll(" ", "").split(',').map(ext => `'${ext.trim()}'`).join(", ")}),
           ];`;
 
-        const settingsFilePath = path.join("php", "settings.php");
+        const settingsFilePath = path.join("TurtleShortener", "settings.php");
         const readableStream = Readable.from([settingsContent]);
         // Upload settings.php
         colorLog("YELLOW", "Uploading settings.php...");

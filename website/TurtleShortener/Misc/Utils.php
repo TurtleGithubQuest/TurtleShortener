@@ -13,7 +13,7 @@ class Utils {
         global$user_language;
         $user_language = $_GET["lang"] ?? $_POST["lang"] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
         $user_language = self::getLanguage($user_language);
-        include_once(__DIR__ . "/../lang/".$user_language.".php");
+        include_once(__DIR__ . "/../Language/" .$user_language.".php");
     }
     public function validateTranslation($baseTranslation, $otherTranslation): array {
       $missingEntries = array_diff_key($baseTranslation, $otherTranslation);

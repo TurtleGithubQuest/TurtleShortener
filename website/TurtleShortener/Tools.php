@@ -1,5 +1,5 @@
 <?php
-namespace Website\Php;
+namespace TurtleShortener;
 
 session_start();
 $tool = $_GET["t"];
@@ -10,7 +10,7 @@ if ($tool == "clear") {
     unset($_SESSION["shortened_array"]);
     exit;
 } else if ($tool == "migratedb") {
-    echo require("db/migrate.php");
+    echo require("Database/Migrate.php");
 } else if ($tool == "upkeep") {
-    echo require("db/upkeep.php");
+    echo require("Database/UpKeep.php");
 }

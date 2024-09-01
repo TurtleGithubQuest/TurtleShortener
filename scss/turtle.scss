@@ -1,6 +1,7 @@
 @use "var/color" as *;
 @use "var/font" as *;
 @use "scope/global" as *;
+@use "fn/sea" as *;
 
 @media only screen and (max-device-width : 768px), only screen and (max-width : 768px) {
   .title {

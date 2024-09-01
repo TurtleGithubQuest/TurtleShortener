@@ -1,4 +1,5 @@
 Options -Indexes
+
 <FilesMatch ".*">
     Order Allow,Deny
     Allow from all

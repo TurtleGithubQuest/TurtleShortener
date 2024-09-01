@@ -1,7 +1,7 @@
 <?php
-namespace Website\Php\Fn;
+namespace TurtleShortener\Misc;
 
-require_once('bootstrap.php');
+require_once(__DIR__ . '/../bootstrap.php');
 
 header('Content-type:application/json;charset=utf-8');
 error_reporting(E_ERROR);
@@ -47,7 +47,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['secret'])) {
         else
             header("Location: error.php?error=" . urlencode($message));
     } else {
-        $json = ['status' => $status, 'errormsg' => $message, 'url' => getProtocol().'://'.$host.'/'.$img_dir.$uploadedName];
+        $json = ['status' => $status, 'errormsg' => $message, 'url' => $GLOBALS['utils']->getProtocol().'://'.$host.'/'.$img_dir.$uploadedName];
         echo json_encode($json);
     }
 }

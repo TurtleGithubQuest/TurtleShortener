@@ -5,11 +5,9 @@ RewriteBase /
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^/api/v1/(Upload|Shorten|Search)(/)?$ [NC]
+RewriteRule ^api/v1/(Upload|Shorten|Search)(/)?$ /TurtleShortener/Misc/$1.php [L,QSA]
 
-RewriteCond %{REQUEST_URI} ^/api/v1/(Upload|Shorten|Search)$ [NC]
-RewriteRule ^(Upload|Shorten|Search)$ /php/Misc/$1.php [L,QSA]
+RewriteRule ^(.*)\+$ TurtleShortener/Page/Preview.php?s=$1&preview=true [L,QSA]
 
-RewriteRule ^(.*)\+$ php/page/preview.php?s=$1&preview=true [L,QSA]
-
-RewriteRule ^([a-zA-Z0-9_-]+)$ php/page/preview.php?s=$1 [L,QSA]
-
+RewriteRule ^([a-zA-Z0-9_-]+)$ TurtleShortener/Page/Preview.php?s=$1 [L,QSA]

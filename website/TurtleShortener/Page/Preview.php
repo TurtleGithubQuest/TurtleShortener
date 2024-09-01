@@ -11,6 +11,7 @@ $is_bot = false;
 $preview_mode = $_GET['preview'] ?? false;
 try {
     if (isset($_GET['s'])) {
+        require_once(__DIR__. '/../bootstrap.php');
         //require_once(__DIR__ . '/../db/util.php');
         $pdo = DbUtil::getPdo();
         $query = $preview_mode ?
@@ -88,7 +89,7 @@ if ($preview_mode) {
           <tr>
             <th>target</th>
             <td><a href="'.$url.'">'.$url.'</a>
-                <span class="copy-wrapper" title="click to copy url" onclick="copyValue(this, \''.$url.'\')">
+                <span class="copy-wrapper" title="click to copy url" copyValue="\''.$url.'\'">
                     <img src="img/svg/copy.svg" alt="copy">
                     <img src="img/svg/success.svg" alt="copy-success">
                 </span>

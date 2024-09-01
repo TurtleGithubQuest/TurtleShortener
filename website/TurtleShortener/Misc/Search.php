@@ -1,6 +1,7 @@
 <?php
 namespace TurtleShortener\Misc;
 
+global $lang;
 require_once(__DIR__ . '/../bootstrap.php');
 
 use PDO;
