@@ -1,6 +1,5 @@
 <?php
 namespace TurtleShortener;
-global$user_language;
 ?>
 <nav>
     <section class="left">
@@ -13,8 +12,8 @@ global$user_language;
             </section>
             <section class="items">
                 <form class="search" target="_self" action="/TurtleShortener/Misc/Search.php">
-                    <label><input name="q" type="text" placeholder="<?php echo $lang['search-url']; ?>"></label>
-                    <label hidden><input type="text" name="lang" value="<?php echo $user_language?>"></label>
+                    <label><input name="q" type="text" placeholder="<?php echo $lang->get('search-url'); ?>"></label>
+                    <label hidden><input type="text" name="lang" value="<?php echo $GLOBALS['userLangCode']?>"></label>
                     <input type="image" src="img/svg/magnifying-glass.svg" alt="Submit">
                 </form>
                 <?php
@@ -38,7 +37,7 @@ global$user_language;
             </section>
         </section>
         <div class="dropdown">
-            <img src="img/svg/flag/<?php echo $user_language ?>.svg" alt="selected language"/>
+            <img src="img/svg/flag/<?php echo $GLOBALS['userLangCode'] ?>.svg" alt="selected language"/>
             <?php
             $queryParams = $GLOBALS['utils']?->getQueryParams();
             echo '

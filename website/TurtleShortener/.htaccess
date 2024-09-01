@@ -1,11 +1,11 @@
 Options -Indexes
 
-<Files "Tools.php">
-    Order Allow,Deny
-    Allow from all
-</Files>
-
 <FilesMatch ".*">
     Order Allow,Deny
     Deny from all
 </FilesMatch>
+
+<Files "Tools.php">
+    Order Allow,Deny
+    Allow from all
+</Files>

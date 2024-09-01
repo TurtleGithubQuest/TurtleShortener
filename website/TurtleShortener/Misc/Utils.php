@@ -1,19 +1,45 @@
 <?php
 namespace TurtleShortener\Misc;
 
+use Exception;
+
 class Utils {
-    public function getLanguage($userLang) {
-        if (file_exists(__DIR__ . "/../lang/{$userLang}.php")) {
-            return $userLang;
+    private const DEFAULT_LANGUAGE = "English";
+    public static function getLanguage($userLang): string {
+        $languages = [
+            "cz" => "Czech",
+            "en" => "English",
+            "sk" => "Czech"
+        ];
+        $language = $languages[$userLang] ?? self::DEFAULT_LANGUAGE;
+        if (file_exists(__DIR__ . "/../Languages/{$language}.php")) {
+            return $language;
         } else {
-            return $userLang == "sk" ? "cz" : "en";
+            return self::DEFAULT_LANGUAGE;
         }
     }
-    public function loadLanguage(): void {
-        global$user_language;
+
+    /**
+     * @throws Exception
+     */
+    public static function loadLanguage(): void {
         $user_language = $_GET["lang"] ?? $_POST["lang"] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        $GLOBALS['userLangCode'] = $user_language;
         $user_language = self::getLanguage($user_language);
-        include_once(__DIR__ . "/../Language/" .$user_language.".php");
+        $GLOBALS['userLang'] = $user_language;
+
+        $languageClassPath = __DIR__ . "/../Languages/{$user_language}.php";
+        if (!file_exists($languageClassPath)) {
+            throw new Exception("Language file not found: {$languageClassPath}");
+        }
+        require_once(__DIR__. "/../Languages/Language.php");
+        include_once($languageClassPath);
+        $languageClass = "\\TurtleShortener\\Languages\\{$user_language}";
+        if (!class_exists($languageClass)) {
+            throw new Exception("Language class not found: {$languageClass}");
+        }
+
+        $GLOBALS['lang'] = new $languageClass;
     }
     public function validateTranslation($baseTranslation, $otherTranslation): array {
       $missingEntries = array_diff_key($baseTranslation, $otherTranslation);

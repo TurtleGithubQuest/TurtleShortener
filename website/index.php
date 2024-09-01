@@ -7,10 +7,10 @@ if (isset($_GET["sid"])) {
     session_id($_GET["sid"]);
 }
 session_start();
-
+$lang = $GLOBALS['lang'];
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $user_language; ?>">
+<html lang="<?php echo $GLOBALS['userLangCode']; ?>">
 <head>
     <meta charset="UTF-8">
     <title>trt.ls</title>
@@ -95,19 +95,25 @@ session_start();
                 $expirationDate = date('Y-m-d\TH:i', $expTime);
                 $queryParams = $GLOBALS['utils']?->getQueryParams();
                 echo '
-                    <label>'.$lang['url-address'].'<input type="url" name="url" placeholder="'.$lang['url-address.placeholder'].'" spellcheck="false" maxlength="2083" required></label>
-                    <label>'.$lang['expiration'].'<input type="datetime-local" name="expiration" value="'.$expirationDate.'"></label>
+                    <label for="url">'.$lang->get('url-address').'
+                        <input type="url" name="url" placeholder="'.$lang->get('url-address.placeholder').'" spellcheck="false" maxlength="2083" required>
+                    </label>
+                    <label for="expiration">'.$lang->get('expiration').'
+                        <input type="datetime-local" name="expiration" value="'.$expirationDate.'">
+                    </label>
                     <div class="expiration-time">
-                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 360, $queryParams).'">6 '.$lang['hours'].'</a>
-                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 2880, $queryParams).'">48 '.$lang['hours'].'</a>
-                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 20160, $queryParams).'">14 '.$lang['days'].'</a>
-                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 40320, $queryParams).'">1 '.$lang['month'].'</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 60, $queryParams).'">1 '.$lang->get('hour').'</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 2880, $queryParams).'">48 '.$lang->get('hours').'</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 10080, $queryParams).'">7 '.$lang->get('days').'</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 40320, $queryParams).'">1 '.$lang->get('month').'</a>
                     </div>
-                    <label for="alias">Alias <input type="text" name="alias" placeholder="'.$lang['alias.placeholder'].'" pattern="[a-zA-Z0-9\-_\.~]+" maxlength="6"></label>
+                    <label for="alias">Alias <input type="text" name="alias" placeholder="'.$lang->get('alias.placeholder').'" pattern="[a-zA-Z0-9\-_\.~]+" maxlength="6"></label>
                     <sup>[a-zA-Z0-9\-_\.~]+</sup>
-                    <label>'.$lang['include_in_search'].'<input type="text" name="searchable" value="'.(($_GET['searchable']??1) ? "true" : "false").'" hidden>
-                    <a href="'.$GLOBALS['utils']?->buildQuery("searchable", !($_GET['searchable']??1), $queryParams).'">'.$lang[$_GET['searchable']??1].'</a></label>
-                    <input type="submit" value="'.$lang['shorten'].'">';
+                    <label for="searchable">'.$lang->get('include_in_search').'
+                        <input type="text" name="searchable" value="'.(($_GET['searchable']??1) ? "true" : "false").'" hidden>
+                        <a href="'.$GLOBALS['utils']?->buildQuery("searchable", !($_GET['searchable']??1), $queryParams).'">'.$lang->get($_GET['searchable']??1).'</a>
+                    </label>
+                    <input type="submit" value="'.$lang->get('shorten').'">';
             ?>
         </form>
         <section class="results flex-col"><?php
@@ -120,7 +126,7 @@ session_start();
             $array = $_SESSION["shortened_array"];
             $size = count($array);
             if ($size > 0)
-                echo '<div>'.$size.$lang['shortened-found'].'</div>';
+                echo '<div>'.$size.$lang->get('shortened-found').'</div>';
             foreach (array_reverse($array, true) as $index => $value) {
                 $shortened = unserialize($value);
                 $url = $shortened->url;
@@ -129,7 +135,7 @@ session_start();
                     <div>'.$url.'</div>
                     <table>
                       <tr>
-                        <th>'.$lang['shortened-url'].'</th>
+                        <th>'.$lang->get('shortened-url').'</th>
                         <td><a href="https://'.$shortenedUrl.'">'.$shortenedUrl.'</a>
                             <span class="copy-wrapper" title="click to copy url" copyValue="https://'.$shortenedUrl.'">
                                 <img src="img/svg/copy.svg" alt="copy">
@@ -138,11 +144,11 @@ session_start();
                         </td>
                       </tr>
                       <tr>
-                        <th>'.$lang['created-at'].'</th>
+                        <th>'.$lang->get('created-at').'</th>
                         <td unix="'.$shortened->created.'">'.$shortened->getCreationDate().'</td>
                       </tr>
                       <tr>
-                        <th>'.$lang['expiration'].'</th>
+                        <th>'.$lang->get('expiration').'</th>
                         <td unix="'.$shortened->expiry.'">'.$shortened->getExpiryFormatted().'</td>
                       </tr>
                     </table></div>
