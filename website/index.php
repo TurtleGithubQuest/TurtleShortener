@@ -8,6 +8,7 @@ if (isset($_GET["sid"])) {
 }
 session_start();
 $lang = $GLOBALS['lang'];
+$isMobile = $_GET['m'] ?? false;
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $GLOBALS['userLangCode']; ?>">
@@ -15,6 +16,7 @@ $lang = $GLOBALS['lang'];
     <meta charset="UTF-8">
     <title>trt.ls</title>
     <link rel="stylesheet" href="css/turtle.css">
+    <?php if($isMobile) echo '<link rel="stylesheet" href="css/mobile.css">' ?>
     <link rel="stylesheet" href="css/third-party/josetxu_turtle.css">
     <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">

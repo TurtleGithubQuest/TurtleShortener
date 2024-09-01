@@ -5,9 +5,18 @@ RewriteBase /
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} ^/api/v1/(Upload|Shorten|Search)(/)?$ [NC]
-RewriteRule ^api/v1/(Upload|Shorten|Search)(/)?$ /TurtleShortener/Misc/$1.php [L,QSA]
+#note: RewriteMap not supported by provider.
+RewriteRule ^api/v1/upload(/)?$ /TurtleShortener/Misc/Upload.php [L,QSA]
+RewriteRule ^api/v1/shorten(/)?$ /TurtleShortener/Misc/Shorten.php [L,QSA]
+RewriteRule ^api/v1/search(/)?$ /TurtleShortener/Misc/Search.php [L,QSA]
+
+RewriteRule ^api/v1/(Upload|Shorten|Search)(/)?$ /TurtleShortener/Misc/$1.php [L,QSA,NC]
 
 RewriteRule ^(.*)\+$ TurtleShortener/Page/Preview.php?s=$1&preview=true [L,QSA]
 
 RewriteRule ^([a-zA-Z0-9_-]+)$ TurtleShortener/Page/Preview.php?s=$1 [L,QSA]
+
+RewriteCond %{HTTP_USER_AGENT} "android|mobile|iphone|blackberry|ipod|opera mini|iemobile|windows phone" [NC]
+# Append the query string parameter m=true
+RewriteCond %{QUERY_STRING} !(^|&)m=true(&|$) [NC]
+RewriteRule ^(.*)$ $1?m=true [L,QSA]

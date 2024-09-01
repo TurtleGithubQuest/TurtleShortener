@@ -23,7 +23,7 @@ class Utils {
      * @throws Exception
      */
     public static function loadLanguage(): void {
-        $user_language = $_GET["lang"] ?? $_POST["lang"] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        $user_language = $_GET["lang"] ?? $_POST["lang"] ?? strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? self::DEFAULT_LANGUAGE, 0, 2));
         $GLOBALS['userLangCode'] = $user_language;
         $user_language = self::getLanguage($user_language);
         $GLOBALS['userLang'] = $user_language;
