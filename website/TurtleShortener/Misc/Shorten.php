@@ -20,9 +20,9 @@ use TurtleShortener\Models\Shortened;
 use Ulid\Ulid;
 
 $dbUtil = new DbUtil();
-$pdo = $dbUtil->getPdo();
+$pdo = $dbUtil::getPdo();
 
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
+if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['url'])) {
     $url = (string) $_POST['url'];
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
         $_SESSION["error"] = "'$url' is not a valid url.";
@@ -38,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
         if ($timestamp !== false)
             $expiry = $timestamp;
     }
-    $searchable = !isset($_POST['searchable']) || $_POST['searchable'] == 'true';
+    $searchable = !isset($_POST['searchable']) || $_POST['searchable'] === 'true';
     try {
         $stmt = $pdo->prepare("SELECT shortcode, expiry, created FROM urls WHERE url = ? OR shortcode = ?");
         $stmt->execute([$url, $_POST["alias"]??null]);
@@ -68,13 +68,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['url'])) {
         if (!isset($errorMessage)) $errorMessage = $e->getTraceAsString();
         $_SESSION["error"] = 'Object creation error: ' . $errorMessage;
         $json_data = ['error' => $errorMessage];
-        $GLOBALS['log']->debug(json_encode($errorMessage));
+        $GLOBALS['log']->debug(json_encode($errorMessage, JSON_THROW_ON_ERROR));
     } finally {
         if ($should_redirect)
             header('Location: '.$GLOBALS['utils']->getProtocol().'://'.$_SERVER['HTTP_HOST'].'/?sid='.session_id());
         else echo json_encode($json_data);
     }
-} else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['s'])) {
+} else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['s'])) {
     $shortCode = $_GET['s'];
 
     $stmt = $pdo->prepare("SELECT url FROM urls WHERE shortcode = ?");

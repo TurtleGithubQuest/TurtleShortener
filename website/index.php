@@ -1,6 +1,8 @@
 <?php
 namespace TurtleShortener;
 
+use TurtleShortener\Models\Shortened;
+
 require_once(__DIR__ . '/TurtleShortener/bootstrap.php');
 
 if (isset($_GET["sid"])) {
@@ -31,65 +33,15 @@ $isMobile = $_GET['m'] ?? false;
             <input type="image" class="broom" src="img/svg/broom.svg" alt="Clean cookies" title="Clean cookies">
         </form>
     </div>
-    <div id="sea-effects">
-        <div class="bubbley bubbley--1"></div>
-        <div class="bubbley bubbley--2"></div>
-        <div class="bubbley bubbley--3"></div>
-        <div class="bubbley bubbley--4"></div>
-        <div class="bubbley bubbley--5"></div>
-        <div class="bubbley bubbley--6"></div>
-        <div class="bubbley bubbley--7"></div>
-        <div class="bubbley bubbley--8"></div>
-        <div class="bubbley bubbley--9"></div>
-        <div class="bubbley bubbley--10"></div>
-        <div class="bubbley bubbley--11"></div>
-        <div class="bubbley bubbley--12"></div>
-        <div class="turtle-box" style="position:absolute; top: 20%; right: 2%; opacity: 80%">
-            <div class="bubbles">
-                <div class="bubble b1"></div>
-                <div class="bubble b2"></div>
-                <div class="bubble b3"></div>
-                <div class="bubble b4"></div>
-                <div class="bubble b5"></div>
-                <div class="bubble b6"></div>
-                <div class="bubble b7"></div>
-                <div class="bubble b8"></div>
-                <div class="bubble b9"></div>
-                <div class="bubble b10"></div>
-            </div>
-            <div class="bubbles mirror">
-                <div class="bubble b1"></div>
-                <div class="bubble b2"></div>
-                <div class="bubble b3"></div>
-                <div class="bubble b4"></div>
-                <div class="bubble b5"></div>
-                <div class="bubble b6"></div>
-                <div class="bubble b7"></div>
-                <div class="bubble b8"></div>
-                <div class="bubble b9"></div>
-                <div class="bubble b10"></div>
-            </div>
-            <div class="turtle">
-                <div class="head"><div class="eyes"></div></div>
-                <div class="leg1"></div>
-                <div class="leg2"></div>
-                <div class="leg3"></div>
-                <div class="leg4"></div>
-                <div class="tail"></div>
-                <div class="body"><span></span></div>
-                <div class="body-tail"></div>
-            </div>
-        </div>
-    </div>
     <div class="index-box flex-col">
-        <div class="title">Turtle Shortener</div>
+        <div class="title">Turtle Shortener <?php if($isMobile) echo '<div class="mobile">(mobile)</div>' ?></div>
         <form class="t-form flex-col" action="TurtleShortener/Misc/Shorten.php?sid=<?php
             if (isset($_GET['sid'])) echo $_GET['sid'];
             else echo session_id();
         ?>" method="post">
             <?php
                 $expValue = $_GET["exp"] ?? 10080; # Default 1 week
-                if (!filter_var($expValue, FILTER_VALIDATE_INT) || $expValue <= 0) {
+                if ($expValue <= 0 || !filter_var($expValue, FILTER_VALIDATE_INT)) {
                     $expValue = 10080;
                 }
                 $expValue = (int)$expValue*60;
@@ -130,7 +82,7 @@ $isMobile = $_GET['m'] ?? false;
             if ($size > 0)
                 echo '<div>'.$size.$lang->get('shortened-found').'</div>';
             foreach (array_reverse($array, true) as $index => $value) {
-                $shortened = unserialize($value);
+                $shortened = unserialize($value, Shortened::class);
                 $url = $shortened->url;
                 $shortenedUrl = $shortened->shortenedUrl;
                 echo '<div class="result-table">
@@ -162,6 +114,56 @@ $isMobile = $_GET['m'] ?? false;
     </div>
     </div>
 </div>
+<div id="sea-effects">
+        <div class="bubbley bubbley--1"></div>
+        <div class="bubbley bubbley--2"></div>
+        <div class="bubbley bubbley--3"></div>
+        <div class="bubbley bubbley--4"></div>
+        <div class="bubbley bubbley--5"></div>
+        <div class="bubbley bubbley--6"></div>
+        <div class="bubbley bubbley--7"></div>
+        <div class="bubbley bubbley--8"></div>
+        <div class="bubbley bubbley--9"></div>
+        <div class="bubbley bubbley--10"></div>
+        <div class="bubbley bubbley--11"></div>
+        <div class="bubbley bubbley--12"></div>
+        <div class="turtle-box">
+            <div class="bubbles">
+                <div class="bubble b1"></div>
+                <div class="bubble b2"></div>
+                <div class="bubble b3"></div>
+                <div class="bubble b4"></div>
+                <div class="bubble b5"></div>
+                <div class="bubble b6"></div>
+                <div class="bubble b7"></div>
+                <div class="bubble b8"></div>
+                <div class="bubble b9"></div>
+                <div class="bubble b10"></div>
+            </div>
+            <div class="bubbles mirror">
+                <div class="bubble b1"></div>
+                <div class="bubble b2"></div>
+                <div class="bubble b3"></div>
+                <div class="bubble b4"></div>
+                <div class="bubble b5"></div>
+                <div class="bubble b6"></div>
+                <div class="bubble b7"></div>
+                <div class="bubble b8"></div>
+                <div class="bubble b9"></div>
+                <div class="bubble b10"></div>
+            </div>
+            <div class="turtle">
+                <div class="head"><div class="eyes"></div></div>
+                <div class="leg1"></div>
+                <div class="leg2"></div>
+                <div class="leg3"></div>
+                <div class="leg4"></div>
+                <div class="tail"></div>
+                <div class="body"><span></span></div>
+                <div class="body-tail"></div>
+            </div>
+        </div>
+    </div>
 <iframe style="display: none" id="none"></iframe>
 <script src="js/turtle.js"></script>
 </body>

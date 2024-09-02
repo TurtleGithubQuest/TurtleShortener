@@ -19,10 +19,12 @@
       max-width: unset !important;
     }
   }
-  .turtle-box {
-    top: 45% !important;
-    opacity: 70% !important;
-  }
+}
+.turtle-box {
+  position:absolute;
+  top: 20%;
+  right: 2%;
+  opacity: 80%
 }
 .index-box {
   display: flex;
@@ -230,4 +232,11 @@
   0% {box-shadow: 0 0 0.55rem 0.05rem lighten($background, 6%);}
   50% {box-shadow: -0.25 -0.25 1.55rem 0.5rem lighten($background, 12%);}
   100% {box-shadow: 0 0 0.55rem 0.05rem lighten($background, 6%);}
+}
+#wrapper-content {
+  position: relative;
+  z-index: 5;
+}
+.mobile {
+  display: none;
 }

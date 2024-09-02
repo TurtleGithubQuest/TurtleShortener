@@ -12,6 +12,25 @@ $base-opacity: 0.2;
   bottom: $bottom;
 }
 
+@keyframes bubble {
+  0% {
+    transform: translateY(0%);
+    opacity: 0.06;
+  }
+  100% {
+    transform: translateY(-120vh);
+  }
+}
+
+@keyframes sideWays {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(12.5rem);
+  }
+}
+
 .bubbley {
   width: 1.875rem;
   height: 1.875rem;
@@ -21,6 +40,7 @@ $base-opacity: 0.2;
   bottom: -1.875rem;
   opacity: 0.2;
   animation: $animation-bubble;
+  //will-change: transform, opacity;
 
   &--1 {
     @include bubble(1.875rem, 1.875rem, 10%, 0.5s, 16s);
@@ -67,25 +87,6 @@ $base-opacity: 0.2;
   }
 }
 
-@keyframes bubble {
-  0% {
-    transform: translateY(0%);
-    opacity: 0.06;
-  }
-  100% {
-    transform: translateY(-120vh);
-  }
-}
-
-@keyframes sideWays {
-  0% {
-    margin-left: 0;
-  }
-  100% {
-    margin-left: 12.5rem;
-  }
-}
-
 #sea-effects {
   position: fixed;
   top: 0;
@@ -93,5 +94,8 @@ $base-opacity: 0.2;
   height: 100%;
   background-image: linear-gradient(0deg, #182848, #2980b9);
   overflow: hidden;
-  z-index: 0;
+  z-index: 1;
+  pointer-events: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateZ(0);
 }

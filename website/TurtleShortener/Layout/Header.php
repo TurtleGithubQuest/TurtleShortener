@@ -19,7 +19,7 @@ namespace TurtleShortener;
                 <?php
                 echo '<div id="searchResult"'.(empty($_GET["found"]) ? ' class="d-none"' : '').'>';
                 if (!empty($_GET["found"])) {
-                    $results = json_decode(urldecode($_GET["found"]));
+                    $results = json_decode(urldecode($_GET["found"]), false, 512, JSON_THROW_ON_ERROR);
                     $host = explode(':', $_SERVER['HTTP_HOST'])[0]."/";
                     foreach ($results as $result) {
                         $r_url = $result->url ?? "";

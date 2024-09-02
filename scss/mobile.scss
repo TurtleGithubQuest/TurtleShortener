@@ -1,10 +1,27 @@
 .expiration-time {
+  font-size: 1.25rem !important;
   a {
-    min-width: 3rem !important;
+    min-height: 4rem !important;
+    min-width: 6rem !important;
   }
 }
+.title {font-size: 3.5rem !important;}
 .t-form {
+  min-height: 80vw !important;
+  min-width: 85vw !important;
+  label {font-size: 2rem !important;}
   input {
-    min-height: 3rem !important;
+    min-height: 4rem !important;;
+    font-size: 1.8rem !important;
+    &[type=submit] {
+      min-height: 4rem !important;
+    }
   }
+}
+.turtle-box {
+  top: 65% !important;
+  opacity: 70% !important;
+}
+.mobile {
+  display: block;
 }

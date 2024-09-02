@@ -116,6 +116,8 @@ img.linkIcon {
     line-height: 0.8rem;
     border-radius: 0.25rem;
     transition: background-color 0.25s cubic-bezier(.65,.23,.21,.88), transform 0.5s ease;
+    text-align: center;
+    align-content: center;
     &:hover {
       //transform: scaleY(102%);
       background-color: darken($bg_secondary, 4%);
