@@ -163,9 +163,12 @@
       padding:0;
     }
   }
-  input[type=text], input[type=date], input[type=datetime-local], input[type=url], input[type=password] {
+  input[type=text], input[type=date], input[type=datetime-local],
+  input[type=url], input[type=password], [for="searchable"]>a[href] {
     font-size: 1rem;
     background-color: darken($bg_secondary, 4%);
+    align-content: center;
+    padding: 0 1rem;
     &:focus {
       outline: 0.1rem solid darken($bg_secondary, 6%);
     }
