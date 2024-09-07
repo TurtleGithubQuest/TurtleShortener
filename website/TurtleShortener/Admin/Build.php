@@ -1,7 +1,9 @@
 <?php
 namespace TurtleShortener\Admin;
+use TurtleShortener\Misc\Utils;
 
 $languages = ['en', 'cz'];
+$utils = new Utils();
 $layoutFiles = ['Index.php', 'Header.php'];
 
 foreach ($languages as $lang) {
@@ -22,10 +24,17 @@ foreach ($languages as $lang) {
         // Read the content of the source file
         $content = file_get_contents($source);
 
+        // Load the language file using Utils
+        $languageClassName = $utils->getLanguage($lang);
+        $languageClassPath = __DIR__ . "/../Languages/{$languageClassName}.php";
+        require_once($languageClassPath);
+        $languageClass = "\\TurtleShortener\\Languages\\{$languageClassName}";
+        $translations = new $languageClass();
+
         // Replace translate('key') with the corresponding value from $translations
-        $content = preg_replace_callback('/translate\(\'([^\']+)\'\)/', function ($matches) use ($translations, $lang) {
+        $content = preg_replace_callback('/translate\(\'([^\']+)\'\)/', function ($matches) use ($translations) {
             $key = $matches[1];
-            return $translations[$lang][$key] ?? $matches[0];
+            return $translations->get($key) ?? $matches[0];
         }, $content);
 
         // Write the modified content to the destination file
