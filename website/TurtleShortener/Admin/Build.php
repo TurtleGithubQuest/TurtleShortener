@@ -1,6 +1,7 @@
 <?php
 namespace TurtleShortener\Admin;
 use TurtleShortener\Misc\Utils;
+use TurtleShortener\Languages\Language;
 
 $languages = ['en', 'cz'];
 $utils = new Utils();
@@ -29,12 +30,16 @@ foreach ($languages as $lang) {
         $languageClassPath = __DIR__ . "/../Languages/{$languageClassName}.php";
         require_once($languageClassPath);
         $languageClass = "\\TurtleShortener\\Languages\\{$languageClassName}";
-        $translations = new $languageClass();
+        $translations = new $languageClass(); // $translations is an instance of Language
 
         // Replace translate('key') with the corresponding value from $translations
         $content = preg_replace_callback('/translate\(\'([^\']+)\'\)/', function ($matches) use ($translations) {
             $key = $matches[1];
-            return $translations->get($key) ?? $matches[0];
+            if ($translations instanceof Language) {
+                return $translations->get($key) ?? $matches[0];
+            } else {
+                throw new \RuntimeException("The class {$languageClass} must implement the Language interface.");
+            }
         }, $content);
 
         // Write the modified content to the destination file
