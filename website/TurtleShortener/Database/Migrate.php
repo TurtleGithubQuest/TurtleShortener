@@ -7,7 +7,7 @@ $token = filter_input(INPUT_GET, 'token')
     ?? filter_input(INPUT_POST, 'token');
 $settings = require(__DIR__."/../settings.php");
 $admin_tokens = $settings["admin_tokens"];
-if (!in_array($token, $admin_tokens)) {
+if (!in_array($token, $admin_tokens, true)) {
     echo "Access token is not valid.";
     exit;
 }

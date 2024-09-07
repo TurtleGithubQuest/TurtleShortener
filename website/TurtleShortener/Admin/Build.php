@@ -1,10 +1,15 @@
 <?php
 namespace TurtleShortener\Admin;
 
+use TurtleShortener\Misc\AccessLevel;
 use TurtleShortener\Misc\Utils;
 use TurtleShortener\Languages\Language;
 
 require_once(__DIR__ . '/../bootstrap.php');
+
+if (!($GLOBALS['utils']->isTokenValid(AccessLevel::admin, null) ?? false)) {
+    exit;
+}
 
 $languages = ['en', 'cz'];
 $utils = new Utils();

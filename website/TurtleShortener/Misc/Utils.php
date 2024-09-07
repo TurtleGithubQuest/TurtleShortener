@@ -3,6 +3,10 @@ namespace TurtleShortener\Misc;
 
 use Exception;
 
+enum AccessLevel {
+    case admin;
+    case server;
+}
 class Utils {
     private const DEFAULT_LANGUAGE = "English";
     public static function getLanguage($userLang): string {
@@ -42,14 +46,13 @@ class Utils {
         $GLOBALS['lang'] = new $languageClass;
     }
     public function validateTranslation($baseTranslation, $otherTranslation): array {
-      $missingEntries = array_diff_key($baseTranslation, $otherTranslation);
+        $missingEntries = array_diff_key($baseTranslation, $otherTranslation);
 
-      if (empty($missingEntries)) {
+        if (empty($missingEntries)) {
         return array();  // All entries are present in the other translation
-      }
-      else {
+        }
+
         return $missingEntries;  // Return keys that are missing in the other translation
-      }
     }
     public function getProtocol(): string {
         return ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] === 443) ? 'https' : 'http';
@@ -70,5 +73,18 @@ class Utils {
         }
         $new_query_string = http_build_query($query_params);
         return '?' . $new_query_string;
+    }
+    public function isTokenValid(AccessLevel $level, ?string $token): bool {
+        $token =
+            $token ??
+            filter_input(INPUT_GET, 'token') ??
+            filter_input(INPUT_POST, 'token');
+
+        $admin_tokens = $GLOBALS['settings'][$level->name."_tokens"] ?? [];
+        if (in_array($token, $admin_tokens, true)) {
+            return true;
+        }
+        echo $level->name." access token is not valid.";
+        return false;
     }
 }

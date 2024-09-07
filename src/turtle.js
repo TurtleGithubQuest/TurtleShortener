@@ -1,5 +1,6 @@
 import("./util/date.js");
 import("./util/misc.js");
+import("./util/form.js");
 import { bubbleCursor } from "cursor-effects";
 import {search} from "./fn/search.js";
 import {copyValue} from "./util/misc.js";
