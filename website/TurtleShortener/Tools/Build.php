@@ -1,21 +1,25 @@
 <?php
 namespace TurtleShortener\Tools;
 
+namespace TurtleShortener\Tools;
 
 $languages = ['en', 'cz'];
-$template = file_get_contents('index_template.php');
+$layoutFiles = ['Index.php', 'Header.php'];
 
 foreach ($languages as $lang) {
     $userLangCode = $lang;
     $isMobile = false;
 
-    $content = str_replace(
-        ['{{lang}}', '{{userLangCode}}', '{{isMobile}}'],
-        [$lang, $userLangCode, $isMobile ? 'true' : 'false'],
-        $template
-    );
+    $generatedDir = __DIR__ . "/../generated/$lang";
+    if (!is_dir($generatedDir)) {
+        mkdir($generatedDir, 0777, true);
+    }
 
-    file_put_contents("index_$lang.php", $content);
+    foreach ($layoutFiles as $file) {
+        $source = __DIR__ . "/../Layout/$file";
+        $destination = $generatedDir . '/' . $file;
+        copy($source, $destination);
+    }
 }
 
 echo "Language-specific files generated successfully.";
