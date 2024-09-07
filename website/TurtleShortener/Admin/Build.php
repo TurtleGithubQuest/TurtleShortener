@@ -44,7 +44,7 @@ foreach ($languages as $lang) {
         }, $content);
 
         // Replace the include('header'); with the actual content of Header.php
-        if (strpos($content, "include('header');") !== false) {
+        if (str_contains($content, "include('header');")) {
             $headerContent = file_get_contents(__DIR__ . '/../Layout/Header.php');
             $content = str_replace("include('header');", $headerContent, $content);
         }
