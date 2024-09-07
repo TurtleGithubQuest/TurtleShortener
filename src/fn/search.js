@@ -20,7 +20,7 @@ export async function search(e) {
             urlA.innerText = userFriendlyURL;
             result.append(urlA);
         }
-        results.append(result)
+        results.append(result);
     }
     const items = e.target.parentElement;
     const results = items.querySelector("#searchResult");

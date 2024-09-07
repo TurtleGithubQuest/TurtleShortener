@@ -14,9 +14,9 @@ class Utils {
         $language = $languages[$userLang] ?? self::DEFAULT_LANGUAGE;
         if (file_exists(__DIR__ . "/../Languages/{$language}.php")) {
             return $language;
-        } else {
-            return self::DEFAULT_LANGUAGE;
         }
+
+        return self::DEFAULT_LANGUAGE;
     }
 
     /**
@@ -30,13 +30,13 @@ class Utils {
 
         $languageClassPath = __DIR__ . "/../Languages/{$user_language}.php";
         if (!file_exists($languageClassPath)) {
-            throw new Exception("Language file not found: {$languageClassPath}");
+            throw new \RuntimeException("Language file not found: {$languageClassPath}");
         }
         require_once(__DIR__. "/../Languages/Language.php");
         include_once($languageClassPath);
         $languageClass = "\\TurtleShortener\\Languages\\{$user_language}";
         if (!class_exists($languageClass)) {
-            throw new Exception("Language class not found: {$languageClass}");
+            throw new \RuntimeException("Language class not found: {$languageClass}");
         }
 
         $GLOBALS['lang'] = new $languageClass;
@@ -52,17 +52,22 @@ class Utils {
       }
     }
     public function getProtocol(): string {
-        return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https' : 'http';
+        return ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] === 443) ? 'https' : 'http';
     }
     public function getQueryParams(): array{
         parse_str($_SERVER['QUERY_STRING'] ?? "", $query_params);
         return $query_params;
     }
     public function buildQuery(string $key, $value, ?array $query_params = null, string $url = ''): string {
-        $query_params = $query_params ?? self::getQueryParams();
+        $query_params = $query_params ?? $this->getQueryParams();
+        $ignoreList = ['page', 'm'];
+        foreach($ignoreList as $ignoreKey) {
+            unset($query_params[$ignoreKey]);
+        }
         $query_params[$key] = $value;
-        if (!empty($currentUrl))
+        if (!empty($currentUrl)) {
             $query_params['url'] = $currentUrl;
+        }
         $new_query_string = http_build_query($query_params);
         return '?' . $new_query_string;
     }

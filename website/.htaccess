@@ -3,6 +3,18 @@ Options -Indexes
 RewriteEngine On
 RewriteBase /
 
+# Capture the domain dynamically and set it to an environment variable
+RewriteCond %{HTTP_HOST} ^(www\.)?(.*)$
+RewriteRule ^ - [E=HOST:%2]
+
+RewriteCond %{REQUEST_URI} !^domains/
+RewriteCond %{REQUEST_URI} !^/domains/
+RewriteCond %{HTTP_HOST} ^(www\.)?(.*)$
+RewriteCond %{DOCUMENT_ROOT}/domains/%2 -d
+RewriteRule (.*) domains/%2/$1 [DPI]
+RewriteRule ^$ /domains/%{ENV:HOST}/generated/index.php [L]
+RewriteRule ^admin/?$ /generated/index.php?page=admin [L,QSA]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 #note: RewriteMap not supported by provider.
@@ -10,6 +22,7 @@ RewriteRule ^api/v1/upload(/)?$ /TurtleShortener/Misc/Upload.php [L,QSA]
 RewriteRule ^api/v1/shorten(/)?$ /TurtleShortener/Misc/Shorten.php [L,QSA]
 RewriteRule ^api/v1/search(/)?$ /TurtleShortener/Misc/Search.php [L,QSA]
 
+RewriteRule ^tools(/)?$ /TurtleShortener/Tools.php$1 [L,QSA]
 RewriteRule ^api/v1/(Upload|Shorten|Search)(/)?$ /TurtleShortener/Misc/$1.php [L,QSA,NC]
 
 RewriteRule ^(.*)\+$ TurtleShortener/Page/Preview.php?s=$1&preview=true [L,QSA]

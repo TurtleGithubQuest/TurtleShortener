@@ -107,6 +107,7 @@ nav {
       }
       #searchResult {
         @include scrollie-hidden;
+        position: absolute;
         display: flex;
         flex-flow: column;
         //flex-wrap: wrap;

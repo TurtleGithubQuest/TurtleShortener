@@ -6,6 +6,7 @@
 .env
 bun.lockb
 turtle.js
+./website/generated/**
 
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 

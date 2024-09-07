@@ -28,9 +28,12 @@ try {
     }
 } catch(Exception $e) {} finally {
     if (!empty($url)) {
-        if (!$is_bot && !$preview_mode)
+        if (!$is_bot && !$preview_mode) {
             header('Location: ' . $url);
-    } else header('Location: /error.php?error='.urlencode('Shortened url "'. ($url ?? 'none') .'" not found.'));
+        }
+    } else {
+        header('Location: /error.php?error=' . urlencode('Shortened url "' . ($url ?? 'none') . '" not found.'));
+    }
 }
 ?>
 <!DOCTYPE html>

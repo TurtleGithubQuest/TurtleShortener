@@ -14,10 +14,12 @@ Number.prototype.formatUnixToDate = function(userFriendly) {
         `${year}-${month}-${day}T${hour}:${minute}`;
 };
 updateInputElementDate = function(el, unix= null) {
+    if (el === null) return;
     const unixTime = unix ? Number.parseInt(unix) : Date.now();
     el.value = unixTime.formatUnixToDate(false)
 }
 updateElementTextDate = function(el, unix= null) {
+    if (el === null) return;
     const unixTime = unix ? Number.parseInt(unix) : Date.now();
     el.innerHTML = unixTime.formatUnixToDate(true)
 }

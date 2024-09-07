@@ -10,9 +10,9 @@ namespace TurtleShortener {
     global $user_language, $lang, $settings;
 
     $utils = new Utils();
-    $utils->loadLanguage();
+    //$utils::loadLanguage();
     $GLOBALS['log'] = LogUtil::getInstance();
     $GLOBALS['utils'] = $utils;
-    $GLOBALS['settings'] = require_once(__DIR__ . '/settings.php');
+    $GLOBALS['settings'] = require(__DIR__ . '/settings.php');
     $settings = $GLOBALS['settings'];
 }
