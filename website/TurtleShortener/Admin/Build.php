@@ -43,13 +43,11 @@ foreach ($languages as $lang) {
             throw new \RuntimeException("The class $className must implement the Language interface.");
         }, $content);
 
-        $content = preg_replace_callback('/include\(["\']([^"\']+)["\']\);/', static function ($matches) {
-            $includePath = __DIR__ . '/../' . $matches[1];
-            if (file_exists($includePath)) {
-                return file_get_contents($includePath);
-            }
-            throw new \RuntimeException("Included file '$includePath' not found.");
-        }, $content);
+        // Replace the include('header'); with the actual content of Header.php
+        if (strpos($content, "include('header');") !== false) {
+            $headerContent = file_get_contents(__DIR__ . '/../Layout/Header.php');
+            $content = str_replace("include('header');", $headerContent, $content);
+        }
 
         $content = str_replace('%language_code%', $lang, $content);
 
