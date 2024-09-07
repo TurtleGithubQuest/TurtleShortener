@@ -5,7 +5,7 @@ include('header');
 <div class="wrapper">
     <div id="wrapper-content">
         <div class="index-box flex-col">
-            <form class="t-form flex-col" method="post" response-type="console">
+            <form class="t-form flex-col" method="post" response-type="alert">
                 <label>Admin token
                     <input type="password" name="token" required>
                 </label>

@@ -15,4 +15,28 @@ export function createEl(tag, classNames) {
     }
     return element;
 }
+export function createAlert(level, text) {
+    const label = createEl('label', 'alert');
+
+    const input = createEl('input');
+    input.type = 'checkbox';
+    input.setAttribute('autocomplete', 'off');
+
+    const notificationInfo = createEl('span', 'notification-info');
+    notificationInfo.textContent = ' >';
+
+    const content = createEl('span', `content ${level}`);
+    content.innerHTML = text;
+
+    label.appendChild(input);
+    label.appendChild(notificationInfo);
+    label.appendChild(content);
+
+    return label;
+}
+export function createAlertAndAssign(level, text) {
+    const alerts = document.getElementById('alerts');
+    if (alerts)
+        alerts.appendChild(createAlert(level, text));
+}
 console.log()
