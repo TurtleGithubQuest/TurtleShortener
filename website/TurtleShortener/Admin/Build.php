@@ -25,7 +25,7 @@ foreach ($languages as $lang) {
         $content = file_get_contents($source);
 
         // Load the language file using Utils
-        $languageClassName = $utils->getLanguage($lang);
+        $languageClassName = $utils::getLanguage($lang);
         $languageClassPath = __DIR__ . "/../Languages/{$languageClassName}.php";
         require_once($languageClassPath);
         $languageClass = "\\TurtleShortener\\Languages\\{$languageClassName}";
