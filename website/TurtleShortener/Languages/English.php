@@ -11,13 +11,17 @@ class English extends Language {
         "expiration" => "Expiration",
         "shorten" => "Shorten",
         "shortened-found" => " shortened url(s) found:",
-        "created-at" => "Created at",
+        "created_at" => "Created at",
         "shortened-url" => "Shortened URL",
         "preview-url" => "Preview URL",
         "alias.placeholder" => "(optional) shortcode",
         "search-url" => "Search URL",
         "found-nothing" => "Nothing found",
         "include_in_search" => "Include in search",
+        "url_preview" => "Shortened url preview",
+        "target" => "Target",
+        "searchable" => "Searchable",
+        "click_to_copy" => "Click to copy",
         1 => "true",
         0 => "false"
     ];

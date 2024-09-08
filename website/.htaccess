@@ -12,8 +12,8 @@ RewriteCond %{REQUEST_URI} !^/domains/
 RewriteCond %{HTTP_HOST} ^(www\.)?(.*)$
 RewriteCond %{DOCUMENT_ROOT}/domains/%2 -d
 RewriteRule (.*) domains/%2/$1 [DPI]
-RewriteRule ^$ /domains/%{ENV:HOST}/generated/index.php [L]
-RewriteRule ^admin/?$ /generated/index.php?page=admin [L,QSA]
+RewriteRule ^$ /domains/%{ENV:HOST}/generated/landing.php [L]
+RewriteRule ^admin/?$ /generated/landing.php?page=admin [L,QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -25,9 +25,9 @@ RewriteRule ^api/v1/search(/)?$ /TurtleShortener/Misc/Search.php [L,QSA]
 RewriteRule ^tools(/)?$ /TurtleShortener/Tools.php$1 [L,QSA]
 RewriteRule ^api/v1/(Upload|Shorten|Search)(/)?$ /TurtleShortener/Misc/$1.php [L,QSA,NC]
 
-RewriteRule ^(.*)\+$ TurtleShortener/Page/Preview.php?s=$1&preview=true [L,QSA]
+RewriteRule ^(.*)\+$ /generated/preview.php?s=$1&preview=true [L,QSA]
 
-RewriteRule ^([a-zA-Z0-9_-]+)$ TurtleShortener/Page/Preview.php?s=$1 [L,QSA]
+RewriteRule ^([a-zA-Z0-9_-]+)$ /generated/preview.php?s=$1 [L,QSA]
 
 RewriteCond %{HTTP_USER_AGENT} "android|mobile|iphone|blackberry|ipod|opera mini|iemobile|windows phone" [NC]
 # Append the query string parameter m=true

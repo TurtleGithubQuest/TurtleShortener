@@ -9,7 +9,7 @@ include('header');
         </form>
     </div>
     <div class="index-box flex-col">
-        <div class="title">Turtle Shortener <?php if($isMobile) echo '<div class="mobile">(mobile)</div>' ?></div>
+        <div class="title">Turtle Shortener <?php if(isset($isMobile) && $isMobile) echo '<div class="mobile">(mobile)</div>' ?></div>
         <form class="t-form flex-col" action="TurtleShortener/Misc/Shorten.php?sid=<?php
             if (isset($_GET['sid'])) echo $_GET['sid'];
             else echo session_id();
@@ -74,7 +74,7 @@ include('header');
                         </td>
                       </tr>
                       <tr>
-                        <th>translate("created-at")</th>
+                        <th>translate("created_at")</th>
                         <td unix="'.$shortened->created.'">'.$shortened->getCreationDate().'</td>
                       </tr>
                       <tr>

@@ -18,7 +18,7 @@ require_once __DIR__."/../Languages/Language.php";
 $languages = ['en', 'cz'];
 //$utils = new Utils();
 //$utils::loadLanguage();
-$layoutFiles = ['Index', "Admin"];
+$layoutFiles = ['Index', "Admin", "Preview"];
 $destinationFolder = __DIR__ . "/../../generated/";
 
 echo "Generating files for languages..<br>";
@@ -93,11 +93,15 @@ foreach (new DirectoryIterator(__DIR__."/../Languages") as $fileInfo) {
     }
     echo "<br>";
 }
-$landingContent = file_get_contents(__DIR__ . '/../Handlers/Landing.php');
-$landingContent = str_replace(
-    '$languages = [];',
-    '$languages = ' . json_encode($languages, JSON_THROW_ON_ERROR) . ';',
-    $landingContent
-);
-file_put_contents($destinationFolder."/index.php", $landingContent);
-echo "Language-specific files generated successfully.";
+foreach(['Landing', 'Preview'] as $handler) {
+    $handlerName = strtolower($handler);
+    $content = file_get_contents(__DIR__ . "/../Handlers/$handler.php");
+    $content = str_replace(
+        '$languages = [];',
+        '$languages = ' . json_encode($languages, JSON_THROW_ON_ERROR) . ';',
+        $content
+    );
+    file_put_contents($destinationFolder."/$handlerName.php", $content);
+}
+
+echo "Build successful.";

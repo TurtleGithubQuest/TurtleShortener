@@ -3,7 +3,9 @@ namespace TurtleShortener {
     require_once(__DIR__ .'/Misc/Utils.php');
     require_once(__DIR__.'/Database/DbUtil.php');
     require_once(__DIR__ .'/Misc/LogUtil.php');
+    require_once(__DIR__ .'/Misc/AccessLevel.php');
     require_once(__DIR__.'/Models/Shortened.php');
+    require_once(__DIR__.'/Models/GeoData.php');
     use TurtleShortener\Misc\Utils;
     use TurtleShortener\Misc\LogUtil;
 

@@ -118,6 +118,14 @@ nav {
         overflow: scroll;
         gap: 0.1rem;
         border: 0.1rem solid darken($bg_secondary, 15%);
+        :not(:has(.result)) & {
+          display: none;
+        }
+        &:has(.result) {
+          #noResults {
+            display: none;
+          }
+        }
         .result {
           display: flex;
           align-items: center;

@@ -1,38 +1,38 @@
 <?php
 namespace TurtleShortener\Page;
 
-use TurtleShortener\Database\DbUtil;
+use TurtleShortener\Models\GeoData;
 use TurtleShortener\Models\Shortened;
 use Exception;
-use PDO;
 use ValueError;
 
 $is_bot = false;
 $preview_mode = $_GET['preview'] ?? false;
 try {
     if (isset($_GET['s'])) {
-        require_once(__DIR__. '/../bootstrap.php');
+        require_once(__DIR__. '/../TurtleShortener/bootstrap.php');
         //require_once(__DIR__ . '/../db/util.php');
-        $pdo = DbUtil::getPdo();
-        $query = $preview_mode ?
-            "SELECT shortcode, url, expiry, created, searchable FROM urls WHERE shortcode = ?":
-            "SELECT url FROM urls WHERE shortcode = ?";
-        $stmt = $pdo->prepare($query);
-        $shortCode = $_GET['s'];
-        $stmt->execute([$shortCode]);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (is_array($data))
-            $url = $data['url'];
+        $shortcode = $_GET['s'];
+        try {
+            $shortened = Shortened::fetch($shortcode, $preview_mode);
+        } catch (Exception $e) {
+            echo "Error fetching data.";
+            exit;
+        }
         $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
         $is_bot = str_contains($userAgent, "bot");
+    } else {
+        echo "No shortcode provided.";
+        exit;
     }
-} catch(Exception $e) {} finally {
-    if (!empty($url)) {
+} catch(Exception $e) {
+} finally {
+    if (!empty($shortened->url)) {
         if (!$is_bot && !$preview_mode) {
-            header('Location: ' . $url);
+            header('Location: ' . $shortened->url);
         }
     } else {
-        header('Location: /error.php?error=' . urlencode('Shortened url "' . ($url ?? 'none') . '" not found.'));
+        header('Location: /error.php?error=' . urlencode('Shortened url "' . ($shortened->url ?? 'none') . '" not found.'));
     }
 }
 ?>
@@ -51,7 +51,7 @@ try {
             )
         );
         try {
-            $html = @file_get_contents($url, false, stream_context_create($options));
+            $html = @file_get_contents($shortened->url, false, stream_context_create($options));
             preg_match_all('~<title>([^<]*)</title>|<meta property="og:description" content="([^<]*)"~i', $html, $matches);
             $title = !empty($matches[1][0]) ? $matches[1][0] : null;
             $description = !empty($matches[2][0]) ? $matches[2][0] : null;
@@ -60,58 +60,27 @@ try {
         } finally {
             echo '<title>'.$title.'</title>';
         }
-        echo '<meta property="og:url" content="'.$url.'">';
-        echo '<meta property="og:image" content="'.$url.'">';
-        echo '<meta property="og:image:secure_url" content="'.$url.'">';
+        echo '<meta property="og:url" content="'.$shortened->url.'">';
+        echo '<meta property="og:image" content="'.$shortened->url.'">';
+        echo '<meta property="og:image:secure_url" content="'.$shortened->url.'">';
         echo '<meta property="og:title" content="'.$title.'">';
-        if (isset($description))
-            echo '<meta property="og:description" content="'.$description.'">';
-        if ($preview_mode) {
-            echo '
-                <link rel="stylesheet" href="css/turtle.css">
-                <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
-                <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
-                <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
-                <script src="js/turtle.js"></script>
-            ';
+        if (isset($description)) {
+            echo '<meta property="og:description" content="' . $description . '">';
         }
     ?>
-</head><body>
 <?php
 if ($preview_mode) {
     //require_once(__DIR__ . '/../model/short.php');
-    try {
-        $shortened = new Shortened($data['shortcode'], "", $url, $data['expiry'], $data['created']);
-    } catch (Exception $e) {
-        echo "Error fetching data.";
-        exit;
+    $languages = [];
+    $user_language = $_GET['lang'] ?? "en";
+    if (!in_array($user_language, $languages)) {
+        $user_language = "en";
     }
-    echo '<div class="index-box flex-col" style="top: 40%; margin: 0 5rem;"><div class="result-table">
-        <div>Shortened url preview</div>
-        <table>
-          <tr>
-            <th>target</th>
-            <td><a href="'.$url.'">'.$url.'</a>
-                <span class="copy-wrapper" title="click to copy url" copyValue="\''.$url.'\'">
-                    <img src="img/svg/copy.svg" alt="copy">
-                    <img src="img/svg/success.svg" alt="copy-success">
-                </span>
-            </td>
-          </tr>
-          <tr>
-            <th>created at</th>
-            <td unix="'.$shortened->created.'">'.$shortened->getCreationDate().'</td>
-          </tr>
-          <tr>
-            <th>expiration</th>
-            <td unix="'.$shortened->expiry.'">'.$shortened->getExpiryFormatted().'</td>
-          </tr>
-          <tr>
-            <th>Searchable</th>
-            <td>'.(($data['searchable']??true) ? "true" : "false").'</td>
-          </tr>
-        </table></div></div>
-    ';
+    include_once(__DIR__.'/'.$user_language.'/preview.php');
+} else {
+    $geoData = GeoData::capture(null);
+    $geoData?->saveToDatabase($shortened->shortcode);
+    echo '</head>';
 }
 ?>
-</body></html>
+</html>

@@ -2,11 +2,7 @@
 namespace TurtleShortener\Misc;
 
 use Exception;
-
-enum AccessLevel {
-    case admin;
-    case server;
-}
+use TurtleShortener\Models\GeoData;
 class Utils {
     private const DEFAULT_LANGUAGE = "English";
     public static function getLanguage($userLang): string {
@@ -61,15 +57,15 @@ class Utils {
         parse_str($_SERVER['QUERY_STRING'] ?? "", $query_params);
         return $query_params;
     }
-    public function buildQuery(string $key, $value, ?array $query_params = null, string $url = ''): string {
+    public function buildQuery(string $key, $value, ?array $query_params = null, ?string $url = null): string {
         $query_params = $query_params ?? $this->getQueryParams();
         $ignoreList = ['page', 'm'];
         foreach($ignoreList as $ignoreKey) {
             unset($query_params[$ignoreKey]);
         }
         $query_params[$key] = $value;
-        if (!empty($currentUrl)) {
-            $query_params['url'] = $currentUrl;
+        if (!empty($url)) {
+            $query_params['url'] = $url;
         }
         $new_query_string = http_build_query($query_params);
         return '?' . $new_query_string;
@@ -86,5 +82,26 @@ class Utils {
         }
         echo $level->name." access token is not valid.";
         return false;
+    }
+    public function getUserIP() {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        }
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        return $_SERVER['REMOTE_ADDR'];
+    }
+    function getUserOS() {
+        $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        $osArray = [
+            'Windows', 'Mac', 'Linux', 'iPhone', 'Android'
+        ];
+        foreach ($osArray as $os) {
+            if (str_contains($userAgent, $os)) {
+                return $os;
+            }
+        }
+        return 'Unknown';
     }
 }

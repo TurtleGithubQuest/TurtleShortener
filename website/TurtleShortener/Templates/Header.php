@@ -13,24 +13,29 @@
                     <label hidden><input type="text" name="lang" value="%language_code%"></label>
                     <input type="image" src="/img/svg/magnifying-glass.svg" alt="Submit">
                 </form>
-                <?php
-                echo '<div id="searchResult"'.(empty($_GET["found"]) ? ' class="d-none"' : '').'>';
-                if (!empty($_GET["found"])) {
-                    $results = json_decode(urldecode($_GET["found"]), false, 512, JSON_THROW_ON_ERROR);
-                    $host = explode(':', $_SERVER['HTTP_HOST'])[0]."/";
-                    foreach ($results as $result) {
-                        $r_url = $result->url ?? "";
-                        $r_shortcode = $result->shortcode ?? "";
-                        if (!empty($r_shortcode))
-                            $r_shortcode .= '+';
-                        echo '<div class="result">
-                            <a class="shortcode" href="'.$r_shortcode.'">[?]</a>
-                            <a href="'.$r_url.'">'.preg_replace("/(http:\/\/|https:\/\/|www\.)/", "", $r_url).'</a>
-                        </div>';
+                <div id="searchResult">
+                    <?php
+                    if (!empty($_GET["found"])) {
+                        $results = json_decode(urldecode($_GET["found"]), false, 512, JSON_THROW_ON_ERROR);
+                        $host = explode(':', $_SERVER['HTTP_HOST'])[0]."/";
+                        $appendNothing = true;
+                        foreach ($results as $result) {
+                            $appendNothing = false;
+                            $r_url = $result->url ?? "";
+                            $r_shortcode = $result->shortcode ?? "";
+                            if (!empty($r_shortcode))
+                                $r_shortcode .= '+';
+                            echo '<div class="result">
+                                <a class="shortcode" href="'.$r_shortcode.'">[?]</a>
+                                <a href="'.$r_url.'">'.preg_replace("/(http:\/\/|https:\/\/|www\.)/", "", $r_url).'</a>
+                            </div>';
+                        }
+                        if ($appendNothing) {
+                            echo '<div class="result">translate("found-nothing")</div>';
+                        }
                     }
-                }
-                echo '</div>';
-                ?>
+                    ?>
+                </div>
             </section>
         </section>
         <div class="dropdown">
