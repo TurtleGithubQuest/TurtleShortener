@@ -24,6 +24,10 @@ class Czech implements Language {
     ];
     public function get(string $key): string
     {
-        return self::TRANSLATIONS[$key] ?? "";
+        $translation = self::TRANSLATIONS[$key];
+        if (isset($translation)) {
+            $GLOBALS['log']->debug("Czech translation not found for key: $key");
+        }
+        return $translation ?? "";
     }
 }

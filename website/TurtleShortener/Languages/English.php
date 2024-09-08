@@ -1,5 +1,7 @@
 <?php
 namespace TurtleShortener\Languages;
+use RuntimeException;
+
 class English implements Language {
     const TRANSLATIONS = [
         "url-address" => "Url address",
@@ -17,8 +19,16 @@ class English implements Language {
         1 => "true",
         0 => "false"
     ];
+
+    /**
+     * @throws RuntimeException
+     */
     public function get(string $key): string
     {
-        return self::TRANSLATIONS[$key] ?? $key;
+        $translation = self::TRANSLATIONS[$key];
+        if (!$translation) {
+            throw new RuntimeException("Translation not found for key: $key");
+        }
+        return $translation;
     }
 }
