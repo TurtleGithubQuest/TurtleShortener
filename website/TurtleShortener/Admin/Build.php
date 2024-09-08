@@ -71,7 +71,7 @@ foreach ($languages as $lang) {
     }
     echo "<br>";
 }
-$landingContent = file_get_contents(__DIR__ . '/../Page/Landing.php');
+$landingContent = file_get_contents(__DIR__ . '/../Handlers/Landing.php');
 $landingContent = str_replace(
     array('$languages = [];', '%language_code%'),
     array('$languages = ' . json_encode($languages, JSON_THROW_ON_ERROR) . ';', $lang),
