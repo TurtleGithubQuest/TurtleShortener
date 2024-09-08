@@ -1,8 +1,10 @@
 <?php
 namespace TurtleShortener\Languages;
 
-class Czech implements Language {
-    const TRANSLATIONS = [
+use TurtleShortener\Misc\LogUtil;
+
+class Czech extends Language {
+    final protected const TRANSLATIONS = [
         "url-address" => "Url adresa",
         "url-address.placeholder" => "velmi dlouhý odkaz..",
         "expiration" => "Expirace",
@@ -22,12 +24,16 @@ class Czech implements Language {
         1 => "ano",
         0 => "ne",
     ];
+    public function __construct() {
+        $this->setCode("cz");
+        $this->setName("Czech");
+    }
     public function get(string $key): string
     {
-        $translation = self::TRANSLATIONS[$key];
-        if (isset($translation)) {
+        if (!array_key_exists($key, self::TRANSLATIONS)) {
             $GLOBALS['log']->debug("Czech translation not found for key: $key");
+            return "";
         }
-        return $translation ?? "";
+        return self::TRANSLATIONS[$key];
     }
 }

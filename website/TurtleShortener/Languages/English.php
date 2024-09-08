@@ -1,9 +1,11 @@
 <?php
 namespace TurtleShortener\Languages;
-use RuntimeException;
 
-class English implements Language {
-    const TRANSLATIONS = [
+use RuntimeException;
+use TurtleShortener\Misc\LogUtil;
+
+class English extends Language {
+    final protected const TRANSLATIONS = [
         "url-address" => "Url address",
         "url-address.placeholder" => "very long url..",
         "expiration" => "Expiration",
@@ -20,15 +22,17 @@ class English implements Language {
         0 => "false"
     ];
 
+    public function __construct()
+    {
+        $this->setCode("en");
+        $this->setName("English");
+    }
+
     /**
      * @throws RuntimeException
      */
     public function get(string $key): string
     {
-        $translation = self::TRANSLATIONS[$key];
-        if (!$translation) {
-            throw new RuntimeException("Translation not found for key: $key");
-        }
-        return $translation;
+        return self::TRANSLATIONS[$key] ?? $key;
     }
 }

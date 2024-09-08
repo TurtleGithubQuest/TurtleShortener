@@ -46,19 +46,4 @@
         </div>
     </section>
 </nav>
-<div id="alerts">
-<label class="alert">
-    <input type="checkbox" autocomplete="off" />
-    <span class="notification-info">></span>
-    <span class="content info">
-        test <br>test
-    </span>
-</label>
-<label class="alert">
-    <input type="checkbox" autocomplete="off" />
-    <span class="notification-info">></span>
-    <span class="content info">
-        1test <br>test2
-    </span>
-</label>
-</div>
+<div id="alerts"></div>

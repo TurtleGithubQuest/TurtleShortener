@@ -1,38 +1,53 @@
 <?php
 namespace TurtleShortener\Misc;
 
+namespace TurtleShortener\Misc;
+
+
 class LogUtil {
-    private static LogUtil $instance;
+    private static ?LogUtil $instance = null;
     private $handle;
+    private $logDir;
+    private $date;
 
     private function __construct() {
-        $date = date('Y-m-d');
-        $logDir = __DIR__."/../../logs";
-        if (!is_dir($logDir)) {
-            mkdir($logDir, 0777, true);
-        }
-        $this->handle = fopen("$logDir/$date-log.txt", 'a');
+        $this->date = date('Y-m-d');
+        $this->logDir = __DIR__ . "/../../logs";
     }
 
     public static function getInstance(): LogUtil {
-        if (!isset(self::$instance)) {
+        if (self::$instance === null) {
             self::$instance = new LogUtil();
         }
         return self::$instance;
     }
 
-    public function debug(string $message): void
-    {
+    private function initializeHandle(): void {
+        if ($this->handle === null) {
+            if (!is_dir($this->logDir) && !mkdir($this->logDir, 0777, true) && !is_dir($this->logDir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $this->logDir));
+            }
+            $this->handle = fopen("{$this->logDir}/{$this->date}-log.txt", 'ab');
+            if ($this->handle === false) {
+                throw new \RuntimeException('Failed to open log file for writing');
+            }
+        }
+    }
+
+    public function debug(string $message): void {
         $this->log($message, 'debug');
     }
 
-    private function log(string $message, string $level): void
-    {
+    private function log(string $message, string $level): void {
+        $this->initializeHandle();
         $timestamp = date('H:i:s');
-        fwrite($this->handle, "[$timestamp] |$level| - $message\n");
+        $logMessage = "[$timestamp] |$level| - $message\n";
+        fwrite($this->handle, $logMessage);
     }
 
-    function __destruct() {
-        fclose($this->handle);
+    public function __destruct() {
+        if ($this->handle !== null) {
+            fclose($this->handle);
+        }
     }
 }
