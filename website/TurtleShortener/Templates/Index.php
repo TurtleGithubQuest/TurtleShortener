@@ -58,7 +58,15 @@ include('header');
                 echo '<div>' . $size . 'translate("shortened-found")</div>';
             }
             foreach (array_reverse($array, true) as $index => $value) {
-                $shortened = unserialize($value, Shortened::class);
+                if (!is_string($value)) {
+                    if ($value instanceof \TurtleShortener\Models\Shortened) {
+                        $shortened = $value;
+                    } else {
+                        continue;
+                    }
+                } else {
+                    $shortened = unserialize($value, ['allowed_classes' => [Shortened::class]]);
+                }
                 $url = $shortened->url;
                 $shortenedUrl = $shortened->shortenedUrl;
                 echo '<div class="result-table">

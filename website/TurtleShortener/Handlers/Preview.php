@@ -8,6 +8,7 @@ use ValueError;
 
 $is_bot = false;
 $preview_mode = $_GET['preview'] ?? false;
+$shortened = null;
 try {
     if (isset($_GET['s'])) {
         require_once(__DIR__. '/../TurtleShortener/bootstrap.php');
@@ -15,24 +16,27 @@ try {
         $shortcode = $_GET['s'];
         try {
             $shortened = Shortened::fetch($shortcode, $preview_mode);
+            $GLOBALS['log']->debug($shortened->url);
         } catch (Exception $e) {
-            echo "Error fetching data.";
+            $GLOBALS['log']->error('Error fetching shortened url: '. $e->getMessage());
             exit;
         }
         $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
         $is_bot = str_contains($userAgent, "bot");
     } else {
-        echo "No shortcode provided.";
+        header('Location: /error.php?error=' . urlencode('no shortcode provided.'));
         exit;
     }
 } catch(Exception $e) {
+    $GLOBALS['log']->error('Error processing shortcode: '. $e->getMessage());
 } finally {
-    if (!empty($shortened->url)) {
+    if ($shortened !== null) {
         if (!$is_bot && !$preview_mode) {
             header('Location: ' . $shortened->url);
         }
     } else {
-        header('Location: /error.php?error=' . urlencode('Shortened url "' . ($shortened->url ?? 'none') . '" not found.'));
+        header('Location: /error.php?error=' . urlencode('404: not found.'));
+        exit;
     }
 }
 ?>

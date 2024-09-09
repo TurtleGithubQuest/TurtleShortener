@@ -37,6 +37,9 @@ class LogUtil {
     public function debug(string $message): void {
         $this->log($message, 'debug');
     }
+    public function error(string $message): void {
+        $this->log($message, 'error');
+    }
 
     private function log(string $message, string $level): void {
         $this->initializeHandle();

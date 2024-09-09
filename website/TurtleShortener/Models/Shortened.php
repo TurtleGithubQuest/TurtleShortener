@@ -18,13 +18,38 @@ class Shortened {
         public ?int $expiry=null,
         public ?int $created=null,
         public bool $includeInSearch=true,
-        public string $usr_timezone = 'Europe/Warsaw') {
+        public string $usr_timezone = 'Europe/Warsaw'
+    ) {
         if (!isset($created)) {
             $this->created = time();
         }
         try {
             $this->timezone = new DateTimeZone($usr_timezone);
         } catch (Exception $e) {}
+    }
+    public static function fetch_by_url(?string $shortcode, string $url): ?Shortened {
+        $pdo = DbUtil::getPdo();
+        $query = "SELECT ulid, shortcode, url, expiry, created, searchable FROM urls WHERE url = :url OR shortcode = :shortcode LIMIT 1";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':shortcode', $shortcode);
+        $stmt->bindParam(':url', $url);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($data === false) {
+            return null;
+        }
+        $shortcode = $data['shortcode'];
+
+        return new self(
+            $data['ulid'],
+            $shortcode,
+            $_SERVER['HTTP_HOST']."/$shortcode",
+            $data['url'] ?? null,
+            $data['expiry'] ?? null,
+            $data['created'] ?? null,
+            $data['searchable'] ?? null
+        );
     }
     public static function fetch(string $shortcode, bool $full): ?Shortened {
         $pdo = DbUtil::getPdo();
