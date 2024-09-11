@@ -17,12 +17,11 @@ class Shortened {
         public string $url,
         public ?int $expiry=null,
         public ?int $created=null,
-        public bool $includeInSearch=true,
+        public ?bool $includeInSearch=true,
         public string $usr_timezone = 'Europe/Warsaw'
     ) {
-        if (!isset($created)) {
-            $this->created = time();
-        }
+        $this->created = $created ?? time();
+        $this->includeInSearch = $includeInSearch === null ?? true;
         try {
             $this->timezone = new DateTimeZone($usr_timezone);
         } catch (Exception $e) {}

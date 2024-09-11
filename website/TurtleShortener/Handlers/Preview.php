@@ -14,13 +14,7 @@ try {
         require_once(__DIR__. '/../TurtleShortener/bootstrap.php');
         //require_once(__DIR__ . '/../db/util.php');
         $shortcode = $_GET['s'];
-        try {
-            $shortened = Shortened::fetch($shortcode, $preview_mode);
-            $GLOBALS['log']->debug($shortened->url);
-        } catch (Exception $e) {
-            $GLOBALS['log']->error('Error fetching shortened url: '. $e->getMessage());
-            exit;
-        }
+        $shortened = Shortened::fetch($shortcode, $preview_mode);
         $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
         $is_bot = str_contains($userAgent, "bot");
     } else {
@@ -77,13 +71,14 @@ if ($preview_mode) {
     //require_once(__DIR__ . '/../model/short.php');
     $languages = [];
     $user_language = $_GET['lang'] ?? "en";
-    if (!in_array($user_language, $languages)) {
+    if (!in_array($user_language, $languages, true)) {
         $user_language = "en";
     }
+    $geoDataSummary = GeoData::fetch_summary($shortened->ulid);
     include_once(__DIR__.'/'.$user_language.'/preview.php');
 } else {
-    $geoData = GeoData::capture(null);
-    $geoData?->saveToDatabase($shortened->shortcode);
+    $geoData = GeoData::capture();
+    $geoData?->saveToDatabase($shortened->ulid);
     echo '</head>';
 }
 ?>
