@@ -4,7 +4,7 @@ import("./util/form.js");
 import { bubbleCursor } from "cursor-effects";
 import {search} from "./fn/search.js";
 import {copyValue} from "./util/misc.js";
-import {loadChart, registerThemes} from "./fn/graph.js";
+import {loadCharts, registerThemes} from "./fn/graph.js";
 //Navbar
 const navbar = document.querySelector('nav');
 if (navbar) {
@@ -64,5 +64,5 @@ window.addEventListener('DOMContentLoaded', async (e) => {
     }
     new bubbleCursor();
     registerThemes();
-    loadChart();
+    loadCharts();
 });

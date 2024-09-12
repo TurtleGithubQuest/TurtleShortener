@@ -35,12 +35,12 @@ include('header');
           </tr>
         </table>
     </div>
-    <div id="stats_chart" class="stats_chart"></div>
+    <div id="stats_container"></div>
 </div>
 include('SeaEffects');
-include('Scripts');
+<script src="/js/lib/echarts.min.js"></script>
 <script>
     const geoDataSummary = <?php echo $geoDataSummary ?? "null"; ?>;
 </script>
-<script src="/js/lib/echarts.min.js"></script>
+include('Scripts');
 </body>
