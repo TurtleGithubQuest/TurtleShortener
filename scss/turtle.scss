@@ -31,8 +31,9 @@
 .index-box {
   display: flex;
   position: relative;
-  align-content: center;
+  align-items: center;
   text-align: center;
+  gap: 0.75rem;
   .title {
     @include SyneMono;
     font-size: 2rem;

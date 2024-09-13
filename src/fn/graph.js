@@ -5,9 +5,16 @@ export function loadCharts() {
     if (chartContainer && geoDataSummary) {
         const { total_clicks, avg_click_time, countries, cities, operating_systems } = geoDataSummary;
 
-        createChart(chartContainer, "Countries", countries, "pie");
-        createChart(chartContainer, "Cities", cities, "pie");
-        createChart(chartContainer, "Operating Systems", operating_systems, "pie");
+        const echarts = [
+            createChart(chartContainer, "Countries", countries, "pie"),
+            createChart(chartContainer, "Cities", cities, "pie"),
+            createChart(chartContainer, "Operating Systems", operating_systems, "pie")
+        ];
+        window.addEventListener("resize", () => {
+            echarts.forEach(([echart, el]) => {
+                echart.resize();
+            });
+        })
     }
 }
 
@@ -16,29 +23,16 @@ function createChart(container, title, data, theme) {
     container.appendChild(chartDiv);
 
     const echart = echarts.init(chartDiv, theme);
-    let option;
+    let option = echart.getOption();
+    if (!option) {
+        option = themes[theme] ?? themes["default"];
+    }
+
     if (theme === "pie") {
-        option = {
-            ...themes["pie"],
-            title: {
-                text: title,
-                left: 'center'
-            },
-            series: [{
-                type: 'pie',
-                radius: '50%',
-                data: data.map(item => ({
-                    name: item.name,
-                    value: item.percentage
-                })),
-                emphasis: {
-                    itemStyle: {
-                        borderColor: 'rgba(0, 0, 0, 0.3)',
-                        borderWidth: 1
-                    }
-                }
-            }]
-        };
+        option["series"][0]["data"] = data.map(item => ({
+            name: item.name,
+            value: item.percentage
+        }));
     } else if (theme === "radar") {
         let radarIndicators = data.map(item => ({
             icon: `{${item.name}|}`,
@@ -49,7 +43,7 @@ function createChart(container, title, data, theme) {
         let seriesDataList = data.map(item => item.percentage);
 
         option = {
-            ...themes["radar"],
+            ...option,
             title: {
                 text: title,
                 left: 'center'
@@ -69,6 +63,7 @@ function createChart(container, title, data, theme) {
     }
 
     echart.setOption(option);
+    return [echart, chartDiv];
 }
 
 function langIcons(lang) {
@@ -90,15 +85,19 @@ const themes = {
     "default": {
         textStyle: {
             fontFamily: "JetBrainsMono",
-            color: "#FFFFFF"
+            color: "#dfe8ed"
+        },
+        tooltip: {
+            show: false
         },
         title: {
             itemGap: 0,
             textStyle: {
-                color: "#FFFFFF"
+                color: "#f0faff"
             }
         },
         animation: true,
+        backgroundColor: null,
     },
     "radar": {
         textStyle: {
@@ -178,19 +177,17 @@ const themes = {
         }]
     },
     "pie": {
-        textStyle: {
-            fontFamily: "JetBrainsMono",
-            color: "#FFFFFF"
-        },
-        title: {
-            itemGap: 0,
-            textStyle: {
-                color: "#FFFFFF"
-            }
-        },
         series: [{
             type: 'pie',
             radius: '50%',
+            label: {
+                color: 'rgba(255, 255, 255, 0.3)'
+            },
+            itemStyle: {
+                color: '#00796B',
+                shadowBlur: 100,
+                shadowColor: 'rgba(32, 178, 170, 0.5)'
+            },
             emphasis: {
                 itemStyle: {
                     borderColor: 'rgba(0, 0, 0, 0.3)',
@@ -217,7 +214,7 @@ export function registerThemes() {
     for (let [name, option] of Object.entries(themes)) {
         if (name !== "default") {
             option = deepMerge(JSON.parse(JSON.stringify(themes["default"])), option);
-            if (option.xAxis) {
+            if (option.xAxis && option.xAxis.isArray) {
                 option.xAxis = [Object.assign({}, ...option.xAxis)];
             }
         } else {
@@ -229,7 +226,8 @@ export function registerThemes() {
             }
         }
         echarts.registerTheme(name, option);
+        themes[name] = option;
         registeredThemes.push(name);
     }
-    console.debug(`Registered chart themes: '${registeredThemes.join(", ")}'.`);
+    console.debug(`Registered chart themes: ${registeredThemes.join(", ")}.`);
 }
