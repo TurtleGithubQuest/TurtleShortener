@@ -35,7 +35,10 @@ include('header');
           </tr>
         </table>
     </div>
-    <div id="stats_container"></div>
+    <div id="statistics">
+        <div class="title">translate('statistics')</div>
+        <div id="stats_container"></div>
+    </div>
 </div>
 include('SeaEffects');
 <script src="/js/lib/echarts.min.js"></script>

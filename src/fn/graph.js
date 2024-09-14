@@ -1,33 +1,77 @@
-import { createEl } from "../util/misc.js";
+import {createEl, deepMerge, deepClone} from "../util/misc.js";
+import {themes} from "../settings/graph_themes.js";
 
+let chartContainer;
 export function loadCharts() {
-    const chartContainer = document.getElementById("stats_container");
+    chartContainer = document.getElementById("stats_container");
     if (chartContainer && geoDataSummary) {
-        const { total_clicks, avg_click_time, countries, cities, operating_systems } = geoDataSummary;
+        const { total_clicks, avg_click_time, countries, cities, operating_systems, clicks_by_day } = geoDataSummary;
 
         const echarts = [
-            createChart(chartContainer, "Countries", countries, "pie"),
-            createChart(chartContainer, "Cities", cities, "pie"),
-            createChart(chartContainer, "Operating Systems", operating_systems, "pie")
+            //createChart(chartContainer, "Countries", countries),
+            //createChart(chartContainer, "Cities", cities, "pie"),
+            createNestedChart("Countries", "pie", cities,countries),
+            createChart("Operating Systems", "pie", operating_systems),
+            createChart("Daily visits", "bar", clicks_by_day)
         ];
         window.addEventListener("resize", () => {
-            echarts.forEach(([echart, el]) => {
+            echarts.forEach(([el, echart]) => {
                 echart.resize();
             });
         })
     }
 }
-
-function createChart(container, title, data, theme) {
+function initChart(title, theme) {
     const chartDiv = createEl('div', 'stats_chart');
-    container.appendChild(chartDiv);
+    chartContainer.appendChild(chartDiv);
 
     const echart = echarts.init(chartDiv, theme);
+
     let option = echart.getOption();
     if (!option) {
         option = themes[theme] ?? themes["default"];
     }
-
+    option = deepClone(option);
+    option["title"] = {
+        text: title,
+        left: 'center'
+    };
+    return [chartDiv, echart, option];
+}
+function createNestedChart(title, theme, data1, data2) {
+    let [chartDiv, echart, option] = initChart(title, theme);
+    option["series"][1] = option["series"][0];
+    option["series"][0] = deepMerge(option["series"][0], {
+        radius: [0, 35],
+        selectedMode: 'single',
+        label: {
+            position: 'inner',
+            fontSize: "0.83rem"
+        },
+        labelLine: {
+            show: false
+        },
+        data: data1.map(item => ({
+            name: item.name,
+            value: item.percentage
+        })),
+    });
+    option["series"][1] = deepMerge(option["series"][1], {
+        type: 'pie',
+        radius: [45, 65],
+        label: {
+            fontSize: "1rem"
+        },
+        data: data2.map(item => ({
+            name: item.name,
+            value: item.percentage
+        }))
+    });
+    echart.setOption(option);
+    return [chartDiv, echart];
+}
+function createChart(title, theme, data) {
+    let [chartDiv, echart, option] = initChart(title, theme);
     if (theme === "pie") {
         option["series"][0]["data"] = data.map(item => ({
             name: item.name,
@@ -60,10 +104,16 @@ function createChart(container, title, data, theme) {
                 }]
             }]
         };
+    } else if (theme === "bar") {
+        option["series"][0]["data"] = data.map(item => item.count);
+        option["xAxis"]["data"] = data.map(item => {
+                const date = new Date(item.unix * 1000);
+                return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+            }
+        );
     }
-
     echart.setOption(option);
-    return [echart, chartDiv];
+    return [chartDiv, echart];
 }
 
 function langIcons(lang) {
@@ -81,131 +131,6 @@ function createRichIconEntry(lang) {
 
 const fields = ["total_clicks", "avg_click_time", "countries", "cities", "operating_systems"];
 
-const themes = {
-    "default": {
-        textStyle: {
-            fontFamily: "JetBrainsMono",
-            color: "#dfe8ed"
-        },
-        tooltip: {
-            show: false
-        },
-        title: {
-            itemGap: 0,
-            textStyle: {
-                color: "#f0faff"
-            }
-        },
-        animation: true,
-        backgroundColor: null,
-    },
-    "radar": {
-        textStyle: {
-            fontFamily: "JetBrainsMono",
-            color: "#FFFFFF"
-        },
-        title: {
-            itemGap: 0,
-            textStyle: {
-                color: "#FFFFFF"
-            }
-        },
-        radar: {
-            symbol: "roundRect",
-            symbolSize: 5,
-            radius: 100,
-            startAngle: 65,
-            splitNumber: 5,
-            name: {
-                textStyle: {
-                    color: '#FFFFFF'
-                },
-                renderMode: 'richText',
-                formatter: function (name, obj) {
-                    const icon = obj.icon ? obj.icon + " " : "";
-                    return `${icon} ${obj.name}`;
-                },
-                rich: {}
-            },
-            splitArea: {
-                areaStyle: {
-                    color: ['#00796B', '#20B2AA', '#00796B', '#20B2AA'],
-                    shadowColor: 'rgba(0, 0, 0, 0.2)',
-                    shadowBlur: 10
-                }
-            },
-            axisLine: {
-                lineStyle: {
-                    color: "#FFFFFF"
-                },
-            },
-            splitLine: {
-                lineStyle: {
-                    color: "#FFFFFF"
-                }
-            },
-            emphasis: {
-                name: {
-                    color: "#FFFFFF"
-                }
-            },
-            indicator: [],
-        },
-        series: [{
-            type: "radar",
-            lineStyle: {
-                color: '#FFFFFF',
-                width: 1
-            },
-            itemStyle: {
-                color: "#FFFFFF"
-            },
-            areaStyle: {
-                color: "rgba(255, 255, 255, 0.1)"
-            },
-            emphasis: {
-                itemStyle: {
-                    borderWidth: 3,
-                },
-                lineStyle: {
-                    width: 2
-                },
-                areaStyle: {
-                    color: 'rgba(255, 255, 255, 0.4)'
-                }
-            }
-        }]
-    },
-    "pie": {
-        series: [{
-            type: 'pie',
-            radius: '50%',
-            label: {
-                color: 'rgba(255, 255, 255, 0.3)'
-            },
-            itemStyle: {
-                color: '#00796B',
-                shadowBlur: 100,
-                shadowColor: 'rgba(32, 178, 170, 0.5)'
-            },
-            emphasis: {
-                itemStyle: {
-                    borderColor: 'rgba(0, 0, 0, 0.3)',
-                    borderWidth: 1
-                }
-            }
-        }]
-    }
-};
-function deepMerge(target, source) {
-    for (const key of Object.keys(source)) {
-        if (source[key] instanceof Object && key in target) {
-            Object.assign(source[key], deepMerge(target[key], source[key]));
-        }
-    }
-    Object.assign(target || {}, source);
-    return target;
-}
 export function registerThemes() {
     if (typeof echarts === "undefined") {
         return;
@@ -213,10 +138,10 @@ export function registerThemes() {
     let registeredThemes = [];
     for (let [name, option] of Object.entries(themes)) {
         if (name !== "default") {
-            option = deepMerge(JSON.parse(JSON.stringify(themes["default"])), option);
-            if (option.xAxis && option.xAxis.isArray) {
+            option = deepMerge(themes["default"], option, false, true);
+            /*if (option.xAxis && option.xAxis.isArray) {
                 option.xAxis = [Object.assign({}, ...option.xAxis)];
-            }
+            }*/
         } else {
             if (option.radar && option.radar.name) {
                 option.radar.name.rich = fields.reduce((obj, lang) => {

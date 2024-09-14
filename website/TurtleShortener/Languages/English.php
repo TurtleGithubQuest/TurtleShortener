@@ -21,9 +21,10 @@ class English extends Language {
         "url_preview" => "Shortened url preview",
         "target" => "Target",
         "searchable" => "Searchable",
+        "statistics" => "Statistics",
         "click_to_copy" => "Click to copy",
-        1 => "true",
-        0 => "false"
+        1 => "yes",
+        0 => "no"
     ];
 
     public function __construct()

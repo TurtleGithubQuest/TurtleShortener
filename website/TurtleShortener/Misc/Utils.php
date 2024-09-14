@@ -59,7 +59,7 @@ class Utils {
     }
     public function buildQuery(string $key, $value, ?array $query_params = null, ?string $url = null): string {
         $query_params = $query_params ?? $this->getQueryParams();
-        $ignoreList = ['page', 'm'];
+        $ignoreList = ['page', 'm', 'preview', 's'];
         foreach($ignoreList as $ignoreKey) {
             unset($query_params[$ignoreKey]);
         }

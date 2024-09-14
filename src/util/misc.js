@@ -39,4 +39,52 @@ export function createAlertAndAssign(level, text) {
     if (alerts)
         alerts.appendChild(createAlert(level, text));
 }
+export function deepMerge(obj1, obj2, arrayReplace = true, mergeObjectsInArray = false) {
+    const output = { ...obj1 };
+    for (const key in obj2) {
+        const val = obj2[key];
+        if (typeof val === 'object' && val !== null) {
+            if (Array.isArray(val)) {
+                if (arrayReplace || !Array.isArray(output[key])) {
+                    output[key] = obj2[key];
+                } else {
+                    output[key] = output[key].map((item, index) => {
+                        if (mergeObjectsInArray && typeof item === 'object' && typeof val[index] === 'object') {
+                            return deepMerge(item, val[index], arrayReplace, mergeObjectsInArray);
+                        }
+                        return val[index] !== undefined ? val[index] : item;
+                    });
+                }
+            } else {
+                output[key] = deepMerge(obj1[key] || {}, obj2[key], arrayReplace, mergeObjectsInArray);
+            }
+        } else if (typeof val === 'function') {
+            output[key] = val;
+        } else {
+            output[key] = obj2[key];
+        }
+    }
+    return output;
+}
+export function deepClone(obj) {
+    if (obj === null || typeof obj !== 'object') {
+        return obj;
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map(deepClone);
+    }
+
+    const clonedObj = {};
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (typeof obj[key] === 'function') {
+                clonedObj[key] = obj[key];
+            } else {
+                clonedObj[key] = deepClone(obj[key]);
+            }
+        }
+    }
+    return clonedObj;
+}
 console.log()

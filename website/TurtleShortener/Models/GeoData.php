@@ -96,95 +96,111 @@ class GeoData {
 
         return $stmt->execute();
     }
-    public static function fetch_summary(?string $url_ulid): ?string {
-        if (!$url_ulid) {
-            return null;
-        }
-        $pdo = DbUtil::getPdo();
-
-        $sql = "
-            SELECT 
-                COUNT(*) as total_clicks,
-                AVG(click_time) as avg_click_time
-            FROM stats 
-            WHERE url_ulid = :url_ulid
-        ";
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':url_ulid', $url_ulid);
-        $stmt->execute();
-        $summary = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($summary && $summary['total_clicks'] > 0) {
-            $totalClicks = $summary['total_clicks'];
-
-            $detailsSql = "
-                SELECT 
-                    country,
-                    city,
-                    operating_system,
-                    user_agent,
-                    COUNT(*) as count
-                FROM stats 
-                WHERE url_ulid = :url_ulid
-                GROUP BY country, city, operating_system, user_agent
-            ";
-
-            $detailsStmt = $pdo->prepare($detailsSql);
-            $detailsStmt->bindParam(':url_ulid', $url_ulid);
-            $detailsStmt->execute();
-            $details = $detailsStmt->fetchAll(PDO::FETCH_ASSOC);
-            $countries = [];
-            $cities = [];
-            $operatingSystems = [];
-            //$userAgents = [];
-
-            foreach ($details as $detail) {
-                $percentage = ($detail['count'] / $totalClicks) * 100;
-
-                if ($detail['country']) {
-                    $countries[$detail['country']] = [
-                        'name' => $detail['country'],
-                        'count' => ($countries[$detail['country']]['count'] ?? 0) + $detail['count'],
-                        'percentage' => ($countries[$detail['country']]['percentage'] ?? 0) + $percentage
-                    ];
-                }
-                if ($detail['city']) {
-                    $cities[$detail['city']] = [
-                        'name' => $detail['city'],
-                        'count' => ($cities[$detail['city']]['count'] ?? 0) + $detail['count'],
-                        'percentage' => ($cities[$detail['city']]['percentage'] ?? 0) + $percentage
-                    ];
-                }
-                if ($detail['operating_system']) {
-                    $operatingSystems[$detail['operating_system']] = [
-                        'name' => $detail['operating_system'],
-                        'count' => ($operatingSystems[$detail['operating_system']]['count'] ?? 0) + $detail['count'],
-                        'percentage' => ($operatingSystems[$detail['operating_system']]['percentage'] ?? 0) + $percentage
-                    ];
-                }
-                /*if ($detail['user_agent']) {
-                    $userAgents[$detail['user_agent']] = [
-                        'name' => $detail['user_agent'],
-                        'count' => ($userAgents[$detail['user_agent']]['count'] ?? 0) + $detail['count'],
-                        'percentage' => ($userAgents[$detail['user_agent']]['percentage'] ?? 0) + $percentage
-                    ];
-                }*/
-            }
-
-            $summary['countries'] = array_values($countries);
-            $summary['cities'] = array_values($cities);
-            $summary['operating_systems'] = array_values($operatingSystems);
-            //$summary['user_agents'] = array_values($userAgents);
-
-            try {
-                $summary = json_encode($summary, JSON_THROW_ON_ERROR);
-            } catch(\Exception $ex) {
-                $GLOBALS['log']->error("Error encoding GeoData summary: ".$ex->getMessage());
-                $summary = null;
-            }
-            return $summary;
-        }
+public static function fetch_summary(?string $url_ulid): ?string {
+    if (!$url_ulid) {
         return null;
     }
+    $pdo = DbUtil::getPdo();
+
+    $sql = "
+        SELECT 
+            COUNT(*) as total_clicks,
+            AVG(click_time) as avg_click_time
+        FROM stats 
+        WHERE url_ulid = :url_ulid
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':url_ulid', $url_ulid);
+    $stmt->execute();
+    $summary = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($summary && $summary['total_clicks'] > 0) {
+        $totalClicks = $summary['total_clicks'];
+
+        $detailsSql = "
+            SELECT 
+                country,
+                city,
+                operating_system,
+                user_agent,
+                COUNT(*) as count
+            FROM stats 
+            WHERE url_ulid = :url_ulid
+            GROUP BY country, city, operating_system, user_agent
+        ";
+
+        $detailsStmt = $pdo->prepare($detailsSql);
+        $detailsStmt->bindParam(':url_ulid', $url_ulid);
+        $detailsStmt->execute();
+        $details = $detailsStmt->fetchAll(PDO::FETCH_ASSOC);
+        $countries = [];
+        $cities = [];
+        $operatingSystems = [];
+        //$userAgents = [];
+
+        foreach ($details as $detail) {
+            $percentage = ($detail['count'] / $totalClicks) * 100;
+
+            if ($detail['country']) {
+                $countries[$detail['country']] = [
+                    'name' => $detail['country'],
+                    'count' => ($countries[$detail['country']]['count'] ?? 0) + $detail['count'],
+                    'percentage' => ($countries[$detail['country']]['percentage'] ?? 0) + $percentage
+                ];
+            }
+            if ($detail['city']) {
+                $cities[$detail['city']] = [
+                    'name' => $detail['city'],
+                    'count' => ($cities[$detail['city']]['count'] ?? 0) + $detail['count'],
+                    'percentage' => ($cities[$detail['city']]['percentage'] ?? 0) + $percentage
+                ];
+            }
+            if ($detail['operating_system']) {
+                $operatingSystems[$detail['operating_system']] = [
+                    'name' => $detail['operating_system'],
+                    'count' => ($operatingSystems[$detail['operating_system']]['count'] ?? 0) + $detail['count'],
+                    'percentage' => ($operatingSystems[$detail['operating_system']]['percentage'] ?? 0) + $percentage
+                ];
+            }
+            /*if ($detail['user_agent']) {
+                $userAgents[$detail['user_agent']] = [
+                    'name' => $detail['user_agent'],
+                    'count' => ($userAgents[$detail['user_agent']]['count'] ?? 0) + $detail['count'],
+                    'percentage' => ($userAgents[$detail['user_agent']]['percentage'] ?? 0) + $percentage
+                ];
+            }*/
+        }
+
+        $summary['countries'] = array_values($countries);
+        $summary['cities'] = array_values($cities);
+        $summary['operating_systems'] = array_values($operatingSystems);
+        //$summary['user_agents'] = array_values($userAgents);
+
+        $clicksByDaySql = "
+            SELECT 
+                FLOOR(click_time / 86400) * 86400 as unix,
+                COUNT(*) as count
+            FROM stats 
+            WHERE click_time IS NOT NULL AND url_ulid = :url_ulid
+            GROUP BY unix
+        ";
+
+        $clicksByDayStmt = $pdo->prepare($clicksByDaySql);
+        $clicksByDayStmt->bindParam(':url_ulid', $url_ulid);
+        $clicksByDayStmt->execute();
+        $clicksByDay = $clicksByDayStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $summary['clicks_by_day'] = $clicksByDay;
+
+        try {
+            $summary = json_encode($summary, JSON_THROW_ON_ERROR);
+        } catch(\Exception $ex) {
+            $GLOBALS['log']->error("Error encoding GeoData summary: ".$ex->getMessage());
+            $summary = null;
+        }
+        return $summary;
+    }
+    return null;
+}
 }

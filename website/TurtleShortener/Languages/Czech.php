@@ -24,6 +24,7 @@ class Czech extends Language {
         "url_preview" => "Náhled zkráceného odkazu",
         "target" => "Odkaz",
         "searchable" => "Vyhledatelné",
+        "statistics" => "Statistiky",
         "click_to_copy" => "Zkopírovat kliknutím",
         1 => "ano",
         0 => "ne",
