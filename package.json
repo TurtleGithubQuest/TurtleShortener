@@ -8,7 +8,8 @@
     "watch": "bun run tasks/watch.js"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "echarts": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

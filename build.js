@@ -13,10 +13,10 @@ const { values, positionals } = parseArgs({
 const outdir = values["outdir"];
 const buildOutput = await Bun.build({
   entrypoints: ['./src/turtle.js'],
-  outdir: outdir ? outdir : './website/js',
-  external: [],
+  outdir: outdir ?? './website/js',
+  external: ['echarts'],
   minify: false,
-})
+});
 if (!buildOutput.success) {
   console.error(buildOutput.logs);
   throw new Error('Build was not successful.');

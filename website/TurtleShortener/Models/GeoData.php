@@ -76,8 +76,8 @@ class GeoData {
         if (($currentTime - $lastInsertTime) < 59) {
             return false;
         }
-        $sql = "INSERT INTO stats (ulid, url_ulid, click_time, referrer, country, city, user_agent, ip_address, operating_system, click_source)
-                VALUES (:ulid, :url_ulid, :click_time, :referrer, :country, :city, :user_agent, :ip_address, :operating_system, :click_source)";
+        $sql = 'INSERT INTO stats (ulid, url_ulid, click_time, referrer, country, city, user_agent, ip_address, operating_system, click_source)
+                VALUES (:ulid, :url_ulid, :click_time, :referrer, :country, :city, :user_agent, :ip_address, :operating_system, :click_source)';
 
         $stmt = $pdo->prepare($sql);
         $clickTime = time();
@@ -102,13 +102,13 @@ public static function fetch_summary(?string $url_ulid): ?string {
     }
     $pdo = DbUtil::getPdo();
 
-    $sql = "
+    $sql = '
         SELECT 
             COUNT(*) as total_clicks,
             AVG(click_time) as avg_click_time
         FROM stats 
         WHERE url_ulid = :url_ulid
-    ";
+    ';
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':url_ulid', $url_ulid);
@@ -118,7 +118,7 @@ public static function fetch_summary(?string $url_ulid): ?string {
     if ($summary && $summary['total_clicks'] > 0) {
         $totalClicks = $summary['total_clicks'];
 
-        $detailsSql = "
+        $detailsSql = '
             SELECT 
                 country,
                 city,
@@ -128,7 +128,7 @@ public static function fetch_summary(?string $url_ulid): ?string {
             FROM stats 
             WHERE url_ulid = :url_ulid
             GROUP BY country, city, operating_system, user_agent
-        ";
+        ';
 
         $detailsStmt = $pdo->prepare($detailsSql);
         $detailsStmt->bindParam(':url_ulid', $url_ulid);
