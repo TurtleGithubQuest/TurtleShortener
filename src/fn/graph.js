@@ -132,6 +132,7 @@ function createRichIconEntry(lang) {
 const fields = ["total_clicks", "avg_click_time", "countries", "cities", "operating_systems"];
 
 export function registerThemes() {
+    //noinspection JSUnresolvedVariable
     if (typeof echarts === "undefined") {
         return;
     }
@@ -150,6 +151,7 @@ export function registerThemes() {
                 }, {});
             }
         }
+        //noinspection JSUnresolvedVariable
         echarts.registerTheme(name, option);
         themes[name] = option;
         registeredThemes.push(name);
