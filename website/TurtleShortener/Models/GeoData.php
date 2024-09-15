@@ -22,7 +22,7 @@ class GeoData {
         if (empty($ip)) {
             $ip = $GLOBALS['utils']->getUserIP();
         }
-        $json = @file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $ip);
+        $json = @file_get_contents('http://www.geoplugin.net/json.gp?ip=' . $ip);
         if ($json === false) {
             return null; // Handle error appropriately
         }
@@ -31,11 +31,11 @@ class GeoData {
         if (json_last_error() !== JSON_ERROR_NONE) {
             return null;
         }
-        if (is_array($data)) {
+        if (\is_array($data)) {
             $ulid = Ulid::generate();
             $code = $data['geoplugin_countryCode'];
             $continent = $data['geoplugin_continentCode'];
-            $country = $data['geoplugin_countryName'];
+            $country = $data['geoplugin_countryCode'];
             $city = $data['geoplugin_city'];
             $userAgent = $_SERVER['HTTP_USER_AGENT'];
             $ipAddress = $ip;
@@ -57,7 +57,7 @@ class GeoData {
         return null;
     }
     public function saveToDatabase(string $url_ulid): bool {
-        $len = strlen($url_ulid);
+        $len = \strlen($url_ulid);
         if ($len !== 26) {
             $GLOBALS['log']->error("Invalid URL ULID: $url_ulid. Length: $len/26");
             return false;
@@ -66,7 +66,7 @@ class GeoData {
         $ipAddress = $this->ipAddress;
         $currentTime = time();
 
-        $query = "SELECT click_time FROM stats WHERE ip_address = :ip_address ORDER BY click_time DESC LIMIT 1";
+        $query = 'SELECT click_time FROM stats WHERE ip_address = :ip_address ORDER BY click_time DESC LIMIT 1';
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':ip_address', $ipAddress);
         $stmt->execute();
@@ -87,16 +87,16 @@ class GeoData {
         $stmt->bindParam(':url_ulid', $url_ulid);
         $stmt->bindParam(':click_time', $clickTime);
         $stmt->bindParam(':referrer', $referrer);
-        $stmt->bindParam(':country', $this->country);
+        $stmt->bindValue(':country', $this->country ? strtolower($this->country) : null);
         $stmt->bindParam(':city', $this->city);
         $stmt->bindParam(':user_agent', $this->userAgent);
         $stmt->bindParam(':ip_address', $this->ipAddress);
-        $stmt->bindParam(':operating_system', $this->operatingSystem);
+        $stmt->bindValue(':operating_system', $this->operatingSystem ? strtolower($this->operatingSystem) : null);
         $stmt->bindParam(':click_source', $this->clickSource);
 
         return $stmt->execute();
     }
-public static function fetch_summary(?string $url_ulid): ?string {
+public static function fetchSummary(?string $url_ulid): ?string {
     if (!$url_ulid) {
         return null;
     }
@@ -177,14 +177,14 @@ public static function fetch_summary(?string $url_ulid): ?string {
         $summary['operating_systems'] = array_values($operatingSystems);
         //$summary['user_agents'] = array_values($userAgents);
 
-        $clicksByDaySql = "
+        $clicksByDaySql = '
             SELECT 
                 FLOOR(click_time / 86400) * 86400 as unix,
                 COUNT(*) as count
             FROM stats 
             WHERE click_time IS NOT NULL AND url_ulid = :url_ulid
             GROUP BY unix
-        ";
+        ';
 
         $clicksByDayStmt = $pdo->prepare($clicksByDaySql);
         $clicksByDayStmt->bindParam(':url_ulid', $url_ulid);
@@ -196,7 +196,7 @@ public static function fetch_summary(?string $url_ulid): ?string {
         try {
             $summary = json_encode($summary, JSON_THROW_ON_ERROR);
         } catch(\Exception $ex) {
-            $GLOBALS['log']->error("Error encoding GeoData summary: ".$ex->getMessage());
+            $GLOBALS['log']->error('Error encoding GeoData summary: ' .$ex->getMessage());
             $summary = null;
         }
         return $summary;

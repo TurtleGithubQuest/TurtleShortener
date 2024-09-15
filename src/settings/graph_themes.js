@@ -130,7 +130,7 @@ export const themes = {
             selectedMode: 'multiple',
             startAngle: 65,
             label: {
-                formatter: '{b} {c}%',
+                formatter: '{b} {d}%',
                 minPadding: 40,
                 overflow: 'break'
             },

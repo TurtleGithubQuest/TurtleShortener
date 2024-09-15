@@ -16,7 +16,7 @@ try {
         $shortcode = $_GET['s'];
         $shortened = Shortened::fetch($shortcode, $preview_mode);
         $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
-        $is_bot = str_contains($userAgent, "bot");
+        $is_bot = str_contains($userAgent, 'bot');
     } else {
         header('Location: /error.php?error=' . urlencode('no shortcode provided.'));
         exit;
@@ -68,14 +68,13 @@ try {
     ?>
 <?php
 if ($preview_mode) {
-    //require_once(__DIR__ . '/../model/short.php');
     $languages = [];
-    $user_language = $_GET['lang'] ?? "en";
-    if (!in_array($user_language, $languages, true)) {
-        $user_language = "en";
+    $user_language = $_GET['lang'] ?? 'en';
+    if (!\in_array($user_language, $languages, true)) {
+        $user_language = 'en';
     }
-    $geoDataSummary = GeoData::fetch_summary($shortened->ulid);
-    include_once(__DIR__.'/'.$user_language.'/preview.php');
+    $geoDataSummary = GeoData::fetchSummary($shortened->ulid);
+    include_once(__DIR__."/$user_language/preview.php");
 } else {
     $geoData = GeoData::capture();
     $geoData?->saveToDatabase($shortened->ulid);

@@ -77,36 +77,42 @@ function createChart(title, theme, data) {
     if (theme === "pie") {
         option["series"][0] = deepMerge(option["series"][0], {
             label: {
-                //height: 20,
                 formatter: function (params) {
-                        const name = params.name.toLowerCase();
-                        const value = params.value;
-                        return `{${name}|} ${value}%`;
+                        const name = params.name;
+                        const value = params.value.toFixed(2);
+                        const availableIcons = ['windows', 'linux'];
+                        if (availableIcons.includes(name)) {
+                            return `{${name}| } {hr| } {percentage|${value}%}`;
+                        } else {
+                            return `${name} ${value}%`;
+                        }
                 },
                 rich: {
+                    hr: {
+                        borderColor: '#777',
+                        width: '100%',
+                        borderWidth: 0.5,
+                        height: 0
+                    },
                     windows: {
                         height: 24,
-                        align: 'left',
+                        align: 'center',
                         backgroundColor: {
                           image: svgIcon('windows')
                         },
                     },
                     linux: {
                         height: 24,
-                        align: 'left',
+                        align: 'center',
                         backgroundColor: {
                           image: svgIcon('linux')
                         },
                     },
-                }
-                /*
-                backgroundColor: {
-                    image: function (params) {
-                        const value = params.value;
-                        console.log("value: ", value);
-                        return svgIcon(value);
+                    percentage: {
+                        height: 8,
+                        align: 'center',
                     },
-                },*/
+                }
             },
             data: data.map(item => ({
                 name: item.name,
