@@ -1,26 +1,61 @@
 <?php
+declare(strict_types=1);
 namespace TurtleShortener\Database;
 
-$token = filter_input(INPUT_GET, 'token')
-    ?? filter_input(INPUT_POST, 'token');
-$settings = require(__DIR__."/../settings.php");
-$allowed = $settings["server_tokens"];
-if (!in_array($token, $allowed)) {
-    echo "Access token is not valid.";
-    exit;
+use PDO;
+use RuntimeException;
+use TurtleShortener\Misc\AccessLevel;
+use function sprintf;
+
+/**
+ * Handles cleanup of expired URLs from the database
+ */
+class UpKeep {
+    private PDO $pdo;
+
+    public function __construct() {
+        $this->pdo = DbUtil::getPdo();
+    }
+
+    /**
+     * Deletes expired URLs from the database
+     * @return int Number of deleted URLs
+     */
+    private function deleteExpiredUrls(): int {
+        $query = 'DELETE FROM urls WHERE expiry IS NOT NULL AND expiry < :current_time';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['current_time' => time()]);
+        return $stmt->rowCount();
+    }
+
+    /**
+     * Executes the cleanup process
+     * @return string Status message
+     */
+    public function execute(string $token): string {
+        if (!($GLOBALS['utils']->isTokenValid(AccessLevel::server, $token) ?? false)) {
+            throw new RuntimeException('Invalid token');
+        }
+        try {
+            $deletedCount = $this->deleteExpiredUrls();
+
+            if ($deletedCount === 0) {
+                return 'No expired URLs found.';
+            }
+
+            $message = sprintf('Deleted %d expired URLs', $deletedCount);
+            $GLOBALS['log']->debug($message);
+
+            return $message;
+
+        } catch (RuntimeException $e) {
+            http_response_code(403);
+            return $e->getMessage();
+        } catch (\Exception $e) {
+            http_response_code(500);
+            $GLOBALS['log']->error($e->getMessage());
+            return 'An error occurred during cleanup.';
+        }
+    }
+
 }
-require_once('util.php');
-$pdo = DbUtil::getPdo();
-
-$query = "DELETE FROM urls WHERE expiry IS NOT NULL AND expiry < ?";
-$currentUnix = time();
-$stmt = $pdo->prepare($query);
-$stmt->execute([$currentUnix]);
-$rowCount = $stmt->rowCount();
-
-if ($rowCount > 0) {
-    require_once(__DIR__ . '/../Misc/log.php');
-    $log = LogUtil::getInstance();
-    $log->log("Deleted (".$rowCount.") expired urls.");
-    echo "Deleted (".$rowCount.") expired urls.";
-} else echo "No expired urls found.";

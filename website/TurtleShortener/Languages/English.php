@@ -23,6 +23,10 @@ class English extends Language {
         "searchable" => "Searchable",
         "statistics" => "Statistics",
         "click_to_copy" => "Click to copy",
+        'none yet' => 'none yet',
+        'countries' => 'Countries',
+        'os' => 'Operating systems',
+        'daily_visits' => 'Daily visits',
         1 => "yes",
         0 => "no"
     ];

@@ -1,36 +1,54 @@
 <?php
-namespace TurtleShortener\Misc;
+declare(strict_types=1);
 
-require_once(__DIR__ . '/../bootstrap.php');
+namespace TurtleShortener\Misc;
 
 use JetBrains\PhpStorm\NoReturn;
 use PDO;
+use RuntimeException;
 use TurtleShortener\Database\DbUtil;
 
-$q = $_POST['q'] ?? ($_GET['q'] ?? null);
-#[NoReturn] function dataReturn($data): void {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+class Search {
+    private PDO $pdo;
+
+    public function __construct() {
+        $this->pdo = DbUtil::getPdo();
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+
+    /**
+     * Execute the search command
+     * @param string $q
+     * @return string JSON encoded search results
+     */
+    public function execute(string $q): string {
+        try {
+            $searchQuery = '%' . trim($q) . '%';
+            $host = '%' . explode(':', $_SERVER['HTTP_HOST'])[0] . '%';
+
+            //Do not change to wildcard
+            $stmt = $this->pdo->prepare('SELECT ulid, shortcode, url, expiry, created FROM urls WHERE (shortcode LIKE ? OR url LIKE ?) AND url NOT LIKE ? AND (searchable != 0 OR searchable IS NULL) LIMIT 10');
+            $stmt->execute([$searchQuery, $searchQuery, $host]);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+            $this->handleResponse(json_encode($data, JSON_THROW_ON_ERROR));
+        } catch (\PDOException $e) {
+            throw new RuntimeException('Search failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Handle the search response
+     * @param string $data The search results
+     */
+    #[NoReturn] public function handleResponse(string $data): void {
+        header('Content-type: application/json');
         if (empty($data)) {
             http_response_code(404);
+            echo json_encode(['error' => 'No results found'], JSON_THROW_ON_ERROR);
+        } else {
+            echo $data;
         }
-        header('Content-type: application/json');
-        echo $data;
-    } else {
-        header('Location: /?found=' . urlencode($data));
+        exit;
     }
-    exit;
-}
-if(empty($q)) {
-    dataReturn(null);
-}
-$pdo = DbUtil::getPdo();
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$searchQuery = '%'.$q.'%';
-$host = '%'.explode(':', $_SERVER['HTTP_HOST'])[0].'%';
-//Do not change to wildcard
-$stmt = $pdo->prepare("SELECT ulid, shortcode, url, expiry, created FROM urls WHERE (shortcode LIKE ? OR url LIKE ?) AND url NOT LIKE ? AND (searchable != 0 OR searchable IS NULL) LIMIT 10");
-$stmt->execute([$searchQuery, $searchQuery, $host]);
-$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$data = json_encode($data);
-dataReturn($data);
+}

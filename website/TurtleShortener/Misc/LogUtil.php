@@ -1,18 +1,17 @@
 <?php
-namespace TurtleShortener\Misc;
+declare(strict_types=1);
 
 namespace TurtleShortener\Misc;
-
 
 class LogUtil {
     private static ?LogUtil $instance = null;
-    private $handle;
-    private $logDir;
-    private $date;
+    protected mixed $handle = null;
 
-    private function __construct() {
+    private function __construct(
+        private ?string $date = null,
+        private readonly string $logDir = (__DIR__ . '/../../logs')
+    ) {
         $this->date = date('Y-m-d');
-        $this->logDir = __DIR__ . "/../../logs";
     }
 
     public static function getInstance(): LogUtil {
@@ -22,16 +21,17 @@ class LogUtil {
         return self::$instance;
     }
 
-    private function initializeHandle(): void {
+    private function getHandle(): mixed {
         if ($this->handle === null) {
             if (!is_dir($this->logDir) && !mkdir($this->logDir, 0777, true) && !is_dir($this->logDir)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $this->logDir));
+                throw new \RuntimeException(\sprintf('Directory "%s" was not created', $this->logDir));
             }
             $this->handle = fopen("{$this->logDir}/{$this->date}-log.txt", 'ab');
             if ($this->handle === false) {
                 throw new \RuntimeException('Failed to open log file for writing');
             }
         }
+        return $this->handle;
     }
 
     public function debug(string $message): void {
@@ -42,10 +42,9 @@ class LogUtil {
     }
 
     private function log(string $message, string $level): void {
-        $this->initializeHandle();
         $timestamp = date('H:i:s');
         $logMessage = "[$timestamp] |$level| - $message\n";
-        fwrite($this->handle, $logMessage);
+        fwrite($this->getHandle(), $logMessage);
     }
 
     public function __destruct() {
@@ -53,4 +52,5 @@ class LogUtil {
             fclose($this->handle);
         }
     }
+
 }

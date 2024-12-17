@@ -9,13 +9,20 @@ include('header');
         </form>
     </div>
     <div class="index-box flex-col">
-        <div class="title">Turtle Shortener <?php if(isset($isMobile) && $isMobile) echo '<div class="mobile">(mobile)</div>' ?></div>
+        <div class="title">Turtle Shortener <?php
+            if(isset($isMobile) && $isMobile) {
+                echo '<div class="mobile">(mobile)</div>';
+            }
+            ?></div>
         <form class="t-form flex-col" action="TurtleShortener/Misc/Shorten.php?sid=<?php
-            if (isset($_GET['sid'])) echo $_GET['sid'];
-            else echo session_id();
+            if (isset($_GET['sid'])) {
+                echo $_GET['sid'];
+            } else {
+                echo session_id();
+            }
         ?>" method="post">
             <?php
-                $expValue = $_GET["exp"] ?? 10080; # Default 1 week
+                $expValue = $_GET['exp'] ?? 10080; # Default 1 week
                 if ($expValue <= 0 || !filter_var($expValue, FILTER_VALIDATE_INT)) {
                     $expValue = 10080;
                 }
@@ -31,41 +38,39 @@ include('header');
                         <input type="datetime-local" name="expiration" value="'.$expirationDate.'">
                     </label>
                     <div class="expiration-time">
-                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 60, $queryParams).'">1 translate("hour")</a>
-                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 2880, $queryParams).'">48 translate("hours")</a>
-                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 10080, $queryParams).'">7 translate("days")</a>
-                        <a href="'.$GLOBALS['utils']?->buildQuery("exp", 40320, $queryParams).'">1 translate("month")</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery('exp', 60, $queryParams).'">1 translate("hour")</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery('exp', 2880, $queryParams).'">48 translate("hours")</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery('exp', 10080, $queryParams).'">7 translate("days")</a>
+                        <a href="'.$GLOBALS['utils']?->buildQuery('exp', 40320, $queryParams).'">1 translate("month")</a>
                     </div>
                     <label for="alias">Alias <input type="text" name="alias" placeholder="translate("alias.placeholder")" pattern="[a-zA-Z0-9\-_\.~]+" maxlength="6"></label>
                     <sup>[a-zA-Z0-9\-_\.~]+</sup>
                     <label for="searchable">translate("include_in_search")
-                        <input type="text" name="searchable" value="'.(($_GET['searchable']??1) ? "true" : "false").'" hidden>
-                        <a href="'.$GLOBALS['utils']?->buildQuery("searchable", !($_GET['searchable']??1), $queryParams).'">'.(($_GET['searchable'] ?? true) ? 'translate("1")' : 'translate("0")').'</a>
+                        <input type="text" name="searchable" value="'.(($_GET['searchable']??1) ? 'true' : 'false').'" hidden>
+                        <a href="'.$GLOBALS['utils']?->buildQuery('searchable', !($_GET['searchable']??1), $queryParams).'">'.(($_GET['searchable'] ?? true) ? 'translate("1")' : 'translate("0")').'</a>
                     </label>
                     <input type="submit" value="translate("shorten")">';
             ?>
         </form>
         <section class="results flex-col"><?php
-        if (isset($_SESSION["error"])) {
-            echo '<p>'.$_SESSION["error"].'</p>';
-            unset($_SESSION["error"]);
+        if (isset($_SESSION['error'])) {
+            echo '<p>'.$_SESSION['error'].'</p>';
+            unset($_SESSION['error']);
             exit;
         }
-        if (isset($_SESSION["shortened_array"])) {
-            $array = $_SESSION["shortened_array"];
+        if (isset($_SESSION['shortened_array'])) {
+            $array = $_SESSION['shortened_array'];
             $size = count($array);
             if ($size > 0) {
                 echo '<div>' . $size . 'translate("shortened-found")</div>';
             }
             foreach (array_reverse($array, true) as $index => $value) {
-                if (!is_string($value)) {
-                    if ($value instanceof \TurtleShortener\Models\Shortened) {
-                        $shortened = $value;
-                    } else {
-                        continue;
-                    }
-                } else {
+                if (is_string($value)) {
                     $shortened = unserialize($value, ['allowed_classes' => [Shortened::class]]);
+                } elseif (($value instanceof \TurtleShortener\Models\Shortened)){
+                    $shortened = $value;
+                } else {
+                    continue;
                 }
                 $url = $shortened->url;
                 $shortenedUrl = $shortened->shortenedUrl;

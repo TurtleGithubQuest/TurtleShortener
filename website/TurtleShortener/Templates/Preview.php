@@ -1,4 +1,4 @@
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <title>trt.ls</title>
     <link rel="stylesheet" href="/css/turtle.css">
     <?php if(isset($isMobile) && $isMobile) {echo '<link rel="stylesheet" href="/css/mobile.css">';} ?>
@@ -15,7 +15,7 @@ include('header');
           <tr style="border-top: unset;">
             <th>translate('target')</th>
             <td><?php echo '<a href="'.$shortened->url.'">'.$shortened->url.'</a>'; ?>
-                <span class="copy-wrapper" title="translate('click_to_copy')" copyValue="<?php echo $shortened->shortenedUrl; ?>">
+                <span class="copy-wrapper" title="translate('click_to_copy')" copyValue="<?= $shortened->shortenedUrl ?>">
                     <img src="/img/svg/copy.svg" alt="copy">
                     <img src="/img/svg/success.svg" alt="copy-success">
                 </span>
@@ -23,27 +23,32 @@ include('header');
           </tr>
           <tr>
             <th>translate('created_at')</th>
-            <?php echo '<td unix="'.$shortened->created.'">'.$shortened->getCreationDate().'</td>'; ?>
+              <?= '<td unix="' . $shortened->created . '">' . $shortened->getCreationDate() . '</td>' ?>
           </tr>
           <tr>
             <th>translate('expiration')</th>
-            <?php echo '<td unix="'.$shortened->expiry.'">'.$shortened->getExpiryFormatted().'</td>'; ?>
+              <?= '<td unix="' . $shortened->expiry . '">' . $shortened->getExpiryFormatted() . '</td>' ?>
           </tr>
           <tr>
             <th>translate('searchable')</th>
-            <?php echo '<td>'.(($data['searchable']??true) ? "translate('1')" : "translate('0')").'</td>';?>
+              <?= '<td>' . (($data['searchable'] ?? true) ? "translate('1')" : "translate('0')") . '</td>'?>
           </tr>
         </table>
     </div>
     <div id="statistics">
         <div class="title">translate('statistics')</div>
-        <div id="stats_container"></div>
+        <div id="stats_container"><?= empty($geoDataSummary) ? "translate('none yet')" : '' ?></div>
     </div>
 </div>
 include('SeaEffects');
 <script src="/js/lib/echarts.min.js"></script>
 <script>
-    const geoDataSummary = <?php echo $geoDataSummary ?? "null"; ?>;
+    const geoDataSummary = <?= $geoDataSummary ?? 'null' ?>;
+    const translations = {
+        'countries': "translate('countries')",
+        'os': "translate('os')",
+        'daily_visits': "translate('daily_visits')",
+    };
 </script>
 include('Scripts');
 </body>

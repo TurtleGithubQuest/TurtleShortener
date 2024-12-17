@@ -20,7 +20,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 #note: RewriteMap not supported by provider.
 RewriteRule ^api/v1/upload(/)?$ /TurtleShortener/Misc/Upload.php [L,QSA]
 RewriteRule ^api/v1/shorten(/)?$ /TurtleShortener/Misc/Shorten.php [L,QSA]
-RewriteRule ^api/v1/search(/)?$ /TurtleShortener/Misc/Search.php [L,QSA]
+RewriteRule ^api/v1/search(/)?$ /tools?t=search [R=301,L,QSA]
 
 RewriteRule ^tools(/)?$ /TurtleShortener/Tools.php$1 [L,QSA]
 RewriteRule ^api/v1/(Upload|Shorten|Search)(/)?$ /TurtleShortener/Misc/$1.php [L,QSA,NC]

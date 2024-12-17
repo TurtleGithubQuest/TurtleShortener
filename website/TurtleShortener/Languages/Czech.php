@@ -26,8 +26,12 @@ class Czech extends Language {
         "searchable" => "Vyhledatelné",
         "statistics" => "Statistiky",
         "click_to_copy" => "Zkopírovat kliknutím",
-        1 => "ano",
-        0 => "ne",
+        'none yet' => 'Zatím žádné',
+        'countries' => 'Země',
+        'os' => 'Operační systémy',
+        'daily_visits' => 'Denní návštěvy',
+        1 => 'ano',
+        0 => 'ne',
     ];
     public function __construct() {
         $this->setCode("cz");

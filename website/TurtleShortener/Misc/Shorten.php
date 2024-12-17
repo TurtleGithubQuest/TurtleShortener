@@ -1,104 +1,123 @@
 <?php
+declare(strict_types=1);
+
 namespace TurtleShortener\Misc;
 
 error_reporting(E_ALL);
-if (isset($_GET["sid"])) {
-    session_id($_GET["sid"]);
-} else if (isset($_POST["sid"])) {
-    session_id($_POST["sid"]);
+
+if (isset($_GET['sid']) || isset($_POST['sid'])) {
+    $session_id = $_GET['sid'] ?? $_POST['sid'];
+    session_id($session_id);
 }
 session_start();
 
-/*require_once(__DIR__ . '/../db/util.php');
-require_once(__DIR__ . '/../model/short.php');
-require_once(__DIR__ . '/utils.php');*/
 require_once(__DIR__. '/../bootstrap.php');
 require_once(__DIR__ . '/../../composer/vendor/autoload.php');
 
 use Throwable;
-use TurtleShortener\Database\DbUtil;
 use TurtleShortener\Models\Shortened;
 use Ulid\Ulid;
+use function in_array;
 
-$dbUtil = new DbUtil();
-$pdo = $dbUtil::getPdo();
+class Shorten {
+    private function handleUrlCreation(string $url): array {
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            throw new \InvalidArgumentException("'$url' is not a valid url.");
+        }
 
-if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['url'])) {
-    $url = (string) $_POST['url'];
-    if (!filter_var($url, FILTER_VALIDATE_URL)) {
-        $_SESSION["error"] = "'$url' is not a valid url.";
-        exit;
-    }
-    $host = filter_input(INPUT_SERVER, 'HTTP_HOST') ?? filter_input(INPUT_SERVER, 'REQUEST URI');
-    $should_redirect = isset($_SERVER['HTTP_REFERER']) && (parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === $host || parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === parse_url($host, PHP_URL_HOST));
-    if (!isset($_SESSION["shortened_array"]))
-        $_SESSION["shortened_array"] = array();
-    try {
-        $shortcode = $_POST["alias"]??null;
-        $shortened = Shortened::fetch_by_url($shortcode, $url);
-        $searchable = !isset($_POST['searchable']) || $_POST['searchable'] === 'true';
-        //$stmt = $pdo->prepare("SELECT shortcode, expiry, created FROM urls WHERE url = ? OR shortcode = ?");
-        //$stmt->execute([$url, ]);
-        //$data = $stmt->fetch();
+        $shortcode = $_POST['alias'] ?? null;
+        $shortened = Shortened::fetchByUrl($shortcode, $url);
+
         if (!$shortened) {
-            $alias = $_POST["alias"] ?? "!";
-            $pattern = '/^[a-zA-Z0-9\-_.~]+$/';
-            $shortcode = preg_match($pattern, $alias) ? $alias : substr(md5(uniqid(mt_rand(), true)), 0, 6);
+            $shortened = $this->createNewShortened($url);
+        }
 
-            $expiry = (!empty($_POST['expiration']) && ($timestamp = strtotime($_POST['expiration'])) !== false) ? $timestamp : null;
-            $shortened = new Shortened(
-                Ulid::generate(),
-                $shortcode,
-                $_SERVER['HTTP_HOST'] . '/' . $shortcode,
-                $url,
-                $expiry,
-                null,
-                $searchable
-            );
-           //$shortcode = $data["shortcode"];
-           //$expiry = (int) $data["expiry"];
-           //$created = strtotime($data['created']);
-        }// else {
-           // $stmt = $pdo->prepare("INSERT INTO urls (ulid, shortcode, url, expiry, searchable) VALUES (?, ?, ?, ?, ?)");
-           // $stmt->execute([$ulid, $shortcode, $url, $expiry, $searchable]);
-           // $created = null;
-        //}
-        //$shortened = serialize(new Shortened($shortcode, $shortenedUrl, $url, $expiry, $created));
-        $ser_shortened = serialize($shortened);
-        if (!in_array($shortened, $_SESSION["shortened_array"], false)) {
-            $_SESSION["shortened_array"][] = $shortened;
+        $this->updateSession($shortened);
+        return ['url' => $shortened->shortenedUrl];
+    }
+
+    private function createNewShortened(string $url): Shortened {
+        $alias = $_POST['alias'] ?? '!';
+        $pattern = '/^[a-zA-Z0-9\-_.~]+$/';
+        $shortcode = preg_match($pattern, $alias) ? $alias : substr(md5(uniqid((string)mt_rand(), true)), 0, 6);
+
+        $expiry = $this->parseExpiry($_POST['expiration'] ?? '');
+        $includeInSearch = !isset($_POST['searchable']) || $_POST['searchable'] === 'true';
+
+        return Shortened::new(
+            (string) Ulid::generate(),
+            $shortcode,
+            $_SERVER['HTTP_HOST'] . '/' . $shortcode,
+            $url,
+            $expiry,
+            null,
+            $includeInSearch
+        );
+    }
+
+    private function parseExpiry(?string $expirationDate): ?int {
+        if (empty($expirationDate)) {
+            return null;
         }
-        // Request is probably not from user interface, create json data;
-        if (!$should_redirect) {
-            $json_data = ['url' => $shortened->shortenedUrl];
+        $timestamp = strtotime($expirationDate);
+        return $timestamp !== false ? $timestamp : null;
+    }
+
+    private function updateSession(Shortened $shortened): void {
+        if (!isset($_SESSION['shortened_array'])) {
+            $_SESSION['shortened_array'] = [];
         }
-    } catch(Throwable $e) {
-        $errorMessage = $e->getMessage();
-        if (!isset($errorMessage)) {
-            $errorMessage = $e->getTraceAsString();
-        }
-        $_SESSION["error"] = 'Object creation error: ' . $errorMessage;
-        $json_data = ['error' => $errorMessage];
-        $GLOBALS['log']->debug(json_encode($errorMessage, JSON_THROW_ON_ERROR));
-    } finally {
-        if ($should_redirect) {
-            header('Location: ' . $GLOBALS['utils']->getProtocol() . '://' . $_SERVER['HTTP_HOST'] . '/?sid=' . session_id());
-        } else {
-            echo json_encode($json_data);
+        if (!in_array($shortened, $_SESSION['shortened_array'], false)) {
+            $_SESSION['shortened_array'][] = $shortened;
         }
     }
-} else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['s'])) {
-    $shortcode = $_GET['s'];
-    $shortened = Shortened::fetch($shortcode, false);
-    /*$stmt = $pdo->prepare("SELECT url FROM urls WHERE shortcode = ?");
-    $stmt->execute([$shortCode]);
-    $url = $stmt->fetchColumn();*/
 
-    if($shortened) {
-        header('Location: ' . $shortened->url);
-        exit;
+    private function shouldRedirect(): bool {
+        $host = filter_input(INPUT_SERVER, 'HTTP_HOST') ?? filter_input(INPUT_SERVER, 'REQUEST_URI');
+        return isset($_SERVER['HTTP_REFERER']) &&
+               (parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === $host ||
+                parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === parse_url($host, PHP_URL_HOST));
     }
-    $_SESSION["error"] = "Shortcode '$shortcode' is not valid.";
-    $_SESSION["error_code"] = "404";
-    header('Location: /error.php');
+
+    public function handleRequest(): void {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['url'])) {
+            try {
+                $json_data = $this->handleUrlCreation($_POST['url']);
+
+                if ($this->shouldRedirect()) {
+                    header('Location: ' . $GLOBALS['utils']->getProtocol() . '://' . $_SERVER['HTTP_HOST'] . '/?sid=' . session_id());
+                    return;
+                }
+
+                echo json_encode($json_data);
+
+            } catch (Throwable $e) {
+                $errorMessage = $e->getMessage() ?: $e->getTraceAsString();
+                $_SESSION['error'] = 'Object creation error: ' . $errorMessage;
+                $json_data = ['error' => $errorMessage];
+                $GLOBALS['log']->debug(json_encode($errorMessage, JSON_THROW_ON_ERROR));
+
+                if (!$this->shouldRedirect()) {
+                    echo json_encode($json_data, JSON_THROW_ON_ERROR);
+                }
+            }
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['s'])) {
+            $shortcode = $_GET['s'];
+            $shortened = Shortened::fetch($shortcode, false);
+
+            if ($shortened) {
+                header('Location: ' . $shortened->url);
+                exit;
+            }
+
+            $_SESSION['error'] = "Shortcode '$shortcode' is not valid.";
+            $_SESSION['error_code'] = '404';
+            header('Location: /error.php');
+            exit;
+        }
+    }
+
 }
+
+$handler = new Shorten();
+$handler->handleRequest();

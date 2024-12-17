@@ -15,9 +15,9 @@
                 </form>
                 <div id="searchResult">
                     <?php
-                    if (!empty($_GET["found"])) {
-                        $results = json_decode(urldecode($_GET["found"]), false, 512, JSON_THROW_ON_ERROR);
-                        $host = explode(':', $_SERVER['HTTP_HOST'])[0]."/";
+                    if (!empty($_GET['found'])) {
+                        $results = json_decode(urldecode($_GET['found']), false, 512, JSON_THROW_ON_ERROR);
+                        $host = explode(':', $_SERVER['HTTP_HOST'])[0]. '/';
                         $appendNothing = true;
                         foreach ($results as $result) {
                             $appendNothing = false;
@@ -27,7 +27,7 @@
                                 $r_shortcode .= '+';
                             echo '<div class="result">
                                 <a class="shortcode" href="'.$r_shortcode.'">[?]</a>
-                                <a href="'.$r_url.'">'.preg_replace("/(http:\/\/|https:\/\/|www\.)/", "", $r_url).'</a>
+                                <a href="'.$r_url.'">'.preg_replace('/(http:\/\/|https:\/\/|www\.)/', '', $r_url).'</a>
                             </div>';
                         }
                         if ($appendNothing) {
@@ -44,8 +44,8 @@
             $queryParams = $GLOBALS['utils']?->getQueryParams();
             echo '
             <div class="dropdown-menu">
-                <a href="'.$GLOBALS['utils']?->buildQuery("lang", "en", $queryParams).'"><img src="/img/svg/flag/en.svg" alt="English" />English</a>
-                <a href="'.$GLOBALS['utils']?->buildQuery("lang", "cz", $queryParams).'"><img src="/img/svg/flag/cz.svg" alt="Czech" />Čeština</a>
+                <a href="'.$GLOBALS['utils']?->buildQuery('lang', 'en', $queryParams).'"><img src="/img/svg/flag/en.svg" alt="English" />English</a>
+                <a href="'.$GLOBALS['utils']?->buildQuery('lang', 'cz', $queryParams).'"><img src="/img/svg/flag/cz.svg" alt="Czech" />Čeština</a>
             </div>';
             ?>
         </div>
