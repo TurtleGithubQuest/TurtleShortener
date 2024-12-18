@@ -21,10 +21,11 @@
                         $appendNothing = true;
                         foreach ($results as $result) {
                             $appendNothing = false;
-                            $r_url = $result->url ?? "";
-                            $r_shortcode = $result->shortcode ?? "";
-                            if (!empty($r_shortcode))
+                            $r_url = $result->url ?? '';
+                            $r_shortcode = $result->shortcode ?? '';
+                            if (!empty($r_shortcode)) {
                                 $r_shortcode .= '+';
+                            }
                             echo '<div class="result">
                                 <a class="shortcode" href="'.$r_shortcode.'">[?]</a>
                                 <a href="'.$r_url.'">'.preg_replace('/(http:\/\/|https:\/\/|www\.)/', '', $r_url).'</a>

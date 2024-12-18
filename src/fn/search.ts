@@ -1,19 +1,11 @@
 import {createEl} from "../util/misc.js";
-export async function search(e) {
-	e.preventDefault();
-	const formData = new FormData(e.target);
-	const response = await fetch("/api/v1/search", {
-		method: "POST",
-		body: formData
-	});
-
-	function addResult(url, shortcode) {
+export async function search(e: SubmitEvent) {
+	function addResult(url: string, shortcode: string) {
 		const result = createEl("div", "result");
 		const urlA  = createEl("a");
-		const isUndefined = shortcode===undefined;
-		let userFriendlyURL = url.replace(/(http:\/\/|https:\/\/|www\.)/g, "");
+		const userFriendlyURL = url.replace(/(http:\/\/|https:\/\/|www\.)/g, "");
 		if (userFriendlyURL) {
-			if (!isUndefined) {
+			if (shortcode !== undefined) {
 				const host = window.location.protocol + "//" + window.location.host;
 				urlA.href = host+"/"+shortcode+"+";
 				result.innerHTML = `<a class="shortcode" href="${url}">[•]</a>`;
@@ -23,7 +15,16 @@ export async function search(e) {
 		}
 		results.append(result);
 	}
-	const items = e.target.parentElement;
+
+	e.preventDefault();
+	const target: HTMLFormElement = e.target;
+	const formData: FormData = new FormData(target);
+	const response = await fetch("/api/v1/search", {
+		method: "POST",
+		body: formData
+	});
+
+	const items = target.parentElement;
 	const results = items.querySelector("#searchResult");
 	results.innerHTML = "";
 	//results.classList.add("d-none");
@@ -49,5 +50,4 @@ export async function search(e) {
 	}
 	items.style.overflow = "visible";
 	items.style.height = "1.45rem";
-	//results.classList.remove("d-none");
 }

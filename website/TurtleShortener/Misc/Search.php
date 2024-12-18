@@ -41,12 +41,16 @@ class Search {
      * @param string $data The search results
      */
     #[NoReturn] public function handleResponse(string $data): void {
-        header('Content-type: application/json');
-        if (empty($data)) {
-            http_response_code(404);
-            echo json_encode(['error' => 'No results found'], JSON_THROW_ON_ERROR);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            header('Content-type: application/json');
+            if (empty($data)) {
+                http_response_code(404);
+                echo json_encode(['error' => 'No results found'], JSON_THROW_ON_ERROR);
+            } else {
+                echo $data;
+            }
         } else {
-            echo $data;
+            header('Location: /?found=' . urlencode($data));
         }
         exit;
     }

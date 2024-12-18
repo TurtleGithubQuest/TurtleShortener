@@ -35,10 +35,15 @@ include('header');
           </tr>
         </table>
     </div>
-    <div id="statistics">
-        <div class="title">translate('statistics')</div>
-        <div id="stats_container"><?= empty($geoDataSummary) ? "translate('none yet')" : '' ?></div>
-    </div>
+    <?php
+        if (!empty($geoDataSummary)) {
+            echo '
+                <div id="statistics">
+                <div class="title">translate("statistics")</div>
+                <div id="stats_container"></div>
+            </div>';
+        }
+    ?>
 </div>
 include('SeaEffects');
 <script src="/js/lib/echarts.min.js"></script>
