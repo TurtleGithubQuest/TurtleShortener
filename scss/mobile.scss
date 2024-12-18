@@ -1,0 +1,47 @@
+.expiration-time {
+  font-size: 1.4rem !important;
+  a {
+    min-height: 3.3rem !important;
+    padding: 0 0.65rem !important;
+  }
+}
+.title {font-size: 3.5rem !important;}
+.t-form {
+  min-height: 80vw !important;
+  min-width: 85vw !important;
+  label {
+    font-size: 2rem !important;
+    overflow-x: hidden !important;
+  }
+  input, [for="searchable"]>a[href] {
+    min-height: 4rem !important;;
+    font-size: 1.8rem !important;
+    &[type=submit] {
+      min-height: 4rem !important;
+    }
+    &[type=datetime-local] {
+      width: 100% !important;
+    }
+  }
+  sup {
+    font-size: 1.2rem !important;
+  }
+}
+.turtle-box {
+  top: 65% !important;
+  opacity: 70% !important;
+}
+.mobile {
+  display: block;
+}
+/*
+NAVBAR
+*/
+section.right {
+  img, .dropdown {
+    max-height: 4rem !important;
+  }
+  .dropdown:hover > .dropdown-menu{
+    margin-top: .8rem !important;
+  }
+}

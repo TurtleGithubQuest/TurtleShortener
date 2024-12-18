@@ -1,4 +1,5 @@
 <?php
+namespace TurtleShortener\Error;
 session_start();
 ?>
 <!DOCTYPE html>

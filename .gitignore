@@ -4,8 +4,11 @@
 *.css
 .aider*
 .env
-
-
+bun.lockb
+turtle.js
+build
+**:Zone.Identifier
+./website/generated/**
 
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 

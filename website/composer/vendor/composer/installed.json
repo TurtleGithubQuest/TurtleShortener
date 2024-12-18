@@ -50,6 +50,6 @@
             "install-path": "../robinvdvleuten/ulid"
         }
     ],
-    "dev": true,
+    "dev": false,
     "dev-package-names": []
 }

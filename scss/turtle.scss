@@ -1,39 +1,10 @@
 @use "var/color" as *;
 @use "var/font" as *;
 @use "scope/global" as *;
-/*
-html, body {
-  * {
-    @include JetBrainsMono;
-  }
-  --bs-text-opacity: 1;
-  color: $text !important;
-  background-color: darken($background, 11%);
-}
-html {
-  @include scrollie-vertical-1;
-  font-size: 1rem;
-  scroll-padding-top: 3.7rem;
-  a[href] {
-    &:visited {
-      color: darken($text, 8%);
-    }
-    &:active {
-      color: lighten($text, 10%);
-    }
-    &:hover, &:active + &:hover {
-      color: darken($text, 16%);
-    }
-    &:link {
-      color: lighten($text, 5%);
-    }
-  }
-}
-body {
-  margin:0; padding:0;
-  width: 100vw;
-  height: 100vh;
-}*/
+@use "scope/preview" as *;
+@use "fn/sea" as *;
+@use "fn/alert" as *;
+
 @media only screen and (max-device-width : 768px), only screen and (max-width : 768px) {
   .title {
     font-size: 3rem !important;
@@ -50,16 +21,19 @@ body {
       max-width: unset !important;
     }
   }
-  .turtle-box {
-    top: 45% !important;
-    opacity: 70% !important;
-  }
+}
+.turtle-box {
+  position:absolute;
+  top: 20%;
+  right: 2%;
+  opacity: 80%
 }
 .index-box {
   display: flex;
   position: relative;
-  align-content: center;
+  align-items: center;
   text-align: center;
+  gap: 0.75rem;
   .title {
     @include SyneMono;
     font-size: 2rem;
@@ -67,8 +41,8 @@ body {
     margin-bottom: 4.44rem;
   }
   .t-form {
-    background-color: darken($background, 13%);
-    border: 0.1rem solid darken($background, 16%);
+    background-color: $bg_secondary;//darken($background, 13%);
+    border: 0.1rem solid darken($bg_secondary, 1%);
     border-radius: 0.33rem;
     align-self: center;
     max-width: 15rem;
@@ -192,25 +166,28 @@ body {
       padding:0;
     }
   }
-  input[type=text], input[type=date], input[type=datetime-local], input[type=url], input[type=password] {
+  input[type=text], input[type=date], input[type=datetime-local],
+  input[type=url], input[type=password], [for="searchable"]>a[href] {
     font-size: 1rem;
-    background-color: darken($background, 15%);
+    background-color: darken($bg_secondary, 4%);
+    align-content: center;
+    padding: 0 1rem;
     &:focus {
-      outline: 0.1rem solid darken($background, 13%);
+      outline: 0.1rem solid darken($bg_secondary, 6%);
     }
     &:hover {
-      background-color: darken($background, 20%);
+      background-color: darken($bg_secondary, 8%);
     }
     &::-webkit-datetime-edit-day-field:focus,
     &::-webkit-datetime-edit-month-field:focus,
     &::-webkit-datetime-edit-year-field:focus,
     &::-webkit-datetime-edit-hour-field:focus,
     &::-webkit-datetime-edit-minute-field:focus, {
-        background-color: darken($background, 4%);
+        background-color: darken($bg_secondary, 4%);
         color: lighten($text, 3%);
     }
     &:-webkit-autofill {
-      -webkit-box-shadow: 0 0 3.125rem darken($background, 15%) inset !important;
+      -webkit-box-shadow: 0 0 3.125rem darken($bg_secondary, 15%) inset !important;
       background-color: transparent !important;
       background-clip: text;
       -webkit-text-fill-color: $text !important;
@@ -261,4 +238,11 @@ body {
   0% {box-shadow: 0 0 0.55rem 0.05rem lighten($background, 6%);}
   50% {box-shadow: -0.25 -0.25 1.55rem 0.5rem lighten($background, 12%);}
   100% {box-shadow: 0 0 0.55rem 0.05rem lighten($background, 6%);}
+}
+#wrapper-content {
+  position: relative;
+  z-index: 5;
+}
+.mobile {
+  display: none;
 }

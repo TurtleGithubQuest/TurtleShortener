@@ -10,7 +10,8 @@
 }
 @font-face {
   font-family: 'Syne Mono';
-  src: url("../fonts/SyneMono/SyneMono-Regular.ttf");
+  src: url("../fonts/SyneMono/SyneMono-Regular.woff2") format('woff2'),
+       url("../fonts/SyneMono/SyneMono-Regular.ttf");
 }
 @mixin JetBrainsMono {
   font-family: "JetBrainsMono", monospace !important;

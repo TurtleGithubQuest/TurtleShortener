@@ -18,7 +18,7 @@ Extra thanks to Josetxu
     pointer-events: none;
 	align-items: center;
     overflow: hidden;
-    position: relative;
+    //position: relative;
     padding: 1rem 0 8rem;
     .bubbles {
         //margin-right: 3rem;

@@ -3,16 +3,23 @@
   "module": "",
   "type": "module",
   "scripts": {
-    "deploy": "bun run tasks/deploy.js",
-    "watch": "bun run tasks/watch.js"
+    "clear": "rm -rf /home/user/.bun/install/cache && rm -rf node_modules",
+    "build": "bun run build.ts",
+    "deploy": "bun run node_modules/turtle-devtools/src/turtle-devtools.js --task deploy",
+    "watch": "bun run node_modules/turtle-devtools/src/turtle-devtools.js --task watch"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "cursor-effects": "^1.0.15",
+    "turtle-devtools": "https://github.com/TurtleGithubQuest/turtle-devtools-js/releases/download/v0.0.1/turtle-devtools-0.0.1.tgz"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "echarts": "latest",
+    "eslint": "latest",
+    "typescript-eslint": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "basic-ftp": "^5.0.5"
   }
 }

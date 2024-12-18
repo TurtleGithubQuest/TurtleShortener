@@ -1,0 +1,78 @@
+@use '../var/color' as *;
+
+#alerts {
+  position: absolute;
+  display: flex;
+  flex-flow: column;
+  z-index: 10;
+  top: 15%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.alert {
+  position: relative;
+  pointer-events: all;
+  margin-bottom: .5rem;
+  width: 16rem;
+  height: auto;
+  min-width: 16rem;
+  padding: .15rem;
+  border-radius: 0.3rem;
+  background-color: darken($background, 6%);
+  border-color: darken($bg_secondary, 12%);
+  cursor: pointer;
+  animation: green_glow 5s infinite;
+
+  span {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1rem;
+    transition: all 60ms ease-in;
+    border-radius: 0.3rem;
+  }
+  .notification-info {
+    text-align: end;
+    padding-right: 0.5rem;
+  }
+  .content {
+    padding: 0;
+    margin: 0;
+  }
+  input[type="checkbox"]:not(:checked) {
+    ~ .notification-info {
+      opacity: 0;
+      height: 0;
+    }
+  }
+
+  input[type="checkbox"]:checked {
+    ~ .content {
+      opacity: 0;
+      height: 0;
+    }
+    ~ & {
+      left: 1%;
+      transform: translateX(1%);
+    }
+  }
+  &:has(input:checked) {
+      left: -10vw;
+      transform: translateX(-10vw);
+  }
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  &:not(:has(.content)) {
+    display: none !important;
+  }
+  .error {
+    background-color: $rock_lobster;
+    border: 1px solid #EDD;
+  }
+  .info {
+    background-color: #bbab31;
+  }
+}
