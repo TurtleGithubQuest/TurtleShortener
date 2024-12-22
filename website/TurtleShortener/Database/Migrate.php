@@ -48,8 +48,40 @@ class Migrate {
             click_source VARCHAR(100) #-- Source of the click (e.g., web, email, social)
         )';
 
+        $stats_country = 'CREATE TABLE IF NOT EXISTS stats_country_summary (
+            unix BIGINT,
+            country VARCHAR(100) NOT NULL,
+            visit_count INT NOT NULL,
+            unique_visitors INT NOT NULL,
+            PRIMARY KEY (unix, country)
+        )';
+
+        $stats_os = 'CREATE TABLE IF NOT EXISTS stats_os_summary (
+            unix BIGINT,
+            operating_system VARCHAR(100) NOT NULL,
+            visit_count INT NOT NULL,
+            unique_visitors INT NOT NULL,
+            PRIMARY KEY (unix, operating_system)
+        )';
+
+        $stats_city = 'CREATE TABLE IF NOT EXISTS stats_city_summary (
+            unix BIGINT,
+            city VARCHAR(100) NOT NULL,
+            visit_count INT NOT NULL,
+            unique_visitors INT NOT NULL,
+            PRIMARY KEY (unix, city)
+        )';
+
+        $stats_source = 'CREATE TABLE IF NOT EXISTS stats_source_summary (
+            unix BIGINT,
+            click_source VARCHAR(100) NOT NULL,
+            visit_count INT NOT NULL,
+            unique_visitors INT NOT NULL,
+            PRIMARY KEY (unix, click_source)
+        )';
+
         try {
-            foreach ([$urls, $statistics] as $sql) {
+            foreach ([$urls, $statistics, $stats_country, $stats_os, $stats_city, $stats_source] as $sql) {
                 $this->pdo->exec($sql);
             }
             return 'Database migrated successfully.';

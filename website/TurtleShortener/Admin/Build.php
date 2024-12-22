@@ -12,7 +12,8 @@ use TurtleShortener\Misc\AccessLevel;
 use function sprintf;
 
 class Build {
-    private const LAYOUT_FILES = ['Index', 'Admin', 'Preview'];
+    private const LAYOUT_FILES = ['Index', 'Admin', 'Preview', 'Info', 'Stats'];
+    private const HANDLER_FILES = ['Landing', 'Preview', 'Image'];
     private const LANGUAGES = ['en', 'cz'];
 
     public function __construct(
@@ -98,7 +99,7 @@ class Build {
             $output .= '<br>';
         }
 
-        foreach(['Landing', 'Preview'] as $handler) {
+        foreach(self::HANDLER_FILES as $handler) {
             $handlerName = strtolower($handler);
             $content = file_get_contents(__DIR__ . "/../Handlers/$handler.php");
             if ($content === false) {

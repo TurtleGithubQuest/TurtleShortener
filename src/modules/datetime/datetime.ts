@@ -15,7 +15,13 @@ export function initializeDateTime(defaultExpValue = 10080) {
 	}
 
 	document.querySelectorAll('[unix]').forEach((el) => {
-		const unix = Number(el.getAttribute('unix')) * 1000;
+		const unixAttribute = el.getAttribute('unix') || null;
+
+		if (unixAttribute === null) {
+			return;
+		}
+
+		const unix = Number(unixAttribute) * 1000;
 		updateElementTextDate(el as HTMLElement, unix.toString());
 	});
 }

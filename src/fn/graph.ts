@@ -2,31 +2,126 @@ import {createEl, deepMerge, deepClone} from "../util/misc.js";
 import {themes} from "../settings/graph_themes.js";
 
 let chartContainer: HTMLElement | null;
+let fullWidth = false;
 
 export function loadCharts(): void {
 	chartContainer = document.getElementById("stats_container");
-	if (chartContainer && geoDataSummary) {
-		const {total_clicks, avg_clickTime, countries, cities, operating_systems, clicks_by_day} = geoDataSummary;
 
-		const echarts = [
-			//createChart(chartContainer, "Countries", countries),
-			//createChart(chartContainer, "Cities", cities, "pie"),
-			createNestedChart(translations['countries'], "pie", countries, cities),
-			createChart(translations['os'], "pie", operating_systems),
-			createChart(translations['daily_visits'], "bar", clicks_by_day)
-		];
-			//noinspection JSUnresolvedVariable
-		window.addEventListener("resize", () => {
-			echarts.forEach(([el, echart]) => {
-				echart.resize();
+	if (!chartContainer) {
+		return;
+	}
+
+	if (typeof geoDataSummary !== 'undefined' && geoDataSummary) {
+		loadUrlSummary(geoDataSummary);
+	} else if (typeof geoDataRangeSummary !== 'undefined' && geoDataRangeSummary) {
+		fullWidth = true;
+		loadDateRangeSummary(geoDataRangeSummary);
+	}
+}
+
+function loadUrlSummary(summary: any): void {
+	const {total_clicks, avg_clickTime, countries, cities, operating_systems, clicks_by_day} = summary;
+	const echarts = [
+		createNestedChart(translations['countries'], "pie", countries, cities),
+		createChart(translations['os'], "pie", operating_systems),
+		createChart(translations['daily_visits'], "bar", clicks_by_day)
+	];
+	registerResizeHandler(echarts);
+}
+
+function loadDateRangeSummary(summary: any): void {
+	const {country_stats, os_stats, city_stats, source_stats} = summary;
+
+	const countryData = country_stats.map((stat: any) => ({
+		...stat,
+		name: stat.country
+	}));
+	const osData = os_stats.map((stat: any) => ({
+		...stat,
+		name: stat.operating_system
+	}));
+	const cityData = city_stats.map((stat: any) => ({
+		...stat,
+		name: stat.city
+	}));
+	const sourceData = source_stats.map((stat: any) => ({
+		...stat,
+		name: stat.click_source
+	}));
+
+	const [chartDiv, echart, option] = initChart(translations['statistics'], 'line');
+	const dates = new Set();
+	const dataGroups = {
+		Countries: { data: countryData, categories: new Set() },
+		Cities: { data: cityData, categories: new Set() },
+		'Operating Systems': { data: osData, categories: new Set() },
+		Sources: { data: sourceData, categories: new Set() }
+	};
+
+	Object.values(dataGroups).forEach(group => {
+		group.data.forEach((item: any) => {
+			const date = new Date(item.unix * 1000).toLocaleDateString();
+			dates.add(date);
+			group.categories.add(item.name);
+		});
+	});
+
+	const dateArray: any = Array.from(dates);
+	const series: any = [];
+
+	// Create series for each data group
+	Object.entries(dataGroups).forEach(([groupName, group]) => {
+		Array.from(group.categories).forEach((category, index: number) => {
+			series.push({
+				name:  `${translations[groupName.toLowerCase()] ?? groupName} - ${category}`,
+				type: 'bar',
+				stack: groupName,
+				emphasis: {
+					focus: 'series',
+					scale: true
+				},
+				barGap: '30%',
+				barCategoryGap: '40%',
+				barWidth: '12',
+				itemStyle: {
+					opacity: 0.8
+				},
+				data: dateArray.map((date: any) => {
+					const item = group.data.find((d: any) =>
+						new Date(d.unix * 1000).toLocaleDateString() === date &&
+						d.name === category
+					);
+					return item ? item.visit_count : 0;
+				})
 			});
 		});
+	});
 
-	}
+	option.xAxis.data = dateArray;
+	option.legend.data = series.map((s: any) => s.name);
+	option.series = series;
+
+	echart.setOption(option);
+	const echarts: any = [[chartDiv, echart]];
+	registerResizeHandler(echarts);
+}
+
+function registerResizeHandler(echarts: ChartReturn[]): void {
+	//noinspection JSUnresolvedVariable
+	window.addEventListener("resize", () => {
+		echarts.forEach(([, echart]) => {
+			echart.resize();
+		});
+	});
 }
 
 function initChart(title: string, theme: ChartTheme): [HTMLDivElement, any, ChartOption] {
 	const chartDiv = createEl('div', 'stats_chart');
+
+	if (fullWidth) {
+		chartDiv.style.width = "100%";
+	}
+
 	chartContainer.appendChild(chartDiv);
 
 	const echart = echarts.init(chartDiv, theme);

@@ -94,7 +94,7 @@ a[href]:not(.bookmark) {
   text-decoration-thickness: 0.1rem;
   text-shadow: 0.02rem 0.02rem 0.02rem darken($rock_lobster, 12%);
   &:hover {
-    color: lighten($background, 12%);
+    color: darken($text, 6%);
     text-decoration: underline;
   }
 }
