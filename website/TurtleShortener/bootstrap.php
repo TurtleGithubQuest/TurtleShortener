@@ -12,6 +12,7 @@ namespace TurtleShortener {
     require_once(__DIR__.'/Database/UpKeep.php');
     require_once(__DIR__.'/Database/Migrate.php');
     require_once(__DIR__.'/Admin/Build.php');
+    require_once(__DIR__.'/Admin/StatSummary.php');
     require_once(__DIR__.'/Misc/Search.php');
     use TurtleShortener\Misc\Utils;
     use TurtleShortener\Misc\LogUtil;

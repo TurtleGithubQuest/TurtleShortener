@@ -89,14 +89,11 @@ class Shortened {
 
     public static function fetch(string $shortcode, bool $full): ?Shortened {
         $pdo = DbUtil::getPdo();
-        $query = ($full ?
-            'SELECT ulid, url, expiry, created, searchable' : 'SELECT ulid, url') .
-            ' FROM urls WHERE shortcode = :shortcode LIMIT 1';
+        $query = 'SELECT ulid, url' . ($full ? ', expiry, created, searchable' : '') . ' FROM urls WHERE shortcode = :shortcode LIMIT 1';
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':shortcode', $shortcode);
         $stmt->execute();
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
         if ($data === false) {
             return null;
         }
@@ -113,17 +110,14 @@ class Shortened {
     }
 
     public function getExpiryFormatted(string $dateformat='d-m-Y H:i:s'): ?string {
-        $result = 'never';
-        if ($this->expiry !== null) {
+        if (!empty($this->expiry)) {
             try {
                 $datetime = new DateTime('@' . $this->expiry);
                 $datetime->setTimezone($this->timezone);
-                $result = $datetime->format($dateformat);
-            } catch (Exception) {
-                return null;
-            }
+                return $datetime->format($dateformat);
+            } catch (Exception) {}
         }
-        return $result;
+        return null;
     }
 
     public function getCreationDate(string $dateformat='d-m-Y H:i:s'): ?string {

@@ -1,6 +1,7 @@
 @use "../var/font" as *;
 @use "../fn/scrollbar" as *;
 @import "../var/color";
+
 nav {
   position: sticky;
   top: 0;
@@ -46,17 +47,24 @@ nav {
       }
     }
     .items {
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      gap: 1rem;
       top: 2rem;
       right: 2rem;
       padding: 0;
       perspective: 1000px;
+      background-color: darken($background, 2%);
+      border-radius: 1rem;
+      border: solid 0.05rem darken($background, 4%);
       & > a {
         display: inline-block;
         height: 1.7rem;
         text-align: center;
         align-content: center;
         &:hover {
-          background-color: lighten($background, 3%);
+          background-color: darken($background, 3.5%);
           border-radius: 0.1rem;
           transition: 0.2s all cubic-bezier(.52,.22,.25,.81);
           transform: rotateX(-10deg) scale(1.06);
@@ -64,8 +72,9 @@ nav {
       }
       form.search {
         display: flex;
-        align-items: center;
-        height: 2rem;
+        align-items: stretch;
+        height: 2.2rem;
+        margin: auto 0;
         border: 0.1rem solid darken($background, 15%);
         border-radius: 0.2rem;
         input:hover {
@@ -79,10 +88,8 @@ nav {
         }
         input[type="image"] {
           background-color: darken($background, 7%);
-          height: 1.75rem;
           padding: 0.15rem;
-          margin: 0.05rem;
-          border-radius: 0.15rem;
+          border-top-right-radius: 0.15rem;
           &:hover {
             background-color: darken($background, 5%) !important;
           }
@@ -150,6 +157,8 @@ nav {
         display: flex;
         position: absolute;
         flex-flow: column;
+        align-items: stretch;
+        gap: 0.5rem;
         height: 0;
         overflow: hidden;
         transition: 0.2s all cubic-bezier(.52,.22,.25,.81);

@@ -14,7 +14,7 @@ include('header');
         <table>
           <tr style="border-top: unset;">
             <th>translate('target')</th>
-            <td><?php echo '<a href="'.$shortened->url.'">'.$shortened->url.'</a>'; ?>
+            <td><?= '<a href="' . $shortened->url . '">' . $shortened->url . '</a>' ?>
                 <span class="copy-wrapper" title="translate('click_to_copy')" copyValue="<?= $shortened->shortenedUrl ?>">
                     <img src="/img/svg/copy.svg" alt="copy">
                     <img src="/img/svg/success.svg" alt="copy-success">
@@ -23,11 +23,11 @@ include('header');
           </tr>
           <tr>
             <th>translate('created_at')</th>
-              <?= '<td unix="' . $shortened->created . '">' . $shortened->getCreationDate() . '</td>' ?>
+              <?= '<td unix=' . $shortened->created . '>' . $shortened->getCreationDate() . '</td>' ?>
           </tr>
           <tr>
             <th>translate('expiration')</th>
-              <?= '<td unix="' . $shortened->expiry . '">' . $shortened->getExpiryFormatted() . '</td>' ?>
+              <?= '<td unix='. $shortened->expiry .'>' . ($shortened->getExpiryFormatted() ?? "translate('never')")  . '</td>' ?>
           </tr>
           <tr>
             <th>translate('searchable')</th>

@@ -209,4 +209,70 @@ class GeoData {
         return null;
     }
 
+    public static function fetchDateRangeSummary(int $from, int $to): ?string {
+        $pdo = DbUtil::getPdo();
+
+        // Fetch country statistics
+        $countrySql = 'SELECT unix, country, visit_count, unique_visitors 
+                      FROM stats_country_summary 
+                      WHERE unix BETWEEN :from AND :to';
+
+        $countryStmt = $pdo->prepare($countrySql);
+        $countryStmt->bindParam(':from', $from);
+        $countryStmt->bindParam(':to', $to);
+        $countryStmt->execute();
+        $countryStats = $countryStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Fetch OS statistics
+        $osSql = 'SELECT unix, operating_system, visit_count, unique_visitors 
+                 FROM stats_os_summary 
+                 WHERE unix BETWEEN :from AND :to';
+
+        $osStmt = $pdo->prepare($osSql);
+        $osStmt->bindParam(':from', $from);
+        $osStmt->bindParam(':to', $to);
+        $osStmt->execute();
+        $osStats = $osStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Fetch city statistics
+        $citySql = 'SELECT unix, city, visit_count, unique_visitors 
+                   FROM stats_city_summary 
+                   WHERE unix BETWEEN :from AND :to';
+
+        $cityStmt = $pdo->prepare($citySql);
+        $cityStmt->bindParam(':from', $from);
+        $cityStmt->bindParam(':to', $to);
+        $cityStmt->execute();
+        $cityStats = $cityStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Fetch source statistics
+        $sourceSql = 'SELECT unix, click_source, visit_count, unique_visitors 
+                     FROM stats_source_summary 
+                     WHERE unix BETWEEN :from AND :to';
+
+        $sourceStmt = $pdo->prepare($sourceSql);
+        $sourceStmt->bindParam(':from', $from);
+        $sourceStmt->bindParam(':to', $to);
+        $sourceStmt->execute();
+        $sourceStats = $sourceStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $summary = [
+            'date_range' => [
+                'from' => $from,
+                'to' => $to
+            ],
+            'country_stats' => $countryStats,
+            'os_stats' => $osStats,
+            'city_stats' => $cityStats,
+            'source_stats' => $sourceStats
+        ];
+
+        try {
+            return json_encode($summary, JSON_THROW_ON_ERROR);
+        } catch(\Exception $ex) {
+            $GLOBALS['log']->error('Error encoding date range summary: ' . $ex->getMessage());
+            return null;
+        }
+    }
+
 }

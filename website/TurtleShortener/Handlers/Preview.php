@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace TurtleShortener\Page;
 
 use TurtleShortener\Models\GeoData;
@@ -8,29 +10,33 @@ use ValueError;
 
 $is_bot = false;
 $preview_mode = $_GET['preview'] ?? false;
+if (!\is_bool($preview_mode)) {
+    $preview_mode = $preview_mode === 'true';
+}
 $shortened = null;
+
+if (isset($_GET['s'])) {
+    $shortcode = $_GET['s'];
+} else {
+    header('Location: /error.php?error=' . urlencode('no shortcode provided.'));
+    exit;
+}
+
 try {
-    if (isset($_GET['s'])) {
-        require_once(__DIR__. '/../TurtleShortener/bootstrap.php');
-        //require_once(__DIR__ . '/../db/util.php');
-        $shortcode = $_GET['s'];
-        $shortened = Shortened::fetch($shortcode, $preview_mode);
-        $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
-        $is_bot = str_contains($userAgent, 'bot');
-    } else {
-        header('Location: /error.php?error=' . urlencode('no shortcode provided.'));
-        exit;
-    }
+    require_once(__DIR__. '/../TurtleShortener/bootstrap.php');
+    $shortened = Shortened::fetch($shortcode, $preview_mode);
+    $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $is_bot = str_contains($userAgent, 'bot');
 } catch(Exception $e) {
     $GLOBALS['log']->error('Error processing shortcode: '. $e->getMessage());
 } finally {
-    if ($shortened !== null) {
-        if (!$is_bot && !$preview_mode) {
-            header('Location: ' . $shortened->url);
-        }
-    } else {
-        header('Location: /error.php?error=' . urlencode('404: not found.'));
+    if ($shortened === null) {
+        header('Location: /error.php?error=' . urlencode("404: '$shortcode' not found."));
         exit;
+    }
+
+    if (!$is_bot && !$preview_mode) {
+        header('Location: ' . $shortened->url);
     }
 }
 ?>
@@ -41,16 +47,18 @@ try {
     <meta property="og:type" content="website">
     <title></title>
     <?php
-        $title = "trt.ls";
-        $options = array(
-            'http' => array(
+        $title = 'trt.ls';
+        $options = [
+            'http' => [
                 'method' => 'GET',
                 'header' => 'User-Agent: TurtleBot (trt.ls)'
-            )
-        );
+            ]
+        ];
         try {
             $html = @file_get_contents($shortened->url, false, stream_context_create($options));
-            preg_match_all('~<title>([^<]*)</title>|<meta property="og:description" content="([^<]*)"~i', $html, $matches);
+            if ($html !== false) {
+               preg_match_all('~<title>([^<]*)</title>|<meta property="og:description" content="([^<]*)"~i', $html, $matches);
+            }
             $title = !empty($matches[1][0]) ? $matches[1][0] : null;
             $description = !empty($matches[2][0]) ? $matches[2][0] : null;
         } catch(ValueError $err) {

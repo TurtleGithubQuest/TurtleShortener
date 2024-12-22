@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace TurtleShortener\Database;
 
 use PDO;
@@ -7,7 +9,7 @@ class DbUtil {
     private static ?PDO $pdo = null;
 
     public static function getPdo(): PDO {
-        if (self::$pdo == null) {
+        if (self::$pdo === null) {
             $settings = $GLOBALS['settings'];
             $db_host = $settings['db_host'];
             $db_name = $settings['db_name'];

@@ -1,5 +1,6 @@
 declare const echarts: any;
 declare const translations: any;
+declare const geoDataRangeSummary: any;
 declare const geoDataSummary: {
     total_clicks: number;
     avg_clickTime: number;
@@ -45,5 +46,5 @@ interface ChartOption {
     };
 }
 
-type ChartTheme = "pie" | "radar" | "bar";
+type ChartTheme = "pie" | "radar" | "bar" | "line";
 type ChartReturn = [HTMLDivElement, any];

@@ -30,6 +30,7 @@ class CommandExecutor {
         $this->registerCommand('build', new Build());
         $this->registerCommand('migratedb', new MigrateDb());
         $this->registerCommand('search', new Search());
+        $this->registerCommand('statsum', new StatSummary());
     }
 
     /**
