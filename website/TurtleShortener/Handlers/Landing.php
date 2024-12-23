@@ -24,7 +24,7 @@ $page = $_GET['page'] ?? 'index';
 if (
     ($page === 'stats')
 ) {
-    $from = strtotime($_GET['from'] ?? date('Y-m-d'));
+    $from = strtotime($_GET['from'] ?? date('Y-m-d', strtotime('-6 months')));
     $to = strtotime($_GET['to'] ?? date('Y-m-d'));
     $geoDataRangeSummary = GeoData::fetchDateRangeSummary($from, $to);
     echo '<script>const geoDataRangeSummary = ' . ($geoDataRangeSummary ?? 'null') . '</script>';

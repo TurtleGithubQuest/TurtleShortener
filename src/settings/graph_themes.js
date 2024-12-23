@@ -1,4 +1,4 @@
-export const themes = {
+export const themes = window.echarts ? {
 	"default": {
 		textStyle: {
 			fontFamily: "JetBrainsMono",
@@ -144,15 +144,22 @@ export const themes = {
 	},
 	"line": {
 		grid: {
+			show: true,
 			left: '5%',
 			right: '5%',
-			bottom: '8%',
-			top: '15%',
-			containLabel: true
+			bottom: '1%',
+			top: '30%',
+			containLabel: true,
+			backgroundColor: new window.echarts.graphic.LinearGradient(0, 0, 0, 1, [
+				{ offset: 0, color: '#146161' },
+				{ offset: 1, color: '#0B3636' }
+			]),
+			borderColor: '#376363',
+			borderWidth: 1
 		},
 		xAxis: {
 			type: 'category',
-			boundaryGap: false,
+			boundaryGap: true,
 			axisLine: {
 				show: false
 			},
@@ -192,13 +199,19 @@ export const themes = {
 				color: '#dfe8ed',
 				fontSize: 12
 			},
-			padding: [15, 0],
-			icon: 'roundRect'
+			padding: [7, 6],
+			backgroundColor: '#163263',
+			borderRadius: [5, 4],
+			shadowColor: 'rgba(0, 0, 0, 0.5)',
+			shadowBlur: 10,
+			top: 0,
+			left: 'center',
+			icon: 'pin',
 		},
 		tooltip: {
 			trigger: 'axis',
 			show: true,
-			backgroundColor: 'rgba(16, 22, 26, 0.8)',
+			backgroundColor: 'rgba(16, 22, 26, 0.98)',
 			borderRadius: 4,
 			padding: [8, 12],
 			textStyle: {
@@ -214,32 +227,5 @@ export const themes = {
 				}
 			}
 		},
-		series: [{
-			type: 'line',
-			smooth: true,
-			symbolSize: 8,
-			symbol: 'circle',
-			lineStyle: {
-				width: 3,
-				cap: 'round'
-			},
-			itemStyle: {
-				borderWidth: 2
-			},
-			emphasis: {
-				focus: 'series',
-				scale: true,
-				lineStyle: {
-					width: 4
-				},
-				itemStyle: {
-					borderWidth: 3
-				}
-			},
-			showSymbol: false,
-			areaStyle: {
-				opacity: 0.1
-			}
-		}]
 	}
-};
+} : undefined;

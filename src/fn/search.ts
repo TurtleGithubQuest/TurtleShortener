@@ -1,21 +1,6 @@
-import {createEl} from "../util/misc.js";
-export async function search(e: SubmitEvent) {
-	function addResult(url: string, shortcode: string) {
-		const result = createEl("div", "result");
-		const urlA  = createEl("a");
-		const userFriendlyURL = url.replace(/(http:\/\/|https:\/\/|www\.)/g, "");
-		if (userFriendlyURL) {
-			if (shortcode !== undefined) {
-				const host = window.location.protocol + "//" + window.location.host;
-				urlA.href = host+"/"+shortcode+"+";
-				result.innerHTML = `<a class="shortcode" href="${url}">[•]</a>`;
-			}
-			urlA.innerText = userFriendlyURL;
-			result.append(urlA);
-		}
-		results.append(result);
-	}
+import {createEl} from "../util/misc";
 
+export async function search(e: SubmitEvent) {
 	e.preventDefault();
 	const target: HTMLFormElement = e.target;
 	const formData: FormData = new FormData(target);
@@ -24,10 +9,33 @@ export async function search(e: SubmitEvent) {
 		body: formData
 	});
 
-	const items = target.parentElement;
-	const results = items.querySelector("#searchResult");
+	const items = target?.parentElement;
+	const results = items?.querySelector("#searchResult") || null;
+
+	if (results === null || items === null) {
+		return;
+	}
+
 	results.innerHTML = "";
-	//results.classList.add("d-none");
+
+	const addResult = (function(results) {
+		return function(url: string, shortcode: string) {
+			const result = createEl('div', 'result');
+			const urlA  = createEl('a', '');
+			const userFriendlyURL = url.replace(/(http:\/\/|https:\/\/|www\.)/g, "");
+			if (userFriendlyURL) {
+				if (shortcode !== undefined) {
+					const host = window.location.protocol + "//" + window.location.host;
+					urlA.href = host+"/"+shortcode+"+";
+					result.innerHTML = `<a class="shortcode" href="${url}">[•]</a>`;
+				}
+				urlA.innerText = userFriendlyURL;
+				result.append(urlA);
+			}
+			results.append(result);
+		};
+	})(results);
+
 	if (response.ok) {
 		const contentType = response.headers.get("content-type");
 		if (contentType && contentType.includes("application/json")) {

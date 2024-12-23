@@ -1,5 +1,5 @@
 import("./util/date.ts");
-import("./util/misc.js");
+import("./util/misc.ts");
 import("./util/form.js");
 import { bubbleCursor } from "cursor-effects";
 import {loadCharts, registerThemes} from "./fn/graph.ts";

@@ -94,6 +94,7 @@ class Shortened {
         $stmt->bindParam(':shortcode', $shortcode);
         $stmt->execute();
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
         if ($data === false) {
             return null;
         }
