@@ -10,21 +10,6 @@ declare const geoDataSummary: {
     clicks_by_day: DayClickItem[];
 } | undefined;
 
-interface GeoItem {
-    name: string;
-    percentage: number;
-}
-
-interface SystemItem {
-    name: string;
-    percentage: number;
-}
-
-interface DayClickItem {
-    unix: number;
-    count: number;
-}
-
 interface ChartOption {
     title?: {
         text: string;

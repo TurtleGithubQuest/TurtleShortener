@@ -1,4 +1,4 @@
-import {createEl, deepMerge, deepClone} from "../util/misc.js";
+import {createEl, deepMerge, deepClone, getShade} from "../util/misc";
 import {themes} from "../settings/graph_themes.js";
 
 let chartContainer: HTMLElement | null;
@@ -52,30 +52,34 @@ function loadDateRangeSummary(summary: any): void {
 	const [chartDiv, echart, option] = initChart(translations['statistics'], 'line');
 	const dates = new Set();
 	const dataGroups = {
-		Countries: { data: countryData, categories: new Set() },
-		Cities: { data: cityData, categories: new Set() },
-		'Operating Systems': { data: osData, categories: new Set() },
-		Sources: { data: sourceData, categories: new Set() }
+		'Sources': { data: sourceData, categories: [], color: "#A81B8F" },
+		'Cities': { data: cityData, categories: [], color: "#FF4B4B" },
+		'Countries': { data: countryData, categories: [], color: "#00BA6C" },
+		'Operating Systems': { data: osData, categories: [], color: "#4B89FF" },
 	};
 
-	Object.values(dataGroups).forEach(group => {
-		group.data.forEach((item: any) => {
+	Object.values(dataGroups).forEach((group: any) => {
+		group.data.forEach((item: any, index: number) => {
 			const date = new Date(item.unix * 1000).toLocaleDateString();
 			dates.add(date);
-			group.categories.add(item.name);
+			group.categories.push({
+				name: item.name,
+				color: getShade(group.color, index)
+			});
 		});
 	});
 
 	const dateArray: any = Array.from(dates);
 	const series: any = [];
 
-	// Create series for each data group
-	Object.entries(dataGroups).forEach(([groupName, group]) => {
-		Array.from(group.categories).forEach((category, index: number) => {
+	Object.entries(dataGroups).forEach(([groupName, group]: [string, any], groupIndex: number) => {
+		const isFirst = groupIndex === 0;
+		Array.from(group.categories).forEach((category: any, categoryIndex: number) => {
+			const previousIndex: number = Math.max(Math.min(group.categories.length, categoryIndex) - 1, 0);
 			series.push({
-				name:  `${translations[groupName.toLowerCase()] ?? groupName} - ${category}`,
-				type: 'bar',
-				stack: groupName,
+				name:  `${translations[groupName.toLowerCase()] ?? groupName} - ${category.name}`,
+				type: isFirst ? 'line' : 'bar',
+				stack: isFirst ? undefined : groupName,
 				emphasis: {
 					focus: 'series',
 					scale: true
@@ -84,12 +88,31 @@ function loadDateRangeSummary(summary: any): void {
 				barCategoryGap: '40%',
 				barWidth: '12',
 				itemStyle: {
-					opacity: 0.8
+					opacity: isFirst ? 1 :  0.8,
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					color: isFirst ? category.color : new window.echarts.graphic.LinearGradient(0, 0, 0, 1, [
+						{ offset: 0, color: category.color },
+						{ offset: 1, color: group.categories[previousIndex].color }
+					])
 				},
+				smooth: isFirst,
+				symbolSize: isFirst ? 8 : undefined,
+				symbol: isFirst ? 'circle' : undefined,
+				lineStyle: isFirst ? {
+					color: '#7E296E',
+					style: 'dashed',
+					width: 1.75,
+					cap: 'square',
+					join: 'bevel',
+					shadowColor: 'rgba(168, 27, 142, 0.5)',
+					shadowBlur: 6,
+					opacity: 0.4
+				} : undefined,
 				data: dateArray.map((date: any) => {
 					const item = group.data.find((d: any) =>
 						new Date(d.unix * 1000).toLocaleDateString() === date &&
-						d.name === category
+						d.name === category.name
 					);
 					return item ? item.visit_count : 0;
 				})
@@ -107,7 +130,6 @@ function loadDateRangeSummary(summary: any): void {
 }
 
 function registerResizeHandler(echarts: ChartReturn[]): void {
-	//noinspection JSUnresolvedVariable
 	window.addEventListener("resize", () => {
 		echarts.forEach(([, echart]) => {
 			echart.resize();
@@ -115,20 +137,20 @@ function registerResizeHandler(echarts: ChartReturn[]): void {
 	});
 }
 
-function initChart(title: string, theme: ChartTheme): [HTMLDivElement, any, ChartOption] {
+function initChart(title: string, theme: ChartTheme): [HTMLElement, any, ChartOption] {
 	const chartDiv = createEl('div', 'stats_chart');
 
 	if (fullWidth) {
 		chartDiv.style.width = "100%";
 	}
 
-	chartContainer.appendChild(chartDiv);
+	chartContainer!.appendChild(chartDiv);
 
 	const echart = echarts.init(chartDiv, theme);
 
 	let option = echart.getOption();
 	if (!option) {
-		option = themes[theme] ?? themes["default"];
+		option = themes![theme] ?? themes!["default"];
 	}
 	option = deepClone(option);
 	option["title"] = {
@@ -141,8 +163,8 @@ function initChart(title: string, theme: ChartTheme): [HTMLDivElement, any, Char
 function createNestedChart(
 	title: string,
 	theme: ChartTheme,
-	dataInner: GeoItem[],
-	dataOuter: GeoItem[]
+	dataInner: any[],
+	dataOuter: any[]
 ): ChartReturn {
 	const [chartDiv, echart, option] = initChart(title, theme);
 	option["series"][1] = option["series"][0];
@@ -179,7 +201,7 @@ function createNestedChart(
 function createChart(
 	title: string,
 	theme: ChartTheme,
-	data: GeoItem[] | SystemItem[] | DayClickItem[]
+	data: any[]
 ): ChartReturn {
 	let [chartDiv, echart, option] = initChart(title, theme);
 	if (theme === "pie") {
@@ -222,19 +244,19 @@ function createChart(
 					},
 				}
 			},
-			data: data.map(item => ({
+			data: data.map((item: any) => ({
 				name: item.name,
 				value: item.percentage
 			})),
 		});
 	} else if (theme === "radar") {
-		const radarIndicators = data.map(item => ({
+		const radarIndicators = data.map((item: any) => ({
 			icon: `{${item.name}|}`,
 			name: item.name,
 			max: 100,
 		}));
 
-		const seriesDataList = data.map(item => item.percentage);
+		const seriesDataList = data.map((item: any) => item.percentage);
 
 		option = {
 			...option,
@@ -290,14 +312,14 @@ function createRichIconEntry(lang: string): {
 const fields: string[] = ["total_clicks", "avg_click_time", "countries", "cities", "operating_systems"];
 
 export function registerThemes(): void {
-	if (typeof echarts === "undefined") {
+	if (typeof echarts === 'undefined' || typeof themes == 'undefined') {
 		return;
 	}
 	const registeredThemes = [];
 	for (const [name, option] of Object.entries(themes)) {
 		if (name === "default") {
 			if (option.radar && option.radar.name) {
-				option.radar.name.rich = fields.reduce((obj, lang) => {
+				option.radar.name.rich = fields.reduce((obj: any, lang: string) => {
 					obj[lang] = createRichIconEntry(lang);
 					return obj;
 				}, {});
