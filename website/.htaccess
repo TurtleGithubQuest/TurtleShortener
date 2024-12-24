@@ -16,6 +16,7 @@ RewriteRule ^$ /domains/%{ENV:HOST}/generated/landing.php [L]
 RewriteRule ^admin/?$ /generated/landing.php?page=admin [L,QSA]
 RewriteRule ^info/?$ /generated/landing.php?page=info [L,QSA]
 RewriteRule ^stats/?$ /generated/landing.php?page=stats [L,QSA]
+RewriteRule ^image/?$ /generated/image.php [L,QSA]
 RewriteRule ^i/(.*)$ https://i.trt.ls/$1 [L,QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-f

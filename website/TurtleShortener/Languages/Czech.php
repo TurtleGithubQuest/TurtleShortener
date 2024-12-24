@@ -35,6 +35,10 @@ class Czech extends Language {
         'stats' => 'Statistiky',
         'sources' => 'Zdroj',
         'cities' => 'Města',
+        'turtle_images' => 'Želvotky',
+        'placeholder_access_token' => 'Api klíč',
+        'drag_and_drop_here' => 'Tažením nahraješ',
+        'supported_extensions' => 'Podporované formáty',
         1 => 'Ano',
         0 => 'Ne',
     ];

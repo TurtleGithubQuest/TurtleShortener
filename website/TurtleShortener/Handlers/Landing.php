@@ -5,29 +5,27 @@ namespace TurtleShortener;
 
 use TurtleShortener\Models\GeoData;
 
-require_once(__DIR__ . '/../TurtleShortener/bootstrap.php');
+require_once(__DIR__ . '/../TurtleShortener/Handlers/BaseHandler.php');
 
-if (isset($_GET['sid'])) {
-    session_id($_GET['sid']);
-}
-session_start();
-$languages = [];
-$user_language = $_GET['lang'] ?? 'en';
+class Landing extends \TurtleShortener\Handlers\BaseHandler {
 
-if (!\in_array($user_language, $languages, false)) {
-    header('Location: /error.php?error='.urlencode("Language '$user_language' is not supported."));
-}
+    public function __construct(?string $page = null, ?string $userLanguage = null) {
+        parent::__construct($page, $userLanguage);
+        $this->include_page();
+    }
 
-$isMobile = $_GET['m'] ?? false;
-$page = $_GET['page'] ?? 'index';
+    public function include_page(): void {
+        if (
+            ($this->page === 'stats')
+        ) {
+            $from = strtotime($_GET['from'] ?? date('Y-m-d', strtotime('-6 months')));
+            $to = strtotime($_GET['to'] ?? date('Y-m-d'));
+            $geoDataRangeSummary = GeoData::fetchDateRangeSummary($from, $to);
+            echo '<script>const geoDataRangeSummary = ' . ($geoDataRangeSummary ?? 'null') . '</script>';
+        }
+        parent::include_page();
+    }
 
-if (
-    ($page === 'stats')
-) {
-    $from = strtotime($_GET['from'] ?? date('Y-m-d', strtotime('-6 months')));
-    $to = strtotime($_GET['to'] ?? date('Y-m-d'));
-    $geoDataRangeSummary = GeoData::fetchDateRangeSummary($from, $to);
-    echo '<script>const geoDataRangeSummary = ' . ($geoDataRangeSummary ?? 'null') . '</script>';
 }
 
-include_once(__DIR__.'/'.$user_language."/$page.php");
+new Landing();

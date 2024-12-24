@@ -33,6 +33,10 @@ class English extends Language {
         'stats' => 'Stats',
         'sources' => 'Sources',
         'cities' => 'Cities',
+        'turtle_images' => 'Turtle images',
+        'placeholder_access_token' => 'Access token',
+        'drag_and_drop_here' => 'Drag and drop here',
+        'supported_extensions' => 'Supported extensions',
         1 => 'Yes',
         0 => 'No'
     ];

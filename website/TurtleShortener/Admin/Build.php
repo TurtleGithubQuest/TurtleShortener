@@ -12,7 +12,7 @@ use TurtleShortener\Misc\AccessLevel;
 use function sprintf;
 
 class Build {
-    private const LAYOUT_FILES = ['Index', 'Admin', 'Preview', 'Info', 'Stats'];
+    private const LAYOUT_FILES = ['Index', 'Admin', 'Preview', 'Info', 'Stats', 'Image'];
     private const HANDLER_FILES = ['Landing', 'Preview', 'Image'];
     private const LANGUAGES = ['en', 'cz'];
 
